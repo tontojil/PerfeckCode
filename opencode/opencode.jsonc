@@ -7,12 +7,39 @@
     "read": {
       "**/.env*": "deny",
       "**/secrets/**": "deny",
-      "**/credentials.json": "deny"
+      "**/credentials.json": "deny",
+      // Llaves privadas y config de editor con tokens.
+      "**/*.pem": "deny",
+      "**/*.key": "deny",
+      "**/*.p12": "deny",
+      "**/*.pfx": "deny",
+      "**/id_rsa*": "deny",
+      "**/id_ed25519*": "deny",
+      "**/settings.json": "deny"
     },
     "edit": {
       "**/.env*": "deny",
       "**/secrets/**": "deny",
-      "**/credentials.json": "deny"
+      "**/credentials.json": "deny",
+      // Llaves privadas y config de editor con tokens.
+      "**/*.pem": "deny",
+      "**/*.key": "deny",
+      "**/*.p12": "deny",
+      "**/*.pfx": "deny",
+      "**/id_rsa*": "deny",
+      "**/id_ed25519*": "deny",
+      "**/settings.json": "deny"
+    },
+    // Solo comandos seguros por defecto, instalacion con confirmacion, destructivos denegados.
+    "bash": {
+      "git status": "allow",
+      "git diff*": "allow",
+      "git log*": "allow",
+      "npm ci": "allow",
+      "npm audit": "allow",
+      "npm install": "ask",
+      "rm -rf *": "deny",
+      "sudo *": "deny"
     }
   }
 }

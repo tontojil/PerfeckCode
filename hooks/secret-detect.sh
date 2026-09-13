@@ -24,7 +24,9 @@ PATTERNS=(
   'pk_live_[0-9A-Za-z]{24,}'                                      # Stripe live publishable key (menor riesgo pero warn)
   'rk_live_[0-9A-Za-z]{24,}'                                      # Stripe live restricted key
   'sk_live_[0-9A-Za-z]{24,}'                                      # Stripe live secret key
-  '-----BEGIN (RSA|OPENSSH|EC|DSA|PGP) PRIVATE KEY-----'          # Private keys
+  'sk-ant-[A-Za-z0-9_-]{20,}'                                      # Anthropic Admin/Environment keys
+  'npm_[A-Za-z0-9]{36}'                                            # npm token clasico
+  '-----BEGIN (RSA |OPENSSH |EC |DSA |PGP )?PRIVATE KEY-----'      # Private keys
   'eyJ[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}' # JWTs largos (posible token)
 )
 
@@ -41,13 +43,14 @@ done
 if [ "$WARN" -eq 1 ]; then
   echo "" >&2
   echo "========================================" >&2
-  echo "  ATENCION: Posible secret en prompt" >&2
+  echo "  BLOQUEADO: Posible secret en prompt" >&2
   echo "========================================" >&2
   echo "Se detectaron patrones de API keys, tokens o credenciales." >&2
   echo "Cancela este prompt (Ctrl+C) y revisa antes de enviar." >&2
   echo "Patrones detectados: ${#MATCHED[@]}" >&2
   echo "========================================" >&2
   echo "" >&2
+  exit 2
 fi
 
 exit 0
