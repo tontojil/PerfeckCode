@@ -27,6 +27,10 @@ description: "Para órdenes en Windows, PowerShell, rutas con espacios y permiso
    - `chmod +x` no existe: el permiso lo da NTFS, no el flag.
 4. **Equivalencias**
    - `ls` -> `Get-ChildItem`, `cat` -> `Get-Content -Raw`, `grep` -> `Select-String`, `rm -rf` -> `Remove-Item -Recurse -Force`.
+5. **Limpieza segura (estilo Win11Debloat)**
+   - Punto de restauración primero: si algo falla, se vuelve atrás.
+   - Quite solo apps que reconoce, una por vez. Telemetría y avisos se apagan con lista, no a ciegas.
+   - Todo cambio anotado para deshacer.
 
 ## Output Contract
 

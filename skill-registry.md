@@ -4,7 +4,7 @@ Catalogo central de skills para Claude Code. Las skills se auto-descubren desde
 `~/.claude/skills/` (cada una con su `SKILL.md`). Esta tabla es la referencia rapida:
 escanea triggers ANTES de codear y aplica la skill que calce.
 
-- **Total skills:** 60
+- **Total skills:** 71
 - **Fuente:** `~/.claude/skills/`
 - **Invocacion:** Claude carga la skill por su `name` del frontmatter cuando el contexto calza.
 - **Ultima sync:** 2026-09-13
@@ -100,6 +100,17 @@ escanea triggers ANTES de codear y aplica la skill que calce.
 | `sii-chile` | DTE, folios CAF, firma y estados ante el SII. |
 | `tienda-online-sii` | Tienda con boleta SII, voucher, RCV y F29. |
 | `pagos-webpay` | Webpay Plus: crear, confirmar y validar pagos. |
+| `experto-node` | Node Express/Nest, async seguro, Vitest. |
+| `postgres-produccion` | Modelo, indices, EXPLAIN, respaldo. |
+| `gestion-secretos` | Vault, rotacion, cero fugas. |
+| `venta-redes-sociales` | Catalogo, WhatsApp, Marketplace, cierre. |
+| `publicacion-web` | Dominio, SSL, hosting, tiendas de apps. |
+| `soporte-pc-redes` | PC, WiFi, impresoras, respaldo 3-2-1. |
+| `privacidad-datos-chile` | Consentimiento, derechos, aviso simple. |
+| `biblioteca-programacion` | Libros gratis en español por lenguaje. |
+| `extraccion-web-datos` | Datos publicos con respeto: robots y pausas. |
+| `nube-propia` | Self-host con Docker, HTTPS y respaldo. |
+| `anuncios-pagos` | Avisos Google/Meta/TikTok con permiso. |
 | `depuracion-sistematica` | Root-cause-first para bugs y test failures. |
 | `verificacion-final` | Gate de evidencia antes de "done"/commit/PR. |
 | `traspaso-sesion` | Estado HANDOFF.md para traspaso de sesion. |
