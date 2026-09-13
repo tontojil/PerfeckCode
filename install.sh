@@ -16,6 +16,7 @@ instalar_dir() {
 
 instalar_dir "$REPO/opencode/agents" "$HOME/.config/opencode/agents"
 instalar_dir "$REPO/opencode/commands" "$HOME/.config/opencode/commands"
+mkdir -p "$HOME/.config/opencode" "$HOME/.claude"
 cp -f "$REPO/opencode/AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
 cp -f "$REPO/opencode/opencode.jsonc" "$HOME/.config/opencode/opencode.jsonc"
 instalar_dir "$REPO/claude-agents" "$HOME/.claude/agents"

@@ -25,21 +25,51 @@ Todo configurable: cada agente y skill es un archivo Markdown que usted puede le
 
 ## Instalación
 
-Requisitos: opencode o Claude Code instalado, Node.js 18+, Git. Windows, macOS o Linux.
+### Requisitos
+
+| Requisito | Windows | macOS / Linux |
+|---|---|---|
+| opencode o Claude Code | Instalado y en el PATH | Igual |
+| Node.js 18+ | `winget install OpenJS.NodeJS` | `brew install node` o su gestor |
+| Git | `winget install Git.Git` | Preinstalado o `brew install git` |
+| PowerShell 5.1+ / Bash | Incluido en Windows | Incluido |
+
+### Windows (PowerShell)
 
 ```powershell
 git clone https://github.com/tontojil/PerfeckCode.git
 cd PerfeckCode
-.\install.ps1        # Windows
+powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
+
+> Si Windows bloquea el script, esa línea lo permite solo para esta
+> ejecución, sin cambiar nada permanente.
+
+### macOS / Linux (Bash)
 
 ```bash
-bash install.sh      # macOS / Linux
+git clone https://github.com/tontojil/PerfeckCode.git
+cd PerfeckCode
+chmod +x install.sh
+./install.sh
 ```
 
-El instalador respalda su configuración previa con fecha antes de copiar. Su `settings.json` existente nunca se sobrescribe. Complete sus claves de proveedor en `~/.claude/settings.json` (guíese por `settings.template.json`).
+### Después de instalar
 
-Reinicie opencode/Claude Code y pruebe con `@depurador hola`. Con Tab cambie al agente `tonto-jil`.
+1. El instalador respalda su configuración previa con fecha y hora. Su
+   `settings.json` existente nunca se sobrescribe.
+2. Si es primera vez, complete sus claves de proveedor en
+   `~/.claude/settings.json` guiándose por `settings.template.json`.
+3. Reinicie opencode o Claude Code.
+4. Pruebe con `@depurador hola` (debe responder el depurador).
+5. Con Tab cambie al agente `tonto-jil`.
+
+### Solución de problemas
+
+- **"no se reconoce @depurador"**: no reinició la app después de instalar. Ciérrela y ábrala de nuevo.
+- **Windows bloquea `install.ps1`**: use la línea con `-ExecutionPolicy Bypass` tal cual.
+- **`./install.sh: permiso denegado`**: corra `chmod +x install.sh` primero.
+- **Quiere volver atrás**: borre las carpetas instaladas y renombre los respaldos `.backup-<fecha>` quitándoles el sufijo.
 
 ## Estructura del repositorio
 

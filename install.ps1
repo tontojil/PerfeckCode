@@ -17,6 +17,8 @@ function Instalar-Dir($Origen, $Destino) {
 
 Instalar-Dir "$Repo\opencode\agents" "$HOME\.config\opencode\agents"
 Instalar-Dir "$Repo\opencode\commands" "$HOME\.config\opencode\commands"
+New-Item -ItemType Directory -Path "$HOME\.config\opencode" -Force | Out-Null
+New-Item -ItemType Directory -Path "$HOME\.claude" -Force | Out-Null
 Copy-Item -Force "$Repo\opencode\AGENTS.md" "$HOME\.config\opencode\AGENTS.md"
 Copy-Item -Force "$Repo\opencode\opencode.jsonc" "$HOME\.config\opencode\opencode.jsonc"
 Instalar-Dir "$Repo\claude-agents" "$HOME\.claude\agents"
