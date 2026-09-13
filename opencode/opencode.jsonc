@@ -2,33 +2,33 @@
   "$schema": "https://opencode.ai/config.json",
   // Formato automatico despues de editar (patron oh-my-opencode).
   "formatter": true,
-  // Defensa en profundidad: secretos nunca legibles ni editables.
+  // Defensa en profundidad: secretos piden confirmacion antes de abrir.
   "permission": {
     "read": {
-      "**/.env*": "deny",
-      "**/secrets/**": "deny",
-      "**/credentials.json": "deny",
-      // Llaves privadas y config de editor con tokens.
-      "**/*.pem": "deny",
-      "**/*.key": "deny",
-      "**/*.p12": "deny",
-      "**/*.pfx": "deny",
-      "**/id_rsa*": "deny",
-      "**/id_ed25519*": "deny",
-      "**/settings.json": "deny"
+      "**/.env*": "ask",
+      "**/secrets/**": "ask",
+      "**/credentials.json": "ask",
+      // Llaves privadas y config de editor con tokens: preguntan, no pasan directo.
+      "**/*.pem": "ask",
+      "**/*.key": "ask",
+      "**/*.p12": "ask",
+      "**/*.pfx": "ask",
+      "**/id_rsa*": "ask",
+      "**/id_ed25519*": "ask",
+      "**/settings.json": "ask"
     },
     "edit": {
-      "**/.env*": "deny",
-      "**/secrets/**": "deny",
-      "**/credentials.json": "deny",
-      // Llaves privadas y config de editor con tokens.
-      "**/*.pem": "deny",
-      "**/*.key": "deny",
-      "**/*.p12": "deny",
-      "**/*.pfx": "deny",
-      "**/id_rsa*": "deny",
-      "**/id_ed25519*": "deny",
-      "**/settings.json": "deny"
+      "**/.env*": "ask",
+      "**/secrets/**": "ask",
+      "**/credentials.json": "ask",
+      // Llaves privadas y config de editor con tokens: preguntan, no pasan directo.
+      "**/*.pem": "ask",
+      "**/*.key": "ask",
+      "**/*.p12": "ask",
+      "**/*.pfx": "ask",
+      "**/id_rsa*": "ask",
+      "**/id_ed25519*": "ask",
+      "**/settings.json": "ask"
     },
     // Solo comandos seguros por defecto, instalacion con confirmacion, destructivos denegados.
     "bash": {

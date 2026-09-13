@@ -4,10 +4,10 @@ Catalogo central de skills para Claude Code. Las skills se auto-descubren desde
 `~/.claude/skills/` (cada una con su `SKILL.md`). Esta tabla es la referencia rapida:
 escanea triggers ANTES de codear y aplica la skill que calce.
 
-- **Total skills:** 53
+- **Total skills:** 60
 - **Fuente:** `~/.claude/skills/`
 - **Invocacion:** Claude carga la skill por su `name` del frontmatter cuando el contexto calza.
-- **Ultima sync:** 2026-09-12
+- **Ultima sync:** 2026-09-13
 
 ---
 
@@ -93,6 +93,13 @@ escanea triggers ANTES de codear y aplica la skill que calce.
 | Skill | Trigger |
 |---|---|
 | `ramas-y-pr` | Crear branch, workflow de PR, conventional commits. |
+| `windows-powershell` | Ordenes PowerShell en Windows, rutas y permisos. |
+| `typescript-estricto` | Tipos estrictos, cero any, tsc en verde. |
+| `accesibilidad-wcag` | Teclado, lector de pantalla y contraste AA. |
+| `rendimiento-web` | LCP/INP/CLS medidos antes y despues. |
+| `sii-chile` | DTE, folios CAF, firma y estados ante el SII. |
+| `tienda-online-sii` | Tienda con boleta SII, voucher, RCV y F29. |
+| `pagos-webpay` | Webpay Plus: crear, confirmar y validar pagos. |
 | `depuracion-sistematica` | Root-cause-first para bugs y test failures. |
 | `verificacion-final` | Gate de evidencia antes de "done"/commit/PR. |
 | `traspaso-sesion` | Estado HANDOFF.md para traspaso de sesion. |

@@ -43,14 +43,17 @@ done
 if [ "$WARN" -eq 1 ]; then
   echo "" >&2
   echo "========================================" >&2
-  echo "  BLOQUEADO: Posible secret en prompt" >&2
+  echo "  ATENCION: Posible secret en prompt" >&2
   echo "========================================" >&2
   echo "Se detectaron patrones de API keys, tokens o credenciales." >&2
-  echo "Cancela este prompt (Ctrl+C) y revisa antes de enviar." >&2
   echo "Patrones detectados: ${#MATCHED[@]}" >&2
+  echo "Si sigue, esa clave sale de su PC a 3 lugares:" >&2
+  echo "1. Nube del modelo: viaja con el prompt y queda en historial." >&2
+  echo "2. Archivos que se comparten: logs, backups, git, pantallazos." >&2
+  echo "3. Otro programa que lea esos archivos (respaldo, extension)." >&2
+  echo "Revise y confirme antes de enviar. Ctrl+C para cancelar." >&2
   echo "========================================" >&2
   echo "" >&2
-  exit 2
 fi
 
 exit 0

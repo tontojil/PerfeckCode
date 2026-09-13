@@ -58,6 +58,9 @@ Utilice el subagente con @ segun corresponda (definicion completa en `C:/Users/P
 - Onboarding, churn, retencion -> @exito-cliente "@exito-cliente proponga un plan contra el churn"
 - Contratacion, onboarding, clima -> @recursos-humanos "@recursos-humanos redacte la oferta para backend"
 - Tono neutro, estilo directo -> @tonto-jil "@tonto-jil revise este texto en tono neutro"
+- Trabajos INACAP hechos y listos -> @tutor-inacap "@tutor-inacap haga mi informe con este enunciado"
+- Windows, PowerShell, rutas -> @ingeniero-windows "@ingeniero-windows corrija este error de terminal en Windows"
+- SII y ventas online desde cero -> @super-agente-sii "@super-agente-sii quiero vender online con boleta"
 
 ## Skills
 
