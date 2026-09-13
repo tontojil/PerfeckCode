@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# Instalador PerfeckCode (macOS/Linux). Respalda lo existente y copia la config.
+set -euo pipefail
+REPO="$(cd "$(dirname "$0")" && pwd)"
+STAMP="$(date +%Y%m%d-%H%M%S)"
+
+instalar_dir() {
+  if [ -e "$2" ]; then
+    mv "$2" "$2.backup-$STAMP"
+    echo "Respaldo: $2.backup-$STAMP"
+  fi
+  mkdir -p "$(dirname "$2")"
+  cp -r "$1" "$2"
+  echo "Instalado: $2"
+}
+
+instalar_dir "$REPO/opencode/agents" "$HOME/.config/opencode/agents"
+instalar_dir "$REPO/opencode/commands" "$HOME/.config/opencode/commands"
+cp -f "$REPO/opencode/AGENTS.md" "$HOME/.config/opencode/AGENTS.md"
+cp -f "$REPO/opencode/opencode.jsonc" "$HOME/.config/opencode/opencode.jsonc"
+instalar_dir "$REPO/claude-agents" "$HOME/.claude/agents"
+instalar_dir "$REPO/skills" "$HOME/.claude/skills"
+instalar_dir "$REPO/output-styles" "$HOME/.claude/output-styles"
+instalar_dir "$REPO/rules" "$HOME/.claude/rules"
+instalar_dir "$REPO/templates" "$HOME/.claude/templates"
+instalar_dir "$REPO/claude-commands" "$HOME/.claude/commands"
+instalar_dir "$REPO/hooks" "$HOME/.claude/hooks"
+instalar_dir "$REPO/scripts" "$HOME/.claude/scripts"
+cp -f "$REPO/skill-registry.md" "$HOME/.claude/skill-registry.md"
+
+if [ ! -f "$HOME/.claude/settings.json" ]; then
+  cp "$REPO/settings.template.json" "$HOME/.claude/settings.json"
+  echo "Creado settings.json desde plantilla: complete sus claves."
+else
+  echo "settings.json existente intacto (no se sobrescribe)."
+fi
+
+echo ""
+echo "Listo. Reinicie opencode/Claude Code y pruebe: @depurador hola"

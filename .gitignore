@@ -1,0 +1,12 @@
+# PerfeckCode: nunca commitear secretos ni bloat
+settings.json
+**/.env
+**/.env.*
+**/secrets/
+**/credentials.json
+node_modules/
+__pycache__/
+*.log
+.DS_Store
+Thumbs.db
+*.backup-*

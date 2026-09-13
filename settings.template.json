@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  // PLANTILLA: complete con sus propias claves. NUNCA suba este archivo
+  // con valores reales a Git. Vease README.md.
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "PEQUE_AQUI_SU_TOKEN",
+    "ANTHROPIC_BASE_URL": "https://api.anthropic.com",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "sonnet",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "haiku"
+  },
+  "includeCoAuthoredBy": false,
+  "outputStyle": "tonto-jil",
+  "permissions": {
+    "allow": ["Read", "Grep", "Glob", "Write", "Edit", "WebFetch"],
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.*)",
+      "Read(**/secrets/**)",
+      "Read(**/credentials.json)"
+    ],
+    "ask": ["Bash(npm install:*)", "Bash(git push:*)"]
+  }
+}
