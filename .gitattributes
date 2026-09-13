@@ -1,2 +1,12 @@
-# Auto detect text files and perform LF normalization
+# Normalizar fines de linea
 * text=auto
+
+# Lo copiado de terceros no cuenta como lenguaje del repo
+skills/api-claude/** linguist-vendored=true
+skills/constructor-mcp/reference/** linguist-vendored=true
+skills/constructor-mcp/scripts/** linguist-vendored=true
+skills/pdf/scripts/** linguist-vendored=true
+skills/pptx/scripts/** linguist-vendored=true
+skills/xlsx/scripts/** linguist-vendored=true
+skills/pptx/package-lock.json linguist-vendored=true
+*.xsd linguist-vendored=true
