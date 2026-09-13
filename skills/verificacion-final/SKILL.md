@@ -28,7 +28,7 @@ Before any completion claim:
 
 ## Comando por stack (no adivines, usa el del proyecto)
 
-| Stack | Comando tipico | Alternativa |
+| Stack | Comando típico | Alternativa |
 |---|---|---|
 | Node/npm | `npm test -- --run` / `npm run build` | `pnpm test`, `bun test`, `npx tsc --noEmit` |
 | Python | `pytest -q` | `uv run pytest -q` |

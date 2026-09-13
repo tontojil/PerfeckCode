@@ -1,9 +1,10 @@
 ---
 name: tanstack-query
 description: "Patrones críticos de TanStack Query v5 en React: query keys, caché, mutaciones, SSR y updates optimistas. (TanStack Query, caching, mutations)"
+license: MIT
 ---
 
-# TanStack Query — Patrones Criticos
+# TanStack Query — Patrones Críticos
 
 Reglas extraidas de audit de 20+ patrones en codebase legacy. Solo lo que causa bugs reales.
 

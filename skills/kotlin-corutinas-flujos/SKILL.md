@@ -5,11 +5,11 @@ description: Patrones Kotlin con coroutines y Flow, concurrencia estructurada, c
 
 ## Cuando usar
 
-Usa esta skill cuando trabajes con codigo Kotlin con corrutinas, Flow o channels.
+Utilice esta skill cuando trabaje con código Kotlin con corutinas, Flow o channels.
 - Cuando uses `suspend`, `async`, `launch` o scopes estructurados.
 - Cuando uses `StateFlow`, `SharedFlow` o channels para estado o eventos.
-- Cuando pruebes corrutinas con `runTest` o `TestDispatcher`.
-No la uses para UI en Compose (pantallas, estado visual); anda a `android-interfaz-compose` en vez.
+- Cuando pruebe corutinas con `runTest` o `TestDispatcher`.
+No la utilice para UI en Compose (pantallas, estado visual); consulte `android-interfaz-compose` en su lugar.
 
 ## Coroutine Basics
 

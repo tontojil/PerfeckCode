@@ -227,7 +227,7 @@ pdftoppm -jpeg -r 150 -f N -l N output.pdf slide-fixed
 
 - `pip install "markitdown[pptx]"` - text extraction
 - `pip install Pillow` - thumbnail grids
-- `pptxgenjs` - pre-installed locally in `skills/pptx/node_modules/`. Scripts run with `node script.js` from this skill dir. `require("pptxgenjs")` resolves automatically.
+- `pptxgenjs` - instalar una vez con `npm install` dentro de `skills/pptx/` (ver `package.json`). Scripts run with `node script.js` from this skill dir. `require("pptxgenjs")` resolves automatically.
 - LibreOffice (`soffice`) - PDF conversion for visual QA **only if needed** (MS Office renders natively on open). Auto-configured for sandboxed environments via `scripts/office/soffice.py`.
 - Poppler (`pdftoppm`) - PDF to images (only needed if using soffice for visual QA)
 
@@ -235,13 +235,13 @@ pdftoppm -jpeg -r 150 -f N -l N output.pdf slide-fixed
 
 ## Formato INACAP (para la U)
 
-Paleta obligatoria INACAP (NUNCA azul generico):
+Paleta obligatoria INACAP (NUNCA azul genérico):
 
 - Rojo `#ed1c24` - acentos, numeros destacados, franja de portada.
 - Negro `#231f20` - titulos y texto principal sobre fondo claro.
 - Gris `#404040` - texto secundario, captions, footers.
 - Blanco `#FFFFFF` - fondo base y texto sobre rojo/negro.
-- Prohibido azul generico (`0000FF`, `1E2761`, `065A82`, Coral Energy, Ocean Gradient).
+- Prohibido azul genérico (`0000FF`, `1E2761`, `065A82`, Coral Energy, Ocean Gradient).
 
 Fuente:
 

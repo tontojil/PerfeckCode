@@ -184,7 +184,7 @@ def sub_heading(doc, text, color="red"):
 
 
 def table(doc, headers, rows, col_widths=None):
-    """Tabla formato v2: 6 bordes #AAAAAA, header #1F4E79/blanco, filas alternadas.
+    """Tabla formato INACAP: 6 bordes #BFBFBF, header #231f20/blanco, filas alternadas.
 
     col_widths: lista opcional de anchos en Cm, ej. [Cm(4), Cm(10)].
     """

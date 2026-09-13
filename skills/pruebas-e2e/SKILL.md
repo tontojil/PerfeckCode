@@ -1,6 +1,6 @@
 ---
 name: pruebas-e2e
-description: Tests E2E con Playwright, Page Object Model, estrategia de pruebas, CI y prevencion de regresiones. Usalo cuando escribai tests de navegador, armai la suite o configurai E2E en CI. (E2E testing, Playwright, Page Object Model)
+description: "Tests E2E con Playwright, Page Object Model, estrategia de pruebas, CI y prevención de regresiones. Úsalo cuando escribas tests de navegador, armes la suite o configures E2E en CI. (E2E testing, Playwright, Page Object Model)"
 ---
 
 # E2E Testing

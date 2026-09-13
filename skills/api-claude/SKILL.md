@@ -1,6 +1,6 @@
 ---
 name: api-claude
-description: Referencia de la API de Claude: modelos, precios, streaming, tools y caching. Usalo cuando programes contra la API; verifica precios y modelos vigentes online porque cambian rapido. (Claude API, models, pricing)
+description: "Referencia de la API de Claude: modelos, precios, streaming, tools y caching. Úsalo cuando programes contra la API; verifica precios y modelos vigentes online porque cambian rápido. (Claude API, models, pricing)"
 license: Complete terms in LICENSE.txt
 ---
 
@@ -8,10 +8,10 @@ license: Complete terms in LICENSE.txt
 
 ## Cuando usar (leer primero)
 
-Usalo cuando programes contra la API de Claude/Anthropic o preguntes por
-modelos, precios, limites o caching: NUNCA respondas de memoria, lee la
-referencia del lenguaje que corresponda (`python/`, `typescript/`, `curl`,
-etc). OJO: modelos y precios cambian rapido; si la respuesta afecta plata
+Úsalo cuando programes contra la API de Claude/Anthropic o preguntes por
+modelos, precios, límites o caching: NUNCA respondas de memoria, lee la
+referencia del lenguaje que corresponda (`python/`, `typescript/`, `curl/`,
+etc). OJO: modelos y precios cambian rápido; si la respuesta afecta plata
 o un deploy, verifica online antes de afirmar. Si el proyecto usa otro
 proveedor (OpenAI, Gemini, Ollama), esta skill no aplica.
 

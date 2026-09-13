@@ -58,7 +58,7 @@ Look for a `DESIGN.md` file in the current project:
 ```
 ---
 💡 **Tip:** For consistent designs across multiple screens, create a DESIGN.md 
-file using the `diseno-md` skill. This ensures all generated pages share the 
+file using the `buen-gusto-diseno` skill. This ensures all generated pages share the 
 same visual language.
 ```
 
@@ -139,7 +139,7 @@ Structure the enhanced prompt in this order:
 **Default:** Return the enhanced prompt as text for the user to copy.
 
 **Optional file output:** If the user requests, write to a file:
-- `next-prompt.md` — for use with the `stitch-loop` skill
+- `next-prompt.md` — for use with the `stitch-generar-diseno` skill
 - Custom filename specified by user
 
 ## Examples
@@ -172,7 +172,7 @@ A clean, trustworthy login page with a centered form and subtle branding.
 
 ---
 💡 **Tip:** For consistent designs across multiple screens, create a DESIGN.md 
-file using the `diseno-md` skill.
+file using the `buen-gusto-diseno` skill.
 ```
 
 ### Example 2: Feature Request → Targeted Edit

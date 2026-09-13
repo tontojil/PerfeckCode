@@ -6,7 +6,7 @@ allowed-tools:
   - "Bash"
   - "Read"
   - "Write"
-  - "WebFetch"
+  - "web_fetch"
 ---
 
 # Stitch to React Components

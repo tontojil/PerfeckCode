@@ -39,7 +39,7 @@ Nombres de propiedad en **camelCase** (`backgroundColor`, `rotationX`). Devuelve
 
 ## Transforms y CSS
 
-CSSPlugin viene en el core. Preﬁere aliases de transform sobre el string `transform` crudo (orden consistente, mas performante):
+CSSPlugin viene en el core. Prefiere aliases de transform sobre el string `transform` crudo (orden consistente, mas performante):
 
 | Prop GSAP | Nota |
 |-----------|------|
@@ -53,7 +53,7 @@ CSSPlugin viene en el core. Preﬁere aliases de transform sobre el string `tran
 
 Valores relativos: `x: "+=20"`, `rotation: "-=30"`. NUNCA animai `width`/`height`/`top`/`left` si `x`/`y`/`scale`/`rotation` logran lo mismo (layout thrashing).
 
-- **autoAlpha** — preﬁerelo sobre `opacity` para fades. En `0` setea `visibility: hidden` (no bloquea clicks); si no es cero, `visibility: inherit`.
+- **autoAlpha** — prefierelo sobre `opacity` para fades. En `0` setea `visibility: hidden` (no bloquea clicks); si no es cero, `visibility: inherit`.
 - **clearProps** — `"all"` o lista (`"visibility"`) para soltar inline styles al terminar y que el CSS tome el control. Limpiar cualquier prop de transform limpia el transform entero.
 - **CSS variables** — animables (`"--hue": 180`) donde el browser las soporte.
 - **SVG** — `svgOrigin: "250 100"` rota/escala en coordenadas globales del SVG (uno solo: `svgOrigin` O `transformOrigin`). Rotacion direccional: sufijo `_short` / `_cw` / `_ccw` (ej. `rotation: "-170_short"`).
@@ -124,7 +124,7 @@ Responsive y reduced-motion van en `references/easings.md` (`gsap.matchMedia()` 
 
 - ✅ camelCase, aliases de transform (`x`, `y`, `scale`, `rotation`), `autoAlpha` sobre `opacity`.
 - ✅ Easings built-in documentados; CustomEase solo si es necesario (ver `references/easings.md`).
-- ✅ Guarda el return para playback; preﬁere timelines sobre `delay` encadenado.
+- ✅ Guarda el return para playback; prefiere timelines sobre `delay` encadenado.
 - ✅ `gsap.matchMedia()` para breakpoints y `prefers-reduced-motion` (ver `references/easings.md`).
 - ✅ `gsap.defaults()` para consistencia del proyecto.
 

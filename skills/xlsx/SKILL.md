@@ -55,11 +55,11 @@ Unless otherwise stated by the user or existing template
 - Test with edge cases (zero values, negative numbers)
 - Verify no unintended circular references
 
-#### Compatibilidad y recalculo (obligatorio)
+#### Compatibilidad y recálculo (obligatorio)
 - [ ] Usar solo lista blanca segura: `SUM` / `AVERAGE` / `SUMIFS` / `INDEX` + `MATCH`.
 - [ ] Prohibido `XLOOKUP` / `FILTER` / `UNIQUE` / `SORT` sin prefijo `_xlfn.` (se rompen fuera de Excel 365).
 - [ ] Ejemplo seguro: `=INDEX(C2:C20,MATCH(B2,A2:A20,0))` en vez de `=XLOOKUP(B2,A2:A20,C2:C20)`.
-- [ ] Exigir recalculo al abrir: `wb.calculation.fullCalcOnLoad = True` antes de `wb.save()`.
+- [ ] Exigir recálculo al abrir: `wb.calculation.fullCalcOnLoad = True` antes de `wb.save()`.
 - [ ] Verificar con `python scripts/recalc.py salida.xlsx` y entregar solo si `status` es `success`.
 - [ ] Si `status` es `errors_found`, corregir segun `error_summary` y recalcular de nuevo.
 

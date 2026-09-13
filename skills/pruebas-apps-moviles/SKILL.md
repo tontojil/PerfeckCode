@@ -1,6 +1,6 @@
 ---
 name: pruebas-apps-moviles
-description: Estrategias de testing movil, tests unitarios, integracion, UI, snapshots y pipelines CI para Android Espresso e iOS XCTest. (mobile, testing, Espresso, XCTest)
+description: Estrategias de testing móvil, tests unitarios, integración, UI, snapshots y pipelines CI para Android Espresso e iOS XCTest. (mobile, testing, Espresso, XCTest)
 ---
 
 ## Cuando usar
@@ -9,7 +9,7 @@ Usa esta skill cuando escribas tests para apps Android o iOS.
 - Cuando pruebes ViewModels, casos de uso o logica con JUnit, MockK o XCTest.
 - Cuando hagas tests UI con Compose Testing o XCUITest.
 - Cuando hagas snapshots con Roborazzi o swift-snapshot-testing.
-No la uses para tests web con navegador; anda a `pruebas-e2e` (Playwright) en vez.
+No la utilice para tests web con navegador; consulte `pruebas-e2e` (Playwright) en su lugar.
 
 ## Android Testing
 

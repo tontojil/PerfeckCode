@@ -1,6 +1,6 @@
 ---
 name: imagemagick
-description: Conversion y edicion de imagenes con ImageMagick, resize, compresion, recorte, rotado, marca de agua, formatos WebP AVIF PNG JPG ICO, favicons, thumbnails, PDF y batch. (ImageMagick, magick, convert, images)
+description: Conversión y edición de imágenes con ImageMagick, resize, compresión, recorte, rotado, marca de agua, formatos WebP AVIF PNG JPG ICO, favicons, thumbnails, PDF y batch. (ImageMagick, magick, convert, images)
 ---
 
 ImageMagick 7 ships the `magick` command. Legacy `convert`/`mogrify` still work but emit deprecation warnings on v7 — prefer `magick` and `magick mogrify`.

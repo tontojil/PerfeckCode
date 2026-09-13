@@ -1,6 +1,6 @@
 ---
 name: android-interfaz-compose
-description: Desarrollo Android con Jetpack Compose, manejo de estado, navegacion, Material 3, side effects y patrones de arquitectura. Usalo cuando creai pantallas en Compose. (Jetpack Compose, state management, navigation, Material 3)
+description: Desarrollo Android con Jetpack Compose, manejo de estado, navegación, Material 3, side effects y patrones de arquitectura. Úsela cuando cree pantallas en Compose. (Jetpack Compose, state management, navigation, Material 3)
 ---
 
 ## Compose State

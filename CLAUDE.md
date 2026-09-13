@@ -113,7 +113,7 @@ Use agents PROACTIVELY via Agent tool with `subagent_type`. Agents self-document
 | Customer onboarding, health scores, churn, retention | `exito-cliente` |
 | Visual design, UX flows, accessibility, design systems | `disenador-ui-ux` |
 
-Trivial tasks (typo, 1-line fix): execute inline. Paralelos: la cantidad que yo te diga o la que vos me pidai preguntando antes. Por defecto 4 para no pisarse los archivos. Si un fix falla 2 veces: STOP, save context, request reset.
+Trivial tasks (typo, 1-line fix): execute inline. Paralelos: 4 por defecto para evitar modificar los mismos archivos. Ajuste la cantidad solo si el usuario lo solicita de forma explícita. Si un fix falla 2 veces: STOP, save context, request reset.
 
 ## SDD Flow (complex features)
 
@@ -135,14 +135,14 @@ Human gates at proposal and spec+design. Max 2 verify→apply cycles. Trivial fe
 
 Estas reglas son defensa en profundidad. Hay hooks que las ENFORCEAN, pero la responsabilidad primaria es del agente.
 
-1. **NO AI FOOTPRINT**: Nunca escribas `Co-Authored-By`, `Co-authored-by`, ni variantes en commit messages. El hook `commit-msg` bloquea el commit, el hook `pre-push` bloquea el push.
-2. **NUNCA `--no-verify`**: Si el hook bloquea algo, CORREGÍ el problema, no by-passees el hook.
-3. **NUNCA pushees auto-save commits**: El hook `pre-push` los bloquea. Si ves `auto-save:` en `git log`, squashealos con `~/.claude/scripts/squash-auto-saves.sh` ANTES de pushear.
-4. **Siempre trabajá en branch**: Nunca commits directo a `main`/`master`. Usá feature branches.
-5. **Revisá `git log` antes de pushear**: `git log origin/main..HEAD --oneline`. Si algo no es profesional, arreglalo.
+1. **NO AI FOOTPRINT**: Nunca escriba `Co-Authored-By`, `Co-authored-by`, ni variantes en commit messages. El hook `commit-msg` bloquea el commit, el hook `pre-push` bloquea el push.
+2. **NUNCA `--no-verify`**: Si el hook bloquea algo, corrija el problema, no omita el hook.
+3. **NUNCA incluya auto-save commits en el push**: El hook `pre-push` los bloquea. Si ve `auto-save:` en `git log`, comprimalos con `~/.claude/scripts/squash-auto-saves.sh` ANTES de pushear.
+4. **Trabaje siempre en branch**: Nunca commits directo a `main`/`master`. Utilice feature branches.
+5. **Revise `git log` antes de pushear**: `git log origin/main..HEAD --oneline`. Si algo no es profesional, corrijalo.
 6. **Commits atómicos y descriptivos**: Cada commit debe tener un propósito claro. Conventional Commits obligatorio.
-7. **Sin archivos temporales**: No commitees `.DS_Store`, `Thumbs.db`, `.tmp`, archivos de backup, o artefactos de build.
-8. **Push con conciencia**: Sabé EXACTAMENTE qué commits estás pusheando. Si hay duda, `git log --oneline -10` primero.
+7. **Sin archivos temporales**: No incluya `.DS_Store`, `Thumbs.db`, `.tmp`, archivos de backup, o artefactos de build.
+8. **Push con conciencia**: Sepa EXACTAMENTE qué commits está incluyendo en el push. Si hay duda, `git log --oneline -10` primero.
 
 ## Hard Rules
 

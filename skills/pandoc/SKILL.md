@@ -9,8 +9,8 @@ Pandoc converts between markup formats. Source format inferred from input extens
 
 - Conversion rapida libre entre Markdown, DOCX, PDF, HTML, EPUB, LaTeX y PPTX.
 - Documentos generales sin plantilla institucional estricta.
-- Si es entrega INACAP estricta, usa la skill `inacap` en vez de `pandoc`.
-- Usa `pandoc` solo como motor de conversion con `--reference-doc` INACAP.
+- Si es entrega INACAP estricta, utilice la skill `inacap` en lugar de `pandoc`.
+- Utilice `pandoc` solo como motor de conversión con `--reference-doc` INACAP.
 - Esta regla evita rechazos por formato en la U.
 
 ## Common Operations
@@ -43,8 +43,9 @@ pandoc -o reference.docx --print-default-data-file reference.docx
 ```
 
 ```bash
-# Ejemplo INACAP (entrega con plantilla + citas + imagenes)
-pandoc informe.md -o informe.docx --reference-doc="$HOME/.claude/skills/inacap/template.docx" --citeproc --bibliography=refs.bib --extract-media=./media
+# Ejemplo INACAP (entrega con plantilla + citas + imagenes).
+# Primero genere su plantilla una vez (linea 42) y luego reutilicela:
+pandoc informe.md -o informe.docx --reference-doc=./mi-plantilla.docx --citeproc --bibliography=refs.bib --extract-media=./media
 ```
 
 > Windows: `choco install pandoc` o `winget install JohnMacFarlane.Pandoc`.

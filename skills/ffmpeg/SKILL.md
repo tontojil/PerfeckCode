@@ -1,6 +1,6 @@
 ---
 name: ffmpeg
-description: Comandos FFmpeg para convertir, comprimir, cortar, unir video y audio, filtros, subtitulos y proceso en lote. Usalo cuando trabajai video o audio por consola. (FFmpeg, video conversion, compression, trimming)
+description: Comandos FFmpeg para convertir, comprimir, cortar, unir video y audio, filtros, subtítulos y proceso en lote. Úsela cuando trabaje con video o audio por consola. (FFmpeg, video conversion, compression, trimming)
 ---
 
 ## Common Operations

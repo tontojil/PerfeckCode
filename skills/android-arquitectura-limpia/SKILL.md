@@ -1,6 +1,6 @@
 ---
 name: android-arquitectura-limpia
-description: Arquitectura limpia en Android con MVVM, casos de uso, repositorios, inyeccion con Hilt y modulos por capas. Usalo cuando armai una app Android ordenada. (Android Clean Architecture, MVVM, repository, Hilt)
+description: Arquitectura limpia en Android con MVVM, casos de uso, repositorios, inyección con Hilt y módulos por capas. Úsela cuando construya una app Android ordenada. (Android Clean Architecture, MVVM, repository, Hilt)
 ---
 
 ## Module Structure

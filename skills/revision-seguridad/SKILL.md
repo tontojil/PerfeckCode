@@ -43,7 +43,7 @@ Security review focused on pending changes. Systematic audit, not theoretical.
 
 ## Output
 
-Emit at completion con formato accionable (mismo que `revision-codigo`):
+Emite al completar con formato accionable (mismo que `revision-codigo`):
 
 ```
 ## Security Review: [branch/PR]
@@ -62,7 +62,7 @@ Emit at completion con formato accionable (mismo que `revision-codigo`):
 ```
 
 Reglas de score:
-- Parte de 100. Critical -25 c/u, High -10 c/u, Medium -3 c/u. Minimo 0.
+- Parte de 100. Critical -25 c/u, High -10 c/u, Medium -3 c/u. Mínimo 0.
 - 90-100: ship. 70-89: fix High antes de merge. <70: bloquea deploy.
 - Si no hay diff (solo pregunta), marca `N/A - sin diff` y no inventes score.
 

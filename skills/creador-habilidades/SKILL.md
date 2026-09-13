@@ -10,10 +10,10 @@ allowed-tools: Read, Edit, Write, Glob, Grep, Bash, WebFetch, WebSearch, Task
 ## Cuando usar
 
 Usa esta skill cuando quieras crear una skill nueva y reutilizable.
-- Cuando un patron se repite y la IA necesita guia paso a paso.
+- Cuando un patrón se repite y la IA necesita guía paso a paso.
 - Cuando las convenciones del proyecto piden instrucciones propias.
 - Cuando un flujo complejo se beneficia de un checklist o decision tree.
-No la uses para tareas de una sola vez (one-off); resolvelas directo sin crear skill.
+No la uses para tareas de una sola vez (one-off); resuélvelas directo sin crear skill.
 
 ## When to Create a Skill
 
@@ -166,10 +166,10 @@ corresponda) y actualiza el contador de Total skills:
 
 No entregues una skill sin probarla. Loop chico y efectivo:
 
-1. Escribe 2-3 prompts de prueba realistas (lo que un usuario diria de verdad,
+1. Escribe 2-3 prompts de prueba realistas (lo que un usuario diría de verdad,
    con detalle y contexto, no "formatea esto").
 2. Corre cada prompt DOS veces: una CON la skill cargada y una SIN ella
-   (baseline). Compara: la version con skill tiene que ganar claramente.
+   (baseline). Compara: la versión con skill tiene que ganar claramente.
 3. Muestrale ambos resultados al usuario y pide feedback concreto.
 4. Mejora la skill desde el feedback (generaliza, no parchees solo el ejemplo),
    saca lo que no aporta peso y explica el POR QUE de cada regla en vez de

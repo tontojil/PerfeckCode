@@ -1,6 +1,6 @@
 ---
 name: constructor-mcp
-description: Crea servidores MCP en Python o TypeScript para conectar al agente con APIs externas. Usalo cuando necesites herramientas nuevas. (MCP, server, tools)
+description: "Crea servidores MCP en Python o TypeScript para conectar al agente con APIs externas. Úsalo cuando necesites herramientas nuevas. (MCP, server, tools)"
 license: Complete terms in LICENSE.txt
 ---
 
@@ -8,7 +8,7 @@ license: Complete terms in LICENSE.txt
 
 ## Cuando usar
 
-Usalo cuando necesites conectar al agente con una API o servicio externo
+Úsalo cuando necesites conectar al agente con una API o servicio externo
 creando un servidor MCP, en Python (FastMCP) o Node/TypeScript (MCP SDK).
 Detalle de referencia en `reference/` y scripts listos en `scripts/`.
 La calidad del servidor se mide por que tan bien deja al agente hacer

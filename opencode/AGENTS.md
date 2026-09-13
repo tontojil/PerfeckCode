@@ -52,7 +52,7 @@ Utilice el subagente con @ según corresponda (están en
 
 Cargue skills con la herramienta skill cuando la tarea calce. Viven en
 `~/.claude/skills/<nombre>/SKILL.md` (53, descripciones en español).
-Claves para la U: `inacap` (DOCX formato INACAP), `pptx`, `xlsx`,
+Claves para trabajos académicos: `inacap` (DOCX formato INACAP), `pptx`, `xlsx`,
 `pandoc`, `pdf`, `depuracion-sistematica`, `verificacion-final`.
 Web: `diseno-frontend` + `buen-gusto-diseno`.
-Si el profe contradice a la skill, manda el profe.
+En caso de conflicto, prevalece la indicación del docente.

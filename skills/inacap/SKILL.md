@@ -1,6 +1,6 @@
 ---
 name: inacap
-description: Generar documentos academicos formato INACAP en DOCX, informes, evaluaciones, portada y trabajos universitarios. (DOCX, academic, document, python-docx)
+description: Generar documentos académicos formato INACAP en DOCX, informes, evaluaciones, portada y trabajos universitarios. (DOCX, academic, document, python-docx)
 ---
 
 # INACAP Academic Document Generator — v4
@@ -336,7 +336,7 @@ Default: APA 7ma Edicion. Si el profesor pide otra cosa, seguir al profesor.
 
 ### Contexto
 
-Los detectores de IA (ZeroGPT, GPTZero, Turnitin) tienen **tasas de falsos positivos de 16-20%** en textos academicos en español (PeerJ Computer Science, 2025). El texto academico formal en tercera persona — exactamente lo que INACAP exige — es particularmente propenso a ser mal clasificado porque comparte patrones estadisticos con texto generado por IA: perplejidad baja, estructura predecible, vocabulario formal uniforme.
+Los detectores de IA (ZeroGPT, GPTZero, Turnitin) tienen **tasas de falsos positivos de 16-20%** en textos académicos en español (PeerJ Computer Science, 2025). El texto académico formal en tercera persona — exactamente lo que INACAP exige — es particularmente propenso a ser mal clasificado porque comparte patrones estadísticos con texto generado por IA: perplejidad baja, estructura predecible, vocabulario formal uniforme.
 
 **La skill NO genera contenido — solo formatea.** Si el contenido lo escribis vos, no deberia haber problema. Pero ciertas practicas de redaccion reducen naturalmente el riesgo de falsos positivos sin comprometer la calidad academica.
 

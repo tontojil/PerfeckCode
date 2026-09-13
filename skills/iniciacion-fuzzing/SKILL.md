@@ -1,8 +1,8 @@
 ---
 name: iniciacion-fuzzing
 description: >
-  Metodologia de fuzzing para pillar vulnerabilidades con AFL++, libFuzzer, ffuf avanzado,
-  mutacion de parametros y fuzzing de protocolos. Usalo cuando busquai fallas que el scanner no ve.
+  Metodología de fuzzing para pillar vulnerabilidades con AFL++, libFuzzer, ffuf avanzado,
+  mutación de parámetros y fuzzing de protocolos. Úsalo cuando busques fallas que el scanner no ve.
   (fuzzing, AFL++, ffuf, input mutation, coverage-guided)
 ---
 
@@ -219,7 +219,7 @@ afl-tmin -i crashing_input -o minimized_input -- ./target @@
 gdb ./target -ex "run < minimized_input" -ex "bt" -ex "info registers"
 ```
 
-## Integration with Vulnerability Hunter
+## Integración con `cazador-vulnerabilidades`
 
 - Phase 2.5 of core loop: after Scan, before Exploit.
 - Use advanced ffuf for each endpoint with parameters.

@@ -1,16 +1,27 @@
 #!/usr/bin/env bash
 # Instalador PerfeckCode (macOS/Linux). Respalda lo existente y copia la config.
 set -euo pipefail
-REPO="$(cd "$(dirname "$0")" && pwd)"
-STAMP="$(date +%Y%m%d-%H%M%S)"
+SRC="${BASH_SOURCE[0]:-$0}"
+REPO="$(cd "$(dirname "$SRC")" && pwd)"
+STAMP="$(date +%Y%m%d-%H%M%S 2>/dev/null || echo nodate)-$$"
 
 instalar_dir() {
-  if [ -e "$2" ]; then
-    mv "$2" "$2.backup-$STAMP"
-    echo "Respaldo: $2.backup-$STAMP"
+  if [ ! -e "$1" ]; then
+    echo "ERROR: origen no existe: $1" >&2
+    return 1
+  fi
+  if [ -e "$2" ] || [ -L "$2" ]; then
+    local BK="$2.backup-$STAMP"
+    local i=1
+    while [ -e "$BK" ] || [ -L "$BK" ]; do
+      BK="$2.backup-$STAMP-$i"
+      i=$((i + 1))
+    done
+    mv "$2" "$BK"
+    echo "Respaldo: $BK"
   fi
   mkdir -p "$(dirname "$2")"
-  cp -r "$1" "$2"
+  cp -Rp "$1" "$2"
   echo "Instalado: $2"
 }
 

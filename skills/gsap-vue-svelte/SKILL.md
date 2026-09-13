@@ -20,7 +20,7 @@ Apply when writing or reviewing GSAP code in Vue (or Nuxt), Svelte (or SvelteKit
 
 ## Vue 3 (Composition API)
 
-See `examples/vue/` for a runnable Vite + Vue 3 project demonstrating these patterns.
+Minimal runnable pattern below (Vite + Vue 3, no extra project needed).
 
 Use **onMounted** to run GSAP after the component is in the DOM. Use **onUnmounted** to clean up.
 
@@ -91,7 +91,7 @@ onUnmounted(() => {
 
 ## Nuxt 4
 
-> See `examples/nuxt/` for a runnable Nuxt 4 project with plugin registration, lazy loading, and SSR-safe patterns.
+> Reusable composable below (Nuxt 4 plugin registration, lazy loading, SSR-safe).
 
 Use a **reusable composable** to register GSAP Plugins and also to lazy load Plugins that are not extensively used in your application:
 
@@ -126,8 +126,6 @@ const PLUGINS = [
   "SplitText",
   "TextPlugin",
 ] as const;
-
-type Plugins = (typeof PLUGINS)[number];
 
 // In order to dynamically load all the GSAP plugins
 const pluginMap = {

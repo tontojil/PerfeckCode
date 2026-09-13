@@ -1,13 +1,13 @@
 ---
 name: diseno-api
-description: Disena APIs REST con codigos de estado correctos, paginacion, errores, versionado y HATEOAS. Usalo cuando creai endpoints, revisai una API o refactorizai rutas. (RESTful APIs, pagination, versioning, HATEOAS)
+description: Diseña APIs REST con códigos de estado correctos, paginación, errores, versionado y HATEOAS. Usalo cuando creai endpoints, revisai una API o refactorizai rutas. (RESTful APIs, pagination, versioning, HATEOAS)
 ---
 
 # API Design
 
 RESTful API design focused on consistency, scalability, and developer experience.
 
-## When to Use
+## Cuando usar
 
 - Creating new endpoints or resources.
 - Reviewing existing API design.
@@ -92,7 +92,7 @@ Error:
 
 ### Filtering, Sorting, Search
 
-```
+```http
 GET /users?status=active&role=admin     → exact filters
 GET /users?q=juan                        → text search
 GET /users?sort=-created_at,name         → sorting (- for desc)
@@ -102,7 +102,7 @@ GET /users?include=orders,profile        → related resources
 ### Rate Limiting
 
 Mandatory headers on every response:
-```
+```http
 X-RateLimit-Limit: 1000
 X-RateLimit-Remaining: 987
 X-RateLimit-Reset: 1623456789

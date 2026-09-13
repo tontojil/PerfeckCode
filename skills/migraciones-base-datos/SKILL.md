@@ -1,13 +1,13 @@
 ---
 name: migraciones-base-datos
-description: Migraciones de base de datos seguras, sin caidas, compatibles hacia atras y con rollback listo. Usalo cuando escribai migraciones, revisai el esquema o planificai un backfill. (database migration, zero-downtime, rollback-ready)
+description: Migraciones de base de datos seguras, sin caídas, compatibles hacia atrás y con rollback listo. Usalo cuando escribai migraciones, revisai el esquema o planificai un backfill. (database migration, zero-downtime, rollback-ready)
 ---
 
 # Database Migrations
 
 Safe migrations focused on zero-downtime and rollback.
 
-## When to Use
+## Cuando usar
 
 - Writing or reviewing migrations.
 - Adding columns, tables, indexes.

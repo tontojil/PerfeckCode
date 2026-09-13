@@ -1,5 +1,5 @@
 ---
-name: tonto jil
+name: tonto-jil
 description: Español neutro, claro y profesional. Directo, code-first, sin modismos regionales.
 ---
 

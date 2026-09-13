@@ -1,13 +1,13 @@
 ---
 name: patrones-despliegue
-description: Pipelines CI/CD, optimizacion Docker, health checks, rollback y deploy automatico. Usalo cuando configurai deploys, escribai Dockerfiles o armai CI/CD. (CI/CD pipelines, Docker, rollback)
+description: Pipelines CI/CD, optimización Docker, health checks, rollback y deploy automático. Usalo cuando configurai deploys, escribai Dockerfiles o armai CI/CD. (CI/CD pipelines, Docker, rollback)
 ---
 
 # Deployment Patterns
 
 Deploy, CI/CD, and container patterns focused on zero-downtime and reliability.
 
-## When to Use
+## Cuando usar
 
 - Configuring CI/CD pipeline.
 - Writing or reviewing Dockerfile/docker-compose.yml.
@@ -19,7 +19,7 @@ Deploy, CI/CD, and container patterns focused on zero-downtime and reliability.
 ### Dockerfile
 
 Dockerfile canonico: ver skill `experto-docker`.
-Aca solo estrategia: rolling / blue-green / canary, `maxUnavailable`, rollback.
+Acá solo estrategia: rolling / blue-green / canary, `maxUnavailable`, rollback.
 
 ### Docker Compose
 

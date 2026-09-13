@@ -1,6 +1,6 @@
 ---
 name: buscar-habilidades
-description: Te ayuda a encontrar e instalar skills nuevos cuando preguntai como hacer algo o si existe un skill para eso. Usalo cuando quierai ampliar lo que el agente sabe hacer. (find skills, discover, install)
+description: Te ayuda a encontrar e instalar skills nuevos cuando preguntas cómo hacer algo o si existe un skill para eso. Úsalo cuando quieras ampliar lo que el agente sabe hacer. (find skills, discover, install)
 ---
 
 # Find Skills
@@ -98,10 +98,10 @@ npx skills add <owner/repo@skill> -g -y
 
 The `-g` flag installs globally (user-level) and `-y` skips confirmation prompts.
 
-### Fijar version al instalar
+### Fijar versión al instalar
 
-Al instalar skills de terceros, fija version con `@v1` o commit SHA (ej: `npx skills add owner/repo@skill@v1`).
-Asi evitas cambios rotos por updates automaticos. Revisa updates con `npx skills check` antes de subir version.
+Al instalar skills de terceros, fija versión con `@v1` o commit SHA (ej: `npx skills add owner/repo@skill@v1`).
+Así evitas cambios rotos por updates automáticos. Revisa updates con `npx skills check` antes de subir versión.
 
 ## Common Skill Categories
 

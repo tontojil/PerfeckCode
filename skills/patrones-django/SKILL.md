@@ -1,12 +1,12 @@
 ---
 name: patrones-django
-description: Patrones Django y DRF, optimizacion ORM, viewsets, serializers, cache, signals, middleware y testing. Usalo cuando trabajai con Django. (Django, DRF, ORM, serializers)
+description: Patrones Django y DRF, optimización ORM, viewsets, serializers, cache, signals, middleware y testing. Usalo cuando trabajai con Django. (Django, DRF, ORM, serializers)
 ---
 
 ## Cuando usar
 
 Usa esta skill cuando trabajai con Django o DRF (modelos, ORM, viewsets, serializers).
-Cubre optimizacion ORM, cache, signals, middleware, paginacion y testing con pytest-django.
+Cubre optimización ORM, cache, signals, middleware, paginación y testing con pytest-django.
 No uses esta skill fuera del stack Django (para Flask/FastAPI u otro backend usa su skill).
 No cambies recetas existentes; solo aplica los patrones tal cual.
 

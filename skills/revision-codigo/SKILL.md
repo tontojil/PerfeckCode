@@ -1,6 +1,6 @@
 ---
 name: revision-codigo
-description: Revisa tu codigo en pasadas, que funcione, seguridad, rapidez y orden. Usalo antes de mergear un PR, despues de terminar algo o cuando pidai review. (code review, correctness, security, performance)
+description: "Revisa tu código en pasadas, que funcione, seguridad, rapidez y orden. Úsalo antes de mergear un PR, después de terminar algo o cuando pidas review. (code review, correctness, security, performance)"
 ---
 
 # Code Review
@@ -70,6 +70,6 @@ Don't emit praise. Don't comment on formatting if the linter covers it. Only act
 
 ## Reglas duras
 
-- No PII ni secretos en logs o respuestas; si lo hai, propone IDs redactados.
+- No PII ni secretos en logs o respuestas; si lo hay, propone IDs redactados.
 - No rompas contrato API/evento existente; propone cambio aditivo y compatible.
 - Nunca apruebes ni mergees automaticamente; el humano decide.

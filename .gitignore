@@ -1,12 +1,38 @@
 # PerfeckCode: nunca commitear secretos ni bloat
+# Configuracion local con claves (solo va settings.template.json)
 settings.json
+**/settings.json
 **/.env
 **/.env.*
 **/secrets/
 **/credentials.json
+**/*.pem
+**/*.key
+**/*.p12
+**/*.pfx
+**/id_rsa*
+**/id_ed25519*
+
+# Dependencias y build
 node_modules/
 __pycache__/
+*.pyc
+.venv/
+venv/
+dist/
+build/
+coverage/
+.npm/
+
+# Logs y temporales
 *.log
+*.tmp
+*.bak
+*~
+*.backup-*
+
+# Sistema e IDE
 .DS_Store
 Thumbs.db
-*.backup-*
+.vscode/
+.idea/

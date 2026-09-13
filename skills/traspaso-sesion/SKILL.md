@@ -1,6 +1,6 @@
 ---
 name: traspaso-sesion
-description: Generar archivo HANDOFF.md con estado del proyecto para traspaso limpio entre sesiones, ideal antes de hacer clear o si la sesion se alarga. (HANDOFF, session, context, handover)
+description: Generar archivo HANDOFF.md con estado del proyecto para traspaso limpio entre sesiones, ideal antes de hacer clear o si la sesión se alarga. (HANDOFF, session, context, handover)
 ---
 
 # Handoff — Traspaso limpio entre sesiones
@@ -25,7 +25,7 @@ Generar el archivo con ESTE formato exacto:
 [Qué estamos tratando de lograr. Una frase clara. Sin ambigüedad.]
 
 ## Estado Actual
-[Dónde estamos. Qué funciona. Qué NO funciona. Sé honesto — esto es lo mas importante.]
+[Dónde estamos. Qué funciona. Qué NO funciona. Sé honesto — esto es lo más importante.]
 
 ## Archivos Clave
 - `ruta/absoluta/archivo.ts` — qué es y por qué importa
@@ -58,5 +58,5 @@ Generar el archivo con ESTE formato exacto:
 
 ## Post-generación
 
-1. Decir explícitamente: "HANDOFF.md creado. Cerrá esta sesión y abrí una nueva. Leerá el handoff automáticamente."
+1. Decir explícitamente: "HANDOFF.md creado. Cierra esta sesión y abre una nueva. Leerá el handoff automáticamente."
 2. No seguir trabajando después de generar el handoff. El punto es CERRAR la sesión.

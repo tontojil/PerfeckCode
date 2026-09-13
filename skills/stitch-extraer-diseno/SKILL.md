@@ -317,8 +317,8 @@ Use the format from the example at [examples/DESIGN.md](examples/DESIGN.md) as y
 
 If the user wants to push the design system into Stitch:
 
-1. Hand off to the `manage-design-system` skill for the MCP create/update calls
-2. The DESIGN.md you wrote is the input — the manage-design-system skill handles
+1. Hand off to the `stitch-sistema-diseno` skill for the MCP create/update calls
+2. The DESIGN.md you wrote is the input — the stitch-sistema-diseno skill handles
    the Stitch API integration
 
 If the user just wants the document, you're done after Phase 3.

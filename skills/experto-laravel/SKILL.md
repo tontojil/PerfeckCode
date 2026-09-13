@@ -5,11 +5,11 @@ description: Patrones Laravel 11 con Eloquent, auth Sanctum, API resources, cola
 
 ## Cuando usar
 
-Usa esta skill en proyectos Laravel 11 con Eloquent, Sanctum o colas (nota: cubre 11, valido para 12).
+Usa esta skill en proyectos Laravel 11 con Eloquent, Sanctum o colas (nota: cubre 11, válido para 12).
 - Cuando armes modelos Eloquent, Resources API o Form Requests.
 - Cuando implementes auth con Sanctum, colas Horizon o eventos.
 - Cuando escribas tests con Pest en Laravel.
-No la uses para otro backend (Node, Django, etc.); anda a `arquitecto-backend` en vez.
+No la uses para otro backend (Node, Django, etc.); anda a `diseno-api` o a la skill del stack correspondiente (`patrones-django`, `experto-go`, `patrones-backend-dotnet`) en vez.
 
 ## Project Structure
 

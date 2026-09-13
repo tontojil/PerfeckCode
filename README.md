@@ -1,27 +1,91 @@
 # PerfeckCode
 
+Configuracion para opencode y Claude Code: agentes especialistas, skills por tarea y reglas de verificacion, con respuestas en español neutro.
+
+## Tabla de contenido
+
+- [Qué es](#qué-es)
+- [Por qué existe](#por-qué-existe)
+- [Demo de uso](#demo-de-uso)
+- [Qué incluye](#qué-incluye)
+- [Instalación](#instalación)
+  - [Requisitos](#requisitos)
+  - [Windows (PowerShell)](#windows-powershell)
+  - [macOS / Linux (Bash)](#macos--linux-bash)
+  - [Después de instalar](#después-de-instalar)
+  - [Solución de problemas](#solución-de-problemas)
+- [Estructura del repositorio](#estructura-del-repositorio)
+- [Seguridad](#seguridad)
+- [FAQ](#faq)
+- [Licencia](#licencia)
+
 ## Qué es
 
-PerfeckCode convierte su asistente de programación (opencode o Claude Code) en un equipo de trabajo completo: en vez de un chat que olvida todo a cada rato, usted obtiene 23 especialistas a los que puede llamar por nombre, 53 habilidades que se activan solas según la tarea, y un estilo de respuesta directo y profesional en español neutro.
+PerfeckCode convierte su asistente de programacion (opencode o Claude Code) en un equipo de trabajo definido: en lugar de un chat que parte de cero en cada sesion, usted obtiene especialistas a los que llama por nombre, habilidades que se activan segun la tarea y reglas que exigen evidencia antes de declarar algo como terminado.
 
-Pida algo en palabras normales ("revísame la seguridad de este login", "hazme el informe INACAP", "arregla este error") y el sistema deriva al especialista que corresponde, con sus reglas y herramientas ya cargadas. Usted revisa el resultado, no el proceso.
+Usted describe el objetivo en lenguaje normal y el sistema deriva al especialista que corresponde, con sus reglas y herramientas ya cargadas. Usted revisa el resultado, no el proceso.
 
 ## Por qué existe
 
-Los asistentes de IA parten de cero en cada conversación: olvidan sus decisiones, no siguen las convenciones de su proyecto y hay que explicarles todo dos veces. PerfeckCode les da memoria de trabajo (skills), oficios definidos (agentes) y disciplina (verificar antes de decir "listo", commits prolijos, jamás secretos en el código). Menos repetición, menos errores tontos, menos tokens gastados.
+Los asistentes de IA olvidan decisiones entre sesiones, no siguen las convenciones del proyecto y obligan a repetir contexto. PerfeckCode aporta tres elementos:
+
+- Memoria de trabajo: 53 skills con criterios por area (backend, frontend, movil, documentos, DevOps, testing, seguridad).
+- Oficios definidos: 23 agentes en opencode (22 especialistas mas el agente primario `tonto-jil`) y 22 agentes en Claude Code, cada uno con ambito y formato de salida propios.
+- Disciplina: verificar con comandos recien ejecutados antes de decir "listo", commits atómicos con Conventional Commits y prohibicion de secretos en el codigo.
+
+El resultado es menos repeticion, menos errores evitables y menos tokens gastados.
+
+## Demo de uso
+
+Ejemplo real con el depurador. Usted escribe:
+
+```text
+@depurador La API responde 500 en /api/login con un usuario valido
+```
+
+El agente `depurador` captura el error, reproduce el caso, aisla la causa raiz y propone el cambio minimo. Respuesta esperada (formato resumido):
+
+```text
+## Root Cause
+La migracion agrego la columna email sin valor por defecto y las filas existentes quedaron en NULL.
+
+## Evidence
+- File:line donde se origina el fallo: src/auth/login.ts:42
+- Estado que provoca el fallo: user.email es null
+- Por que funcionaba antes: la columna no existia y el codigo no la leia
+
+## Reproduction
+curl -X POST http://localhost:3000/api/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"test@test.com","password":"test"}'
+
+## Fix
+old_string: WHERE id = ? (sin control de NULL)
+new_string: control explicito de NULL mas backfill de la columna
+
+## Regression Test
+Test que falla sin el fix y pasa con el: login con fila anterior a la migracion.
+
+## Prevention
+Verificacion previa de migracion y consistencia de datos antes del despliegue.
+```
+
+El detalle del flujo (capturar, reproducir, aislar, probar, corregir) esta definido en `claude-agents/depurador.md` y `opencode/agents/depurador.md`.
 
 ## Qué incluye
 
 | Parte | Contenido |
 |---|---|
-| 23 subagentes (`@nombre`) | Depurador, revisor de código, auditor de seguridad, arquitecto backend, diseñador UI, redactor técnico (INACAP/PPTX/XLSX) y más |
-| Agente primario `tonto-jil` | El que habla con usted; se elige con Tab |
-| 53 skills | Backend, frontend, móvil, documentos universitarios, DevOps, testing, seguridad |
-| Comandos | `/verify` (evidencia antes del "listo"), `/ralph` (itera hasta terminar) |
-| Reglas | Estilo de código, flujo git, testing, seguridad, anti-filtración de secretos |
-| Estilo | Español neutro, directo, code-first |
+| 23 agentes en opencode | 22 especialistas mas el agente primario `tonto-jil` (se elige con Tab) |
+| 22 agentes en Claude Code | Mismos 22 especialistas en `claude-agents/` |
+| 53 skills | Backend, frontend, movil, documentos universitarios, DevOps, testing, seguridad |
+| Comandos en opencode | `/verify` (evidencia antes del "listo"), `/ralph` (itera hasta terminar) |
+| Comandos en Claude Code | 4 comandos en `claude-commands/` (`code-review`, `security-scan`, `plan`, `model-route`) |
+| Reglas | Estilo de codigo, flujo git, testing, seguridad y anti-filtracion de secretos en `rules/` |
+| Plantillas SDD | 7 plantillas de especificacion en `templates/` |
+| Estilo | Español neutro, directo, primero codigo |
 
-Todo configurable: cada agente y skill es un archivo Markdown que usted puede leer y ajustar.
+Cada agente y cada skill es un archivo Markdown que usted puede leer y ajustar.
 
 ## Instalación
 
@@ -29,8 +93,8 @@ Todo configurable: cada agente y skill es un archivo Markdown que usted puede le
 
 | Requisito | Windows | macOS / Linux |
 |---|---|---|
-| opencode o Claude Code | Instalado y en el PATH | Igual |
-| Node.js 18+ | `winget install OpenJS.NodeJS` | `brew install node` o su gestor |
+| opencode o Claude Code | Instalado y en el PATH | Instalado y en el PATH |
+| Node.js 18+ | `winget install OpenJS.NodeJS` | `brew install node` o su gestor de paquetes |
 | Git | `winget install Git.Git` | Preinstalado o `brew install git` |
 | PowerShell 5.1+ / Bash | Incluido en Windows | Incluido |
 
@@ -42,8 +106,7 @@ cd PerfeckCode
 powershell -ExecutionPolicy Bypass -File .\install.ps1
 ```
 
-> Si Windows bloquea el script, esa línea lo permite solo para esta
-> ejecución, sin cambiar nada permanente.
+Si Windows bloquea el script, esa linea lo permite solo para esta ejecucion, sin cambiar nada permanente.
 
 ### macOS / Linux (Bash)
 
@@ -56,39 +119,73 @@ chmod +x install.sh
 
 ### Después de instalar
 
-1. El instalador respalda su configuración previa con fecha y hora. Su
-   `settings.json` existente nunca se sobrescribe.
-2. Si es primera vez, complete sus claves de proveedor en
-   `~/.claude/settings.json` guiándose por `settings.template.json`.
+1. El instalador respalda su configuracion previa con fecha y hora. Su `settings.json` existente nunca se sobrescribe.
+2. Si es primera vez, complete sus claves de proveedor en `~/.claude/settings.json` guiandose por `settings.template.json`.
 3. Reinicie opencode o Claude Code.
 4. Pruebe con `@depurador hola` (debe responder el depurador).
 5. Con Tab cambie al agente `tonto-jil`.
 
 ### Solución de problemas
 
-- **"no se reconoce @depurador"**: no reinició la app después de instalar. Ciérrela y ábrala de nuevo.
-- **Windows bloquea `install.ps1`**: use la línea con `-ExecutionPolicy Bypass` tal cual.
-- **`./install.sh: permiso denegado`**: corra `chmod +x install.sh` primero.
-- **Quiere volver atrás**: borre las carpetas instaladas y renombre los respaldos `.backup-<fecha>` quitándoles el sufijo.
+- **No se reconoce `@depurador`**: no reinicio la aplicacion despues de instalar. Cierrela y abrala de nuevo.
+- **Windows bloquea `install.ps1`**: use la linea con `-ExecutionPolicy Bypass` tal cual.
+- **`./install.sh: permiso denegado`**: ejecute `chmod +x install.sh` primero.
+- **Quiere volver atras**: elimine las carpetas instaladas y renombre los respaldos `.backup-<fecha>` quitandoles el sufijo.
 
 ## Estructura del repositorio
 
-```
+```text
 PerfeckCode/
-├── opencode/          # agentes, comandos, AGENTS.md global, opencode.jsonc
-├── claude-agents/     # 22 agentes para Claude Code
-├── skills/            # 53 skills con SKILL.md
-├── output-styles/     # estilo tonto-jil
-├── rules/             # reglas de codigo, git, testing, seguridad
-├── templates/         # plantillas de especificacion (SDD)
-├── claude-commands/   # comandos para Claude Code
-├── hooks/ scripts/    # hooks y utilidades
-├── skill-registry.md  # indice de skills
+├── opencode/               # 23 agentes, 2 comandos, AGENTS.md global, opencode.jsonc
+├── claude-agents/          # 22 agentes para Claude Code
+├── claude-commands/        # 4 comandos para Claude Code
+├── skills/                 # 53 skills, cada una con SKILL.md
+├── output-styles/          # estilo tonto-jil
+├── rules/                  # 5 reglas en common/ mas npm-security.md
+├── templates/              # 7 plantillas de especificacion (SDD)
+├── hooks/                  # 6 hooks (incluye secret-detect)
+├── scripts/                # utilidades (squash-auto-saves)
+├── skill-registry.md       # indice de las 53 skills
 ├── settings.template.json  # plantilla SIN claves
-├── install.ps1 / install.sh
-└── LICENSE (MIT)
+├── security_rules.md       # protocolos de seguridad y operacion
+├── CLAUDE.md               # instrucciones globales
+├── install.ps1             # instalador Windows
+├── install.sh              # instalador macOS/Linux
+└── LICENSE                 # MIT
 ```
+
+Conteos verificados en esta revision: 23 archivos en `opencode/agents`, 22 en `claude-agents`, 53 directorios en `skills`, 2 comandos en `opencode/commands`, 4 en `claude-commands`.
 
 ## Seguridad
 
-Este repositorio **no contiene claves, tokens ni datos personales**. Solo va `settings.template.json` con espacios vacíos. Si encuentra un secreto por accidente, repórtelo por favor.
+Este repositorio no contiene claves, tokens ni datos personales. Solo se publica `settings.template.json` con valores de ejemplo.
+
+Medidas aplicadas:
+
+- `settings.json`, `.env` y `secrets/` estan en `.gitignore` y no se commitean.
+- `settings.template.json` define permisos por defecto: niega lectura de `.env` y `secrets/`, y pide confirmacion para `npm install` y `git push`.
+- El hook `hooks/secret-detect.sh` detecta claves privadas y tokens antes de commitear.
+- `npm install` y `npm i` requieren confirmacion explicita. Se prefiere `npm ci`.
+- Si encuentra un secreto por accidente, reportelo para revocarlo y purgarlo del historial.
+
+## FAQ
+
+**1. ¿Pierdo mi configuracion actual al instalar?**
+
+No. Ambos instaladores respaldan cada carpeta existente como `.backup-<fecha>` y nunca sobrescriben su `settings.json`. Si es primera vez, se crea uno desde `settings.template.json` para que complete sus claves.
+
+**2. ¿Funciona igual en opencode y en Claude Code?**
+
+Si, con la misma base. opencode usa 23 agentes (incluye el primario `tonto-jil`) y 2 comandos; Claude Code usa 22 agentes y 4 comandos. Las 53 skills y las reglas son compartidas.
+
+**3. ¿Por que `@depurador` no responde despues de instalar?**
+
+En la mayoria de los casos falta reiniciar la aplicacion. Cierre opencode o Claude Code por completo, abralo de nuevo y pruebe `@depurador hola`. En opencode, use Tab para cambiar al agente `tonto-jil` si desea el trato general.
+
+**4. ¿Como actualizo o revierto?**
+
+Para actualizar, repita el `git clone` o `git pull` y ejecute el instalador de su sistema; lo anterior queda respaldado. Para revertir, elimine las carpetas instaladas y renombre los respaldos `.backup-<fecha>` quitandoles el sufijo.
+
+## Licencia
+
+MIT. Ver `LICENSE`.

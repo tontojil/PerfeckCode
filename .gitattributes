@@ -1,5 +1,18 @@
-# Normalizar fines de linea
+# Normalizar fines de linea a LF en el repositorio
 * text=auto
+
+# Scripts: LF para Bash, CRLF para PowerShell
+*.sh text eol=lf
+*.ps1 text eol=crlf
+
+# Binarios de documentos y medios
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.pdf binary
+*.xlsx binary
+*.xlsm binary
+*.pptx binary
 
 # Lo copiado de terceros no cuenta como lenguaje del repo
 skills/api-claude/** linguist-vendored=true

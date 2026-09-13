@@ -120,7 +120,7 @@ gsap.from(split.chars, { opacity: 0, y: 20, stagger: 0.03, duration: 0.4 });
 
 ## Otros plugins — overview
 
-Un linner por plugin. Ver `references/plugins.md` para config completa, tablas y ejemplos.
+Un one-liner por plugin. Ver `references/plugins.md` para config completa, tablas y ejemplos.
 
 - **ScrollToPlugin:** anima scroll sin ScrollTrigger. Ej: `gsap.to(window, { scrollTo: { y: "#section", offsetY: 50 } })`. Ver `references/plugins.md#scrolltoplugin`.
 - **ScrollSmoother:** smooth scroll con wrapper. Requiere ScrollTrigger y DOM `#smooth-wrapper` + `#smooth-content`.
