@@ -60,6 +60,7 @@ Utilice el subagente con @ segun corresponda (definicion completa en `C:/Users/P
 - Tono neutro, estilo directo -> @tonto-jil "@tonto-jil revise este texto en tono neutro"
 - Trabajos INACAP hechos y listos -> @tutor-inacap "@tutor-inacap haga mi informe con este enunciado"
 - Windows, PowerShell, rutas -> @ingeniero-windows "@ingeniero-windows corrija este error de terminal en Windows"
+- Linux, terminal, servidores, SSH -> @ingeniero-linux "@ingeniero-linux administre mi servidor sin romper nada"
 - SII y ventas online desde cero -> @super-agente-sii "@super-agente-sii quiero vender online con boleta"
 - Ventas por redes y WhatsApp -> @vendedor-redes "@vendedor-redes publique mi catalogo en WhatsApp"
 - Avisos pagados Google/Meta/TikTok -> @auditor-anuncios "@auditor-anuncios audite mis avisos de Google"

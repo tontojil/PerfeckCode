@@ -4,7 +4,7 @@ Catalogo central de skills para Claude Code. Las skills se auto-descubren desde
 `~/.claude/skills/` (cada una con su `SKILL.md`). Esta tabla es la referencia rapida:
 escanea triggers ANTES de codear y aplica la skill que calce.
 
-- **Total skills:** 71
+- **Total skills:** 73
 - **Fuente:** `~/.claude/skills/`
 - **Invocacion:** Claude carga la skill por su `name` del frontmatter cuando el contexto calza.
 - **Ultima sync:** 2026-09-13
@@ -111,6 +111,8 @@ escanea triggers ANTES de codear y aplica la skill que calce.
 | `extraccion-web-datos` | Datos publicos con respeto: robots y pausas. |
 | `nube-propia` | Self-host con Docker, HTTPS y respaldo. |
 | `anuncios-pagos` | Avisos Google/Meta/TikTok con permiso. |
+| `linux-terminal` | Terminal sin miedo: archivos, bash, systemd, SSH. |
+| `linux-servidores` | Servidor seguro: SSH, firewall, respaldo. |
 | `depuracion-sistematica` | Root-cause-first para bugs y test failures. |
 | `verificacion-final` | Gate de evidencia antes de "done"/commit/PR. |
 | `traspaso-sesion` | Estado HANDOFF.md para traspaso de sesion. |
