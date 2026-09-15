@@ -47,6 +47,7 @@ Utilice el subagente con @ segun corresponda (definicion completa en `C:/Users/P
 - CI/CD, Docker, deploy -> @ingeniero-despliegue "@ingeniero-despliegue configure el deploy en Docker"
 - Tests E2E, Playwright -> @ingeniero-calidad-qa "@ingeniero-calidad-qa cubra este flujo con Playwright"
 - Docs, informe INACAP, PPTX, XLSX -> @redactor-tecnico "@redactor-tecnico genere el informe INACAP"
+- Sistematizacion UC personas mayores, plan accion -> @trabajo-social "@trabajo-social sistematice mi practica con Jara en centro de mayores"
 - SLI/SLO, alertas, monitoreo -> @ingeniero-observabilidad "@ingeniero-observabilidad defina SLI/SLO para la API"
 - Metricas, dashboard, analisis -> @analista-datos "@analista-datos analice la caida de conversion"
 - Estrategia, vision, fundraising -> @estratega-ceo "@estratega-ceo evalue este pivot"
@@ -70,7 +71,7 @@ Utilice el subagente con @ segun corresponda (definicion completa en `C:/Users/P
 ## Skills
 
 Lea con Read C:/Users/Pablo/.claude/skills/<nombre>/SKILL.md cuando la tarea calce. Ver skill-registry.md.
-Claves para trabajos académicos: `inacap` (DOCX formato INACAP), `pptx`, `xlsx`,
+Claves para trabajos académicos: `inacap` (DOCX formato INACAP), `sistematizacion-uc` (DOCX formato UC Trabajo Social personas mayores, Jara/Martinic/Cifuentes), `pptx`, `xlsx`,
 `pandoc`, `pdf`, `depuracion-sistematica`, `verificacion-final`.
 Web: `diseno-frontend` + `buen-gusto-diseno`.
 En caso de conflicto, prevalece la indicación del docente.

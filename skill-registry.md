@@ -86,6 +86,7 @@ escanea triggers ANTES de codear y aplica la skill que calce.
 | `pptx` | Cualquier .pptx: decks, slides, presentaciones. |
 | `xlsx` | Cualquier planilla .xlsx/.xlsm/.csv/.tsv como input/output. |
 | `inacap` | DOCX academico formato INACAP (python-docx). |
+| `sistematizacion-uc` | Sistematizacion UC Trabajo Social personas mayores, plan accion, Jara/Martinic/Cifuentes, formato UC APA 7. |
 | `pdf` | Manipular PDFs: unir, dividir, OCR, tablas, formularios. |
 
 ## Core & Workflow
