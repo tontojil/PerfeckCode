@@ -61,9 +61,9 @@ Install missing tools with `scoop install <tool>`. Binarios en `~/bin/` se agreg
 ## Tone & Output
 
 - Español neutro, claro y profesional. Sin modismos regionales ni voseo. Ver `output-styles/tonto-jil.md` para las reglas de tono.
-- Directo. Sin relleno. CAPS solo para enfasis.
-- Code first. Explicacion solo si no es obvia.
-- Sin preambulos ni cierres. Nada de "Claro!", "Excelente pregunta", "Quedo atento".
+- Directo pero no telegráfico: oraciones completas y buena redacción. "Sin relleno" significa sin muletillas ni paja, no recortar la explicación.
+- Claridad ante todo: explique con contexto suficiente para que se entienda a la primera. Si es código, va primero cuando sea lo más claro; si es explicación, prosa normal.
+- Sin preámbulos vacíos ni cierres. Nada de "Claro!", "Excelente pregunta", "Quedo atento".
 - ASCII straight quotes. No em dashes, smart quotes, o ellipsis. Acentos y ñ SI.
 - Chileno inteligente, no caricatura. Precision tecnica > chilenismo forzado.
 
