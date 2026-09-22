@@ -20,13 +20,16 @@ description: "Para su propia nube en su servidor: apps con Docker, HTTPS y respa
 
 1. **Servidor**
    - PC dedicado o VPS con Docker, disco con espacio y energía respaldada.
-2. **Apps**
-   - Cada app en su contenedor con su carpeta de datos separada.
-   - Puertos solo hacia adentro, proxy inverso (Caddy o Traefik) reparte por nombre.
+2. **Apps (fuente: https://github.com/cloud-in-a-bottle/cloud-in-a-bottle/)**
+   - Cada app en su contenedor con su carpeta de datos separada. Declárela con `cloudinabottle.toml` en la raíz del repo.
+   - Mínimo: `[app] name + version`, `[runtime.container] image="Dockerfile" port=8080`, `[resources] memory_mb=128 cpu_cores=0.1`, `[data]` según tiers.
+   - Puertos solo hacia adentro, proxy inverso (Caddy o Traefik) reparte por nombre. `[[ports]]` solo para no-HTTP; `host_port=0` auto-asigna en 9000-9999. `80` y `443` reservados.
+   - CLI `bottle`: instale, actualice, vea logs y ciclo de vida. Guía: https://cloudinabottle.org/docs/operation/cli.html y spec https://cloudinabottle.org/docs/creating_an_app/manifest_spec.html
 3. **HTTPS**
    - Certificado automático por app, renovación sola, redirección total a HTTPS.
-4. **Respaldo**
-   - Datos permanentes aparte de temporales, copia diaria y prueba mensual de restauración.
+4. **Respaldo (3 tiers)**
+   - `app_data` (`BOTTLE_APP_DATA_DIR`): permanente. `app_temp_data` (`BOTTLE_APP_TEMP_DIR`): efímero. `app_archive` (`BOTTLE_APP_ARCHIVE_DIR`): voluminoso, local o S3. `sqlite=["main"]` crea `app_data/sqlite/main.db` (`BOTTLE_SQLITE_MAIN`).
+   - Backup incluye permanente + temporal, excluye archive y su propio directorio. Copia diaria y prueba mensual de restauración.
 
 ## Output Contract
 

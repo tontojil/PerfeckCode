@@ -42,7 +42,7 @@ la primera; traduzca la jerga cuando el usuario no sea técnico.
 
 ## Delegacion (@subagentes)
 
-Utilice el subagente con @ segun corresponda (definicion completa en `C:/Users/Pablo/.claude/agents/<nombre>.md`, espejo activo en `C:/Users/Pablo/.config/opencode/agents/<nombre>.md`):
+Utilice el subagente con @ segun corresponda. Los agentes son autonomos en `~/.config/opencode/agents/<nombre>.md` con espejo de proyecto en `opencode/agents/<nombre>.md`, sin dependencia de Claude:
 
 - Bug, test fallido, error raro -> @depurador "@depurador corrija este TypeError en auth.ts"
 - Revisar codigo/PR -> @revisor-codigo (solo lectura) "@revisor-codigo revise este PR"
@@ -77,9 +77,46 @@ Utilice el subagente con @ segun corresponda (definicion completa en `C:/Users/P
 - Aprender a programar gratis -> @mentor-programacion "@mentor-programacion enseñeme Python desde cero"
 - Nube propia y servidor -> @jefe-nube-propia "@jefe-nube-propia publique mi app en mi servidor"
 
+### Triggers
+
+| Trigger | Agente |
+|---|---|
+| Bug, test fallido, error raro | @depurador |
+| Revisar codigo/PR | @revisor-codigo |
+| Seguridad, auth, secretos | @auditor-seguridad |
+| Pentesting, exploits | @cazador-vulnerabilidades |
+| Feature grande, API, arquitectura | @arquitecto-backend |
+| PRD, spec, roadmap, historias | @jefe-producto |
+| UI, componente, layout | @disenador-ui-ux |
+| Implementar componente frontend | @desarrollador-frontend |
+| Lentitud, N+1, cache | @ingeniero-rendimiento |
+| CI/CD, Docker, deploy | @ingeniero-despliegue |
+| Tests E2E, Playwright | @ingeniero-calidad-qa |
+| Docs, informe INACAP, PPTX, XLSX | @redactor-tecnico |
+| Sistematizacion UC personas mayores, plan accion | @trabajo-social |
+| SLI/SLO, alertas, monitoreo | @ingeniero-observabilidad |
+| Metricas, dashboard, analisis | @analista-datos |
+| Estrategia, vision, fundraising | @estratega-ceo |
+| Finanzas, pricing, costos | @finanzas-cfo |
+| Contratos, compliance, privacidad | @legal-cumplimiento |
+| Posicionamiento, GTM, SEO | @estratega-marketing |
+| Propuesta comercial, objeciones | @representante-ventas |
+| Procesos, SOP, proveedores | @jefe-operaciones |
+| Onboarding, churn, retencion | @exito-cliente |
+| Contratacion, onboarding, clima | @recursos-humanos |
+| Tono neutro, estilo directo | @tonto-jil |
+| Trabajos INACAP hechos y listos | @tutor-inacap |
+| Windows, PowerShell, rutas | @ingeniero-windows |
+| Linux, terminal, servidores, SSH | @ingeniero-linux |
+| SII y ventas online desde cero | @super-agente-sii |
+| Ventas por redes y WhatsApp | @vendedor-redes |
+| Avisos pagados Google/Meta/TikTok | @auditor-anuncios |
+| Aprender a programar gratis | @mentor-programacion |
+| Nube propia y servidor | @jefe-nube-propia |
+
 ## Skills
 
-Lea con Read C:/Users/Pablo/.claude/skills/<nombre>/SKILL.md cuando la tarea calce. Ver skill-registry.md.
+Utilice la herramienta skill cuando la descripción calce. Las skills se descubren nativamente desde ~/.claude/skills y skills/ del proyecto. No use Read manual.
 Claves para trabajos académicos: `inacap` (DOCX formato INACAP), `sistematizacion-uc` (DOCX formato UC Trabajo Social personas mayores, Jara/Martinic/Cifuentes), `pptx`, `xlsx`,
 `pandoc`, `pdf`, `depuracion-sistematica`, `verificacion-final`.
 Web: `diseno-frontend` + `buen-gusto-diseno`.

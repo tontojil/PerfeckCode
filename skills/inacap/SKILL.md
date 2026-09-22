@@ -412,3 +412,5 @@ Esta skill es un **asistente de formato**, no un generador de contenido. La inve
     ├── inacap_logo.png       # Logo header (982×131 px)
     └── cover_banner_wide.png # Banner portada (2550×700 px)
 ```
+
+**Compatibilidad:** la ruta canónica es `~/.claude/skills/inacap` y no debe cambiarse. En OpenCode esta skill se descubre y resuelve de forma nativa, sin copiarla; el proyecto la refleja en `skills/inacap/` solo como espejo idéntico.

@@ -26,6 +26,10 @@ description: "Para PC, WiFi, impresoras y respaldo: diagnóstico y arreglo en Wi
    - Papel, encendido, cable o red, driver correcto, página de prueba.
 4. **Respaldo 3-2-1**
    - 3 copias, 2 lugares distintos, 1 fuera del local. Restaure 1 archivo al mes para probar.
+5. **Limpieza Win11Debloat (fuente: https://github.com/Raphire/Win11Debloat)**
+   - Comando rápido: `& ([scriptblock]::Create((irm "https://debloat.raphi.re/")))`
+   - Automático con seguridad: `& ([scriptblock]::Create((irm "https://debloat.raphi.re/"))) -RunDefaults -Silent -CreateRestorePoint`
+   - Checklist: punto de restauración primero, como administrador, anote cada cambio, quite solo apps que reconoce, todo reversible vía Store/wiki.
 
 ## Output Contract
 

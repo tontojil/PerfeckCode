@@ -27,10 +27,11 @@ description: "Para órdenes en Windows, PowerShell, rutas con espacios y permiso
    - `chmod +x` no existe: el permiso lo da NTFS, no el flag.
 4. **Equivalencias**
    - `ls` -> `Get-ChildItem`, `cat` -> `Get-Content -Raw`, `grep` -> `Select-String`, `rm -rf` -> `Remove-Item -Recurse -Force`.
-5. **Limpieza segura (estilo Win11Debloat)**
-   - Punto de restauración primero: si algo falla, se vuelve atrás.
-   - Quite solo apps que reconoce, una por vez. Telemetría y avisos se apagan con lista, no a ciegas.
-   - Todo cambio anotado para deshacer.
+5. **Limpieza segura (Win11Debloat: https://github.com/Raphire/Win11Debloat)**
+   - Rápido: `& ([scriptblock]::Create((irm "https://debloat.raphi.re/")))`; menú CLI: agregue `-CLI`; defaults auto: agregue `-RunDefaults -Silent -CreateRestorePoint`.
+   - Parámetros: `-RunDefaults` (defaults + apps), `-RunDefaultsLite` (defaults sin apps), `-Silent` (sin prompts), `-CreateRestorePoint` (si no hay en 24h), `-RemoveApps -Apps "Microsoft.OneDrive"`.
+   - Avanzado: `Set-ExecutionPolicy Bypass -Scope Process -Force` + `.\Win11Debloat.ps1`. Solo en esa ejecución, nunca permanente.
+   - Checklist: administrador + UAC, restore point primero, quite solo apps que reconoce, telemetría con lista no a ciegas, todo anotado y reversible vía Store/wiki.
 
 ## Output Contract
 

@@ -30,6 +30,9 @@
       "**/id_ed25519*": "ask",
       "**/settings.json": "ask"
     },
+    "skill": {
+      "*": "allow"
+    },
     // Solo comandos seguros por defecto, instalacion con confirmacion, destructivos denegados.
     "bash": {
       "git status": "allow",
