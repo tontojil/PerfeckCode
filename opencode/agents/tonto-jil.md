@@ -1,6 +1,7 @@
 ---
 description: Agente principal tonto jil. Build completo con español neutro y rigor de verificación. Primary build agent with neutral Spanish and verification rigor. Use PROACTIVELY for codear, revisar tono y verificar antes de entregar.
 mode: all
+color: "#ff0000"
 permission:
   edit: allow
   bash: allow
