@@ -35,3 +35,16 @@ description: "Para usar la terminal Linux sin miedo: archivos, permisos, bash, s
 ## Output Contract
 
 Entregue: comando corrido, salida y qué cambió. Si algo falla, el registro exacto.
+
+## Anexo - Referencias oficiales
+
+Usted consulta estas fuentes antes de afirmar sintaxis. Usted prueba en copia, no en real.
+
+| Fuente | URL | Uso |
+|---|---|---|
+| kernel.org | https://www.kernel.org/doc/html/latest/ | Syscalls, permisos, filesystems y cgroups |
+| systemd docs | https://systemd.io/ y https://www.freedesktop.org/wiki/Software/systemd/ | `systemctl`, `journalctl` y unidades |
+| Microsoft Learn WSL y OpenSSH | https://learn.microsoft.com/windows/wsl/ y https://learn.microsoft.com/windows-server/administration/openssh/openssh_overview | SSH desde Windows y llaves ed25519 |
+| awesome-linux | https://github.com/inputsh/awesome-linux | Herramientas curadas y hardening base |
+
+Usted verifica con `man <comando>` en el equipo antes de aplicar cambios.

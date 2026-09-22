@@ -189,3 +189,32 @@ no generic placeholder names, no broken image links.)
 - Being too vague in atmosphere descriptions
 - Ignoring the anti-pattern list — these are what make the output premium
 - Defaulting to generic "safe" designs instead of enforcing the curated aesthetic
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- Stitch DESIGN.md overview: https://stitch.withgoogle.com/docs/design-md/overview
+- Stitch prompting: https://stitch.withgoogle.com/docs/learn/prompting
+- Material 3 Expressive: https://m3.material.io/
+- Apple HIG Foundations: https://developer.apple.com/design/human-interface-guidelines
+- GSAP docs: https://gsap.com/docs/v3/
+
+Repos famosos:
+
+- https://github.com/alexpate/awesome-design-systems
+- https://github.com/klaufel/awesome-design-systems
+- https://github.com/greensock/gsap-skills
+
+Checklist:
+
+- [ ] DESIGN.md con atmosfera, color con hex, tipografia, componentes, layout, motion y anti-patrones.
+- [ ] Maximo 1 acento con saturacion menor a 80%. Sin purpura neon.
+- [ ] Tipografia sin Inter generico. Mono para numeros densos.
+- [ ] Hero asimetrico con maximo 1 CTA. Sin filler tipo Scroll to explore.
+- [ ] Layout sin overlaps, con max-width y min-h-dvh en secciones full.
+- [ ] Motion con spring y solo transform y opacity.
+- [ ] Sin emojis, sin negro puro, sin 3 cards iguales, sin datos inventados.
+- [ ] Responsive single column bajo 768px con touch 44px.

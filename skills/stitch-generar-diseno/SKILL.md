@@ -332,3 +332,32 @@ Download the variant HTML and screenshot urls from `outputComponents` to the
   understands best.
 - [Enhanced Prompt Example](examples/enhanced-prompt.md) — Before/after prompt
   enhancement.
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- Stitch prompting: https://stitch.withgoogle.com/docs/learn/prompting
+- Stitch DESIGN.md: https://stitch.withgoogle.com/docs/design-md/overview
+- Stitch MCP guide: https://stitch.withgoogle.com/docs/mcp/guide
+- Stitch SDK tutorial: https://stitch.withgoogle.com/docs/sdk/tutorial
+- Google Labs Stitch anuncio: https://developers.googleblog.com/en/stitch-a-new-way-to-design-uis/
+
+Repos famosos:
+
+- https://github.com/alexpate/awesome-design-systems
+- https://github.com/greensock/gsap-skills
+- https://github.com/enaqx/awesome-react
+
+Checklist:
+
+- [ ] Prompt mejorado con plataforma, estructura y contenido antes de generar.
+- [ ] Sin hex ni fuentes en prompt de generacion si hay design system.
+- [ ] projectId verificado con list_projects. designSystem aplicado si existe.
+- [ ] Assets descargados en .stitch/designs con nombre por screenId.
+- [ ] AI insights con outputComponents presentados al usuario.
+- [ ] Edicion iterativa preferida sobre regeneracion total.
+- [ ] Variantes con creativeRange y aspects explicitos.
+- [ ] metadata.json actualizado tras cada edit.

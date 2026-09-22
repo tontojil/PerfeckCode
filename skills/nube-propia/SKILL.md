@@ -34,3 +34,17 @@ description: "Para su propia nube en su servidor: apps con Docker, HTTPS y respa
 ## Output Contract
 
 Entregue: app publicada con HTTPS, dónde viven sus datos y fecha del último respaldo probado.
+
+## Anexo - Referencias oficiales
+
+Usted publica de a una app por vez y verifica con `docker ps` y `curl -k -I`.
+
+| Fuente | URL | Uso |
+|---|---|---|
+| Docker docs | https://docs.docker.com/ | Compose, volumes, networks y healthcheck |
+| Caddy docs | https://caddyserver.com/docs/ | `reverse_proxy`, TLS automatico y Caddyfile |
+| awesome-selfhosted | https://github.com/awesome-selfhosted/awesome-selfhosted | Catalogo de 20 apps con Compose oficial |
+| kernel.org (cgroups y namespaces) | https://www.kernel.org/doc/html/latest/ | Base de aislamiento que usa Docker |
+| Microsoft Learn DNS | https://learn.microsoft.com/windows-server/networking/dns/dns-top | Wildcard DNS y verificacion con `nslookup` |
+
+Usted cifra respaldos con restic o borg y prueba restore de 1 archivo al mes.

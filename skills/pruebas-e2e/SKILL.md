@@ -123,3 +123,20 @@ Emit at completion:
 - Retries: [N]
 - Estimated runtime: [Xs]
 ```
+
+## Referencias oficiales y repositorios famosos
+
+1. Playwright Intro (instalacion, primeros tests, codegen): https://playwright.dev/docs/intro
+2. Playwright Test retries y trace viewer (flakiness, debugging): https://playwright.dev/docs/test-retries
+3. Awesome Playwright curaduria mxschmitt (Page Objects, fixtures, CI): https://github.com/mxschmitt/awesome-playwright
+4. Practical Test Pyramid por Martin Fowler (proporciones E2E 10 %, integracion 30 %, unit 60 %): https://martinfowler.com/articles/practical-test-pyramid.html
+
+La documentacion oficial prevalece. Priorice `getByRole` sobre selectores fragiles.
+
+### Checklist aplicable por suite E2E
+
+- [ ] Page Objects con selectores estables, aserciones en specs, datos por API y auth con `storageState`.
+- [ ] Solo viajes criticos en E2E (login, checkout, pagos feliz y rechazo), validaciones en unitario.
+- [ ] `trace: on-first-retry`, screenshot solo en fallo, `retries=2` en CI y `0` local, `workers=1` en CI determinista.
+- [ ] `npx playwright test --repeat-each=10` verde, sin `waitForTimeout`, terceros con `page.route`.
+- [ ] Reporte HTML en fallo, `trace.zip` adjunto al issue, mobiles iPhone 14 y Pixel 7 cubiertos.

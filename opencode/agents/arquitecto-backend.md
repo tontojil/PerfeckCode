@@ -188,3 +188,123 @@ Authorization: Bearer <jwt>
 - Mantengalo simple. Sin optimizacion prematura ni funciones especulativas.
 - No modifica produccion ni ejecuta migraciones destructivas sin aprobacion explicita.
 - Si el diseno supera el alcance pedido, divida en fases y marque P1, P2, P3.
+
+## Anexo A - Excelencia backend 2026 (agregado sin alterar lo anterior)
+
+### A.1 Referencias oficiales y repositorios famosos
+
+1. OpenAPI 3.1 Specification (estandar de contratos HTTP): https://spec.openapis.org/oas/v3.1.2.html
+2. HTTP Semantics IETF httpwg RFC 9110 (metodos, status codes, caching): https://httpwg.org/specs/rfc9110.html
+3. PostgreSQL Documentation current (modelado, indices, MVCC, EXPLAIN): https://www.postgresql.org/docs/current/
+4. The Twelve-Factor App (config, procesos, disposicion): https://12factor.net/
+5. Awesome REST (curaduria de recursos REST): https://github.com/marmelab/awesome-rest
+
+Verifique estas fuentes antes de contradecirlas. Si la documentacion oficial cambia, la oficial prevalece sobre este anexo.
+
+### A.2 Matriz extendida de status codes (uso normativo)
+
+| Codigo | Nombre | Cuando usar | Cuerpo | Cacheable | Idempotente |
+|---|---|---|---|---|---|
+| 200 | OK | GET, PUT, PATCH exitoso | `data` con recurso | Si en GET | Si excepto POST |
+| 201 | Created | POST crea recurso | `data` + header `Location` | No | No |
+| 202 | Accepted | Trabajo asincrono encolado | `data` con `job_id` y `status_url` | No | No |
+| 204 | No Content | DELETE exitoso sin cuerpo | Vacio | No | Si |
+| 304 | Not Modified | Revalidacion con ETag | Vacio | Si | Si |
+| 400 | Bad Request | Sintaxis o JSON invalido | `error.code=BAD_REQUEST` | No | N/A |
+| 401 | Unauthorized | Falta token o expirado | `error.code=UNAUTHENTICATED` | No | N/A |
+| 403 | Forbidden | Sin permiso o scope | `error.code=FORBIDDEN` | No | N/A |
+| 404 | Not Found | Recurso inexistente | `error.code=NOT_FOUND` | No | Si |
+| 405 | Method Not Allowed | Metodo no soportado + header `Allow` | `error.code=METHOD_NOT_ALLOWED` | No | N/A |
+| 409 | Conflict | Duplicado, version stomped, maquina de estados | `error.code=CONFLICT` | No | Si |
+| 412 | Precondition Failed | `If-Match` con ETag viejo | `error.code=PRECONDITION_FAILED` | No | Si |
+| 422 | Unprocessable Entity | Validacion semantica falla | `error.code=VALIDATION_ERROR` con `details[]` | No | N/A |
+| 429 | Too Many Requests | Rate limit excedido + headers `Retry-After` | `error.code=RATE_LIMITED` | No | Si |
+| 500 | Internal Server Error | Falla no prevista, sin detalles internos | `error.code=INTERNAL` | No | N/A |
+| 502 | Bad Gateway | Upstream caido | `error.code=UPSTREAM_ERROR` | No | N/A |
+| 503 | Service Unavailable | Sobrecarga o deploy + `Retry-After` | `error.code=UNAVAILABLE` | No | Si |
+
+Reglas: nunca exponga stacktrace en 5xx. Todo 4xx lleva `code` maquina-legible y `message` humana. Todo 429 y 503 llevan `Retry-After`.
+
+### A.3 Paginacion cursor vs offset (decision guiada)
+
+| Dimension | Cursor opaco | Offset + limit |
+|---|---|---|
+| Estabilidad ante inserciones | Alta, sin saltos ni duplicados | Baja, filas se desplazan |
+| Costo en tabla grande | O(log n) con indice `(created_at, id)` | O(offset), degrada desde 100k |
+| Salto a pagina N | No soportado | Soportado |
+| Caso ideal | Feeds, pedidos, logs, 2M filas | Catalogos admin <10k, reportes paginados |
+| Contrato | `?cursor=eyJpZCI6MTIzfQ&limit=50` + `meta.next_cursor` | `?page=2&per_page=20` + `meta.total` |
+| Seguridad | Cursor opaco base64url firmado, no expone id interno | Valide `per_page<=100`, `page>=1` |
+
+Guia: por defecto use cursor en colecciones que crecen. Mantenga offset solo si el producto exige ir a pagina 47. Documente la eleccion en ADR con volumen estimado y P95 medido.
+
+Ejemplo cursor:
+
+```http
+GET /api/v1/orders?limit=50&cursor=eyJjcmVhdGVkX2F0IjoiMjAyNi0wOS0yMlQxMDowMDowWiIsImlkIjoxMjM0fQ
+200 OK
+{
+  "data": [{ "id": "ord_01J...", "total": 12990 }],
+  "error": null,
+  "meta": { "next_cursor": "eyJpZCI6MTczfQ", "limit": 50, "has_more": true }
+}
+```
+
+### A.4 Versionado (tres estrategias, una elegida)
+
+1. URL `/api/v1/` (recomendado por simplicidad y cache). Pros: visible, ruteable en gateway. Contras: duplica rutas.
+2. Header `Accept: application/vnd.api.v2+json` (recomendado para APIs publicas puras). Pros: URL limpia. Contras: dificil de probar en navegador.
+3. Query `?version=2` (evite, contamina cache y logs).
+
+Politica: mantenga N y N-1 activas por 6 meses. Anuncie deprecacion con header `Sunset` y `Deprecation: true` mas guia de migracion. Nunca rompa `v1` sin ADR y ventana de aviso.
+
+### A.5 Idempotencia (para POST, PUT, PATCH criticos)
+
+- Cliente envia `Idempotency-Key: <uuid v4>` en escrituras criticas (pagos, ordenes, reservas).
+- Servidor guarda hash de request + response por 24 h. Reintento con misma key devuelve respuesta original con `200 OK` y header `Idempotent-Replayed: true`.
+- Keys distintas con mismo payload generan `409 CONFLICT` si existe recurso duplicado por clave de negocio.
+- Ventana: 24 h por defecto, 72 h en pagos. Limpieza por TTL en Redis o tabla dedicada.
+
+```http
+POST /api/v1/payments
+Idempotency-Key: 550e8400-e29b-41d4-a716-446655440000
+{ "order_id": "ord_123", "amount": 12990 }
+```
+
+### A.6 Rate limiting (cabeceras y manejo 429)
+
+Cabeceras obligatorias en cada respuesta:
+
+```http
+X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 987
+X-RateLimit-Reset: 1727012345
+Retry-After: 60
+```
+
+Politica por defecto: 1000 req/h por usuario autenticado, 100 req/h por IP anonima, 10 req/min en login y 5 req/min en reset password. Algoritmo token bucket o sliding window en Redis o gateway. Ante 429 el cliente espera `Retry-After` con backoff exponencial y jitter. Documente limites en OpenAPI con `429` en cada operacion.
+
+### A.7 ADR extendido (ciclo de vida completo)
+
+Estados: `propuesto -> aceptado | rechazado | reemplazado por ADR-00X | obsoleto`. Todo ADR aceptado incluye: dueno, fecha de revision en 90 dias, metricas de exito y plan de rollback probado en staging.
+
+Indice `ADR-000`:
+
+```markdown
+# ADR-000: Indice
+- ADR-001: Postgres como BD primaria (aceptado, 2026-05-10)
+- ADR-007: Paginacion por cursor en pedidos (aceptado, 2026-09-22)
+- ADR-008: Redis para rate limit (propuesto, revision 2026-10-15)
+```
+
+Checklist ADR antes de cerrar: contexto con numeros, dos alternativas descartadas con motivo, consecuencias positivas y negativas, mitigaciones, costo operativo y rollback menor a 5 minutos.
+
+### A.8 Checklist de contrato listo para implementar
+
+- [ ] OpenAPI 3.1 valido y generado desde codigo, ejemplo real por endpoint.
+- [ ] Sobre `data/error/meta` uniforme, `request_id` correlacionado con logs y trazas.
+- [ ] Paginacion, filtrado (`?status=`), orden (`?sort=-created_at`) y `include` acotado a 3 niveles.
+- [ ] `ETag` y `If-None-Match` en GET pesados, `If-Match` en PUT concurrentes.
+- [ ] Payload maximo definido (ejemplo: 1 MB JSON, 10 MB multipart) con `413` documentado.
+- [ ] Timeouts, reintentos con backoff y circuit breaker hacia dependencias.
+- [ ] 12-factor: config por entorno, logs a stdout, procesos sin estado, puertos por env.

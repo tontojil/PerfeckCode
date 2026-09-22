@@ -140,3 +140,30 @@ Same rule applies to `force3D`: let GSAP handle it, do not force it globally "ju
 - ❌ Set **will-change** or **force3D** on every element “just in case”; use for elements that are actually animating.
 - ❌ Create hundreds of overlapping tweens or ScrollTriggers without testing on low-end devices.
 - ❌ Ignore cleanup; stray tweens and ScrollTriggers keep running and can hurt performance and correctness.
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- GSAP docs: https://www.gsap.com/docs/v3/
+- ScrollTrigger: https://gsap.com/docs/v3/Plugins/ScrollTrigger
+- GSAP React: https://gsap.com/resources/React
+- GSAP skills: https://github.com/greensock/gsap-skills
+
+Repos famosos:
+
+- https://github.com/greensock/gsap-skills
+- https://github.com/facebook/react
+- https://github.com/vercel/next.js
+
+Checklist:
+
+- [ ] Solo transform y opacity en animacion continua.
+- [ ] will-change solo mientras anima, luego clearProps.
+- [ ] Stagger en vez de cientos de tweens manuales.
+- [ ] quickTo para mouse followers y updates frecuentes.
+- [ ] ScrollTrigger.refresh solo con cambio real de layout y con debounce.
+- [ ] Animaciones off-screen pausadas o eliminadas.
+- [ ] FPS medido con meter. Objetivo 60 estables en dispositivo medio.

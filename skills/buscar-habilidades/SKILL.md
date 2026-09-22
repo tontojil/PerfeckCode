@@ -140,3 +140,44 @@ I can still help you with this task directly! Would you like me to proceed?
 If this is something you do often, you could create your own skill:
 npx skills init my-xyz-skill
 ```
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar el flujo de descubrimiento existente. Úsela para instalar con seguridad y versión fijada.
+
+### Documentación oficial
+
+- Skills.sh: https://skills.sh/ — catálogo y fichas de instalación con `npx skills add`.
+- Agent Skills Spec: https://agentskills.io/ — formato `SKILL.md`, frontmatter y estructura.
+- Anthropic Skills: https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills — creación y uso de skills.
+- OpenCode Docs: https://opencode.ai/docs/ — descubrimiento nativo desde `~/.claude/skills` y `skills/`.
+- npm Skills CLI: https://www.npmjs.com/package/skills — comandos `find`, `add`, `check` y `update`.
+- Autoskills: https://www.npmjs.com/package/autoskills — instalación curada por stack con `npx autoskills`.
+- Supply Chain Security npm: https://docs.npmjs.com/security/ — verificación antes de instalar paquetes de terceros.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Claude Skills: https://github.com/ComposioHQ/awesome-claude-skills — colección curada por dominio.
+- Vercel Agent Skills: https://github.com/vercel-labs/agent-skills — `vercel-react-best-practices` y más.
+- Anthropic Skills: https://github.com/anthropics/skills — ejemplos oficiales (`pdf`, `pptx`, `xlsx`).
+- Skills.sh Registry: https://github.com/skills-sh/skills — índice público de skills instalables.
+- Awesome Agents: https://github.com/kyrolabs/awesome-agents — agentes y skills complementarios.
+
+### Guías de profundización sugeridas
+
+- Revise la ficha en `skills.sh` antes de instalar: descripción, trigger y mantenimiento.
+- Consulte la spec Agent Skills para distinguir `assets/` y `references/` al evaluar calidad.
+- Valide versión fijada con `@v1` o SHA y revise con `npx skills check` antes de subir.
+- Verifique alcance global (`-g`) versus proyecto antes de instalar en equipo.
+- Mida utilidad con 2 búsquedas alternativas si la primera no retorna resultados.
+
+### Checklist de verificación
+
+- [ ] Se consultó `skills.sh` y la spec `agentskills.io` para el skill evaluado.
+- [ ] La búsqueda utiliza keywords específicas con 2 variantes intentadas.
+- [ ] La propuesta incluye nombre, función, comando de instalación y enlace.
+- [ ] La instalación fija versión con `@v1` o SHA y evita `latest` implícito.
+- [ ] Se ofrece instalación asistida con `-g -y` solo tras aprobación del usuario.
+- [ ] Si no existen resultados, se ofrece ayuda directa y creación con `npx skills init`.
+- [ ] No se instalan skills con permisos excesivos sin revisión deDocs.
+- [ ] El skill instalado se prueba con un prompt real antes de declararlo útil.

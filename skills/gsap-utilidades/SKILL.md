@@ -119,3 +119,30 @@ Regla: si el helper no esta en el Top 3, abri el catalogo antes de usarlo.
 https://gsap.com/docs/v3/HelperFunctions
 
 https://gsap.com/docs/v3/GSAP/UtilityMethods/
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- HelperFunctions: https://gsap.com/docs/v3/HelperFunctions
+- UtilityMethods: https://gsap.com/docs/v3/GSAP/UtilityMethods
+- GSAP docs: https://www.gsap.com/docs/v3/
+- GSAP skills: https://github.com/greensock/gsap-skills
+
+Repos famosos:
+
+- https://github.com/greensock/gsap-skills
+- https://github.com/facebook/react
+- https://github.com/vercel/next.js
+
+Checklist:
+
+- [ ] clamp para drag y scroll acotados. wrap para carrusel infinito.
+- [ ] mapRange para convertir progreso en valores. normalize e interpolate sin confundir.
+- [ ] snap para grids y steps. toArray para arrays reales.
+- [ ] Forma funcion reutilizable en handlers frecuentes.
+- [ ] pipe para cadenas normalize a snap en un callable.
+- [ ] Unidades con getUnit y unitize cuando hay px o porcentajes.
+- [ ] Sin APIs no documentadas. Catalogo revisado si no es Top 3.

@@ -462,3 +462,100 @@ Regla: un hallazgo que pasa las 7 compuertas entra al battle report. Uno que fal
 - Incluya siempre comando o payload exacto que funciono. Nada de "ejecute algo como...".
 - Mapee cada hallazgo a MITRE ATT&CK (TID). La cadena se narra como secuencia de TTPs.
 - Tras el fix, re-testee solo con autorizacion y confirme cierre del vector.
+
+## Anexo A — Metodologia PTES, CVSS 4.0 y reporte dual (extension, no reemplazo)
+
+Este anexo extiende el Operational Core Loop sin modificarlo. Opera en modo solo lectura por defecto. La ejecucion activa exige autorizacion explicita documentada en el hilo.
+
+### A.1 Fuentes oficiales y famosas (4+ obligatorias)
+
+1. MITRE ATT&CK Enterprise — matriz oficial: https://attack.mitre.org/ — Mapee cada hallazgo a un TID (por ejemplo T1190, T1552.001, T1068). Sin TID, el hallazgo queda incompleto.
+2. OWASP WSTG (Web Security Testing Guide) — guia oficial: https://owasp.org/www-project-web-security-testing-guide/ — Usela para planificar casos por fase: informacion, configuracion, auth, session, input, errores, criptografia, logica.
+3. `awesome-pentest` — coleccion curada en GitHub con herramientas por fase (recon, scanning, explotacion, post). Buscar en GitHub como "awesome-pentest". Usela para elegir herramienta minima por fase.
+4. HackTricks — referencia famosa: https://book.hacktricks.xyz/ — Usela para tecnicas por servicio, bypass y escalada, con validacion cruzada en laboratorio antes de reportar.
+5. OWASP Top 10 https://owasp.org/www-project-top-ten/ y CWE https://cwe.mitre.org/ como mapeo secundario por hallazgo.
+
+Regla: si la tecnica no aparece en WSTG, ATT&CK o HackTricks, marque confianza Low y explique como validarla.
+
+### A.2 Metodologia PTES (7 fases operativas)
+
+Aplique el Penetration Testing Execution Standard, referencia: http://www.pentest-standard.org/index.htm — Fases:
+
+1. Pre-engagement: objetivo, alcance (URLs, IPs, repos), ventana, credenciales de prueba, reglas de no daño, canal de escalado. Sin esto escrito en el hilo, opere en solo lectura.
+2. Intelligence gathering: OSINT pasivo, WHOIS, DNS, subdominios, certificados, GitHub expuesto, JS con rutas. No golpee el objetivo mas alla de lo autorizado.
+3. Threat modeling: activos de valor, rutas de ataque probables, matriz STRIDE ligera, priorizacion por impacto en negocio.
+4. Vulnerability analysis: escaneo con nuclei, nikto, semgrep, bandit, `npm audit`, `pip-audit`, mas revision manual. Clasifique con Validation Gate (7 compuertas previas).
+5. Exploitation: solo con autorizacion. PoC minimo que demuestre impacto sin daño colateral. Un intento por vector, con rollback listo.
+6. Post-exploitation: solo con autorizacion. Demuestre escalada y movimiento lateral de forma controlada, con tiempo acotado y evidencia de alcance.
+7. Reporting: reporte dual segun A.5, siempre, incluso en solo lectura. Incluya superficie, hallazgos, cadena, remediacion y verificacion.
+
+Cada fase produce una linea de evidencia con comando, salida y timestamp. Sin evidencia, la fase no se declara completa.
+
+### A.3 Exploit chains (encadenamiento obligatorio)
+
+No reporte bugs aislados cuando puedan encadenarse dentro del alcance autorizado:
+
+1. Formato: `Entrada (CWE + TID) -> Escalada (CWE + TID) -> Impacto maximo (dato, sistema, rol comprometido)`.
+2. Ejemplo: `SQLi en login (CWE-89, T1190) -> lectura de .env con clave AWS (CWE-798, T1552.001) -> acceso a bucket con PII (T1005)`.
+3. Cada eslabon lleva: payload exacto, respuesta observada, prueba de que no es falso positivo.
+4. En solo lectura, marque la cadena como "potencial, no ejecutada por falta de autorizacion" y describa el comando que usaria sin ejecutarlo.
+5. Con autorizacion, mida tiempo total de la cadena y declare AUTORIZACION con referencia al mensaje del hilo.
+6. Priorice cadenas que lleguen a datos, admin o RCE sobre hallazgos sueltos de severidad similar.
+7. Si la cadena requiere salir del alcance (otro host, otra cuenta, produccion real), detengase y pida ampliacion escrita.
+
+### A.4 CVSS 4.0 (puntuacion obligatoria por hallazgo)
+
+Calcule con la calculadora oficial FIRST: https://www.first.org/cvss/v4.0/ — Documentacion: https://www.first.org/cvss/calculator/4.0 —
+
+1. Evalue vector Base: Attack Vector (N/A/L/P), Complexity (L/H), Privileges (N/L/H), User Interaction (N/P/A), Vulnerabilidad en sistema posterior (existencia de impacto en otro sistema).
+2. Metricas de impacto Base: Confidencialidad, Integridad y Disponibilidad en sistema vulnerable y subsiguiente (None/Low/High).
+3. Metricas Threat: madurez de exploit (E) y Utilize. Metricas Environmental: requisitos de seguridad del activo (CR/IR/AR).
+4. Reporte formato: `CVSS:4.0/AV:N/AC:L/AT:N/PR:N/UI:N/VC:H/VI:H/VA:H/SC:N/SI:N/SA:N` mas score numerico y severidad. Ejemplo de tabla: `Severidad | CVSS | CWE | TID`.
+5. Rangos: None 0.0, Low 0.1 a 3.9, Medium 4.0 a 6.9, High 7.0 a 8.9, Critical 9.0 a 10.0.
+6. Si el score automatico de nuclei o scanner difiere del manual, explique la diferencia y prevalezca el manual con evidencia.
+7. Todo CRITICAL debe tener PoC o prueba de explotabilidad, o se degrada a HIGH potencial.
+
+### A.5 Reporte dual ejecutivo mas tecnico (formato obligatorio)
+
+Entregue siempre dos secciones, en español neutro, con oraciones completas:
+
+Ejecutivo (para decision, 5 lineas maximo por bloque):
+
+1. Resumen en 3 a 5 oraciones: que se audito, cuantos hallazgos por severidad, peor impacto en negocio.
+2. Riesgo por escenario: "un atacante con acceso a internet podria leer PII de X usuarios en Y minutos".
+3. Accion pedida: parchear 3 criticos en 7 dias, rotar 2 secretos hoy, activar WAF o rate limit como mitigacion temporal.
+4. Costo de no actuar: multa, perdida de confianza, indisponibilidad. Sin tecnicismos.
+
+Tecnico (para reproduccion y fix):
+
+1. Attack Surface en tabla: entry point, tecnologia, exposicion.
+2. Findings con `Severidad | CVSS | CWE | TID | Hallazgo file:line | Evidencia (comando y salida) | Impacto demostrado o potencial | Fix exacto`.
+3. Exploitation Chain segun A.3 con tiempo y autorizacion.
+4. Remediation Plan ordenado por severidad por explotabilidad por valor del activo.
+5. Fix Verification: como re-testear con autorizacion, o como verificar en solo lectura.
+
+### A.6 Reglas de autorizacion (no negociables)
+
+1. Solo lectura por defecto: analisis estatico, revision de codigo, preparacion de PoC sin ejecutar contra live.
+2. Ejecucion activa (nmap, nuclei, sqlmap, ffuf, hydra, msfconsole, shells, fuzzing activo, exfiltracion) solo con autorizacion explicita y documentada: objetivo, alcance, ventana.
+3. Sin autorizacion, describa el comando que usaria pero no lo ejecute. Declare modo en cada reporte.
+4. Nunca ataque infraestructura fuera del alcance, nunca exfiltre datos reales, nunca persista fuera de ventana.
+5. Si encuentra posible zero-day, documente, prepare PoC sin ejecutar fuera de alcance y alerte de inmediato.
+6. Registre cada comando activo con exit code y timestamp. Si un exploit falla, pruebe otro enfoque dentro del alcance, no amplie solo.
+
+### A.7 Skills y referencias oficiales (mapeo obligatorio)
+
+1. `iniciacion-fuzzing`: despues del scan inicial, para fuzzing profundo. Solo con autorizacion y en entorno aislado.
+2. `revision-seguridad`: para revision estatica y validacion de hallazgos. Referencia: https://owasp.org/www-project-top-ten/
+3. `gestion-secretos`: cuando halle secretos. Indique file:line y tipo, nunca el valor fuera del entorno autorizado.
+4. `depuracion-sistematica`: cuando necesite aislar causa de un crash con input externo antes de declararlo explotable.
+5. `patrones-pruebas-python`: cuando el PoC o la prueba de cierre sea en Python con pytest. Referencia: https://docs.pytest.org/
+6. `constructor-mcp`: cuando exponga recon o validacion como herramienta MCP reutilizable. Referencia: https://modelcontextprotocol.io/
+7. `api-claude`: cuando analice superficies grandes con la API. Referencia: https://docs.anthropic.com/ — Verifique modelos vigentes en linea.
+8. Orden sugerido: recon pasivo, `revision-seguridad`, scan solo con autorizacion, `iniciacion-fuzzing`, exploit solo con autorizacion, reporte dual siempre.
+
+### A.8 Regla operativa del anexo
+
+1. Este anexo no amplias autorizacion. La autorizacion solo la da el usuario por escrito en el hilo.
+2. Un hallazgo que no pase las 7 compuertas del Validation Gate se corrige y revalida o se descarta.
+3. Reporta, no modifica: `edit: deny`. Indique archivo, linea y cambio exacto para que otro agente lo aplique.

@@ -161,3 +161,20 @@ git checkout previous-branch && git stash pop
 ## Keywords
 
 branch, pr, pull request, commit, conventional commits, git workflow, merge
+
+## Referencias oficiales y repositorios famosos
+
+1. Conventional Commits 1.0.0 (tipos, scopes, breaking changes): https://www.conventionalcommits.org/
+2. GitHub Flow (ramas, PR, revision, deploy): https://docs.github.com/en/get-started/using-github/github-flow
+3. Git Documentation (branch, rebase, stash, clean): https://git-scm.com/doc
+4. Awesome Git curaduria (flujos, hooks, aliases, seguridad): https://github.com/dyvoker/awesome-git
+
+La documentacion oficial prevalece. Nunca `push --force` en `main` ni `development`, nunca `--no-verify`.
+
+### Checklist aplicable por PR
+
+- [ ] Rama desde `main` limpio con nombre `feature/`, `fix/`, `refactor/` o `hotfix/`, un proposito por rama.
+- [ ] Commits atomicos en Conventional Commits, sin `Co-Authored-By` de IA, `git status` y `git diff` revisados.
+- [ ] Tests, lint y build en verde con evidencia fresca, commits squash si el proyecto lo exige.
+- [ ] PR hacia `development` con resumen, cambios y como se probo, `gh pr create --base development` verificado.
+- [ ] Seguridad: `git clean -n` antes de `git clean -fd`, sin secretos ni `.DS_Store`, `git log origin/main..HEAD` limpio.

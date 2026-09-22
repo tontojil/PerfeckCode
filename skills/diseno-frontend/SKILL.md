@@ -75,3 +75,32 @@ Use la voz activa por defecto. Un CTA dice exactamente qué pasa cuando se usa: 
 Trate el fallo y el vacío como momentos de dirección, no de ánimo. Explique qué salió mal y cómo arreglarlo, en la voz de la interfaz más que en la de una persona. Los errores no piden disculpas, y nunca son vagos sobre qué pasó. Una pantalla vacía es una invitación a actuar.
 
 Mantenga el tono conversacional: verbos simples, sentence case, sin relleno, con tono ajustado a la marca y a la audiencia. Deje que cada elemento escrito haga exactamente un trabajo.
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- Material 3 Design: https://m3.material.io/
+- Apple HIG: https://developer.apple.com/design/human-interface-guidelines
+- Stitch Docs prompting: https://stitch.withgoogle.com/docs/learn/prompting
+- Stitch DESIGN.md: https://stitch.withgoogle.com/docs/design-md/overview
+- WCAG 2.2: https://www.w3.org/TR/WCAG22/
+
+Repos famosos:
+
+- https://github.com/alexpate/awesome-design-systems
+- https://github.com/enaqx/awesome-react
+- https://github.com/jbranchaud/awesome-react-design-systems
+
+Checklist:
+
+- [ ] Plan de tokens con 4 a 6 hex, tipos y layout antes de codificar.
+- [ ] Tipografia fluida con clamp(). Cuerpo minimo 16px.
+- [ ] Spacing en escala 4/8pt. Sin valores arbitrarios.
+- [ ] Contraste 4.5:1 texto, 3:1 grande y UI verificado.
+- [ ] Foco visible y motion 150-300ms con reduced-motion.
+- [ ] Un elemento memorable. Resto disciplinado y sin decoracion extra.
+- [ ] Copy especifico: errores con solucion, vacios con accion.
+- [ ] Responsive movil sin scroll horizontal y dark mode cubierto.

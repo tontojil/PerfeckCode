@@ -105,3 +105,30 @@ master.to(".c", { opacity: 0 }, "+=0.2");
 - ❌ Forget to pass **defaults** (e.g. `defaults: { duration: 0.5, ease: "power2.out" }`) when many child tweens share the same duration or ease.
 - ❌ Forget that **duration** on the timeline constructor is not the same as tween duration; timeline “duration” is determined by its children.
 - ❌ Nest animations that contain a ScrollTrigger; ScrollTriggers should only be on top-level Tweens/Timelines.
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- GSAP Timeline: https://www.gsap.com/docs/v3/
+- Timeline scrollTrigger: https://gsap.com/docs/v3/GSAP/Timeline/scrollTrigger
+- GSAP skills: https://github.com/greensock/gsap-skills
+- React GSAP: https://gsap.com/resources/React
+
+Repos famosos:
+
+- https://github.com/greensock/gsap-skills
+- https://github.com/facebook/react
+- https://github.com/vercel/next.js
+
+Checklist:
+
+- [ ] Secuencias con timeline y position parameter, no delay.
+- [ ] Labels con addLabel para navegacion y tweenFromTo.
+- [ ] defaults con duration y ease compartidos.
+- [ ] Timelines anidados con add en posicion explicita.
+- [ ] ScrollTrigger solo en top-level, nunca anidado.
+- [ ] Control de playback probado: play, pause, reverse, progress.
+- [ ] Duracion del timeline derivada de hijos, no seteada manual.

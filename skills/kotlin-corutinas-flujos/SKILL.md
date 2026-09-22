@@ -244,3 +244,44 @@ class UserViewModelTest {
 - `flatMapLatest` over `flatMapMerge` for cancel-previous semantics.
 - `flowOn(Dispatchers.IO)` once, not on every operator.
 - Test with `StandardTestDispatcher` and `runTest`.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los patrones existentes. Úsela para validar corutinas, Flow y testing.
+
+### Documentación oficial
+
+- Kotlin Coroutines: https://kotlinlang.org/docs/coroutines-guide.html — guía base de concurrencia estructurada.
+- Flow: https://kotlinlang.org/docs/flow.html — creación, operadores y colección.
+- StateFlow y SharedFlow: https://kotlinlang.org/docs/flow.html#stateflow-and-sharedflow — estado versus eventos.
+- Testing de corutinas: https://kotlinlang.org/docs/coroutines-test.html — `runTest` y dispatchers de prueba.
+- `viewModelScope`: https://developer.android.com/topic/libraries/architecture/coroutines — scopes Android y cancelación.
+- Channels: https://kotlinlang.org/docs/channels.html — productor-consumidor y `channelFlow`.
+- Excepciones: https://kotlinlang.org/docs/exception-handling.html — `SupervisorJob`, `catch` y `retry`.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Kotlin: https://github.com/KotlinBy/awesome-kotlin — librerías y recursos curados.
+- kotlinx.coroutines: https://github.com/Kotlin/kotlinx.coroutines — implementación, ejemplos y guías.
+- Now in Android: https://github.com/android/nowinandroid — uso real de `StateFlow`, `combine` y `flatMapLatest`.
+- Turbine: https://github.com/cashapp/turbine — testing de Flows con assertions legibles.
+- Kotlin: https://github.com/JetBrains/kotlin — lenguaje y propuestas de evolución.
+
+### Guías de profundización sugeridas
+
+- Revise concurrencia estructurada antes de crear un `CoroutineScope` manual.
+- Consulte Flow para elegir entre `combine`, `zip` y `flatMapLatest` según semántica.
+- Valide manejo de errores con `runCatching` o `catch` sin ocultar excepciones de cancelación.
+- Verifique búsqueda con `debounce`, `filter` y `distinctUntilChanged` antes de llamar a red.
+- Mida con `TestDispatcher`, `advanceTimeBy` y `advanceUntilIdle` para pruebas deterministas.
+
+### Checklist de verificación
+
+- [ ] Se consultó `kotlinlang.org/docs/coroutines-guide.html` para el operador utilizado.
+- [ ] No se utiliza `GlobalScope` en ningún código de producción.
+- [ ] El estado utiliza `StateFlow` y los eventos utilizan `SharedFlow`.
+- [ ] Los hijos independientes utilizan `SupervisorJob` documentado.
+- [ ] La búsqueda implementa `debounce` y `distinctUntilChanged`.
+- [ ] Se utiliza `flatMapLatest` cuando debe cancelarse la consulta previa.
+- [ ] `flowOn(Dispatchers.IO)` aparece una sola vez por cadena.
+- [ ] Los tests utilizan `StandardTestDispatcher` con `runTest` y avance explícito de tiempo.

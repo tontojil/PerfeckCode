@@ -131,3 +131,30 @@ En React usai `useGSAP()` (@gsap/react) o matas en el cleanup del efecto. Creai 
 ### Learn More
 
 https://gsap.com/docs/v3/Plugins/ScrollTrigger/
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- ScrollTrigger: https://gsap.com/docs/v3/Plugins/ScrollTrigger
+- ScrollTrigger start: https://gsap.com/docs/v3/Plugins/ScrollTrigger/start
+- Timeline scrollTrigger: https://gsap.com/docs/v3/GSAP/Timeline/scrollTrigger
+- GSAP scroll instrucciones: https://github.com/greensock/gsap-skills/blob/main/.github/instructions/scrolltrigger.instructions.md
+
+Repos famosos:
+
+- https://github.com/greensock/gsap-skills
+- https://github.com/facebook/react
+- https://github.com/vercel/next.js
+
+Checklist:
+
+- [ ] registerPlugin una vez antes de usar.
+- [ ] Scrub o toggleActions, nunca ambos en mismo trigger.
+- [ ] ease none en scrub y containerAnimation horizontal.
+- [ ] ScrollTrigger en timeline top-level, no en child tween.
+- [ ] Pin anima hijos, no el fijado. pinSpacing true por defecto.
+- [ ] refresh tras layout dinamico. Sin markers en produccion.
+- [ ] Triggers creados de arriba hacia abajo.

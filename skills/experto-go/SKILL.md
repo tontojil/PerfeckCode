@@ -294,3 +294,44 @@ if errors.Is(err, ErrNotFound) { ... }
 
 Estructura `service/` con `cmd/server/main.go`, `internal/handler|service|repository|model|config`, `pkg/`, `api/proto/`.
 Checklist: timeouts en todo llamado externo via `context.WithTimeout`, `context` como primer parametro, errores con `%w` y `errors.Is/As`.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los patrones existentes. Úsela para profundizar y validar decisiones con fuentes oficiales.
+
+### Documentación oficial
+
+- Documentación principal de Go: https://go.dev/doc/ — inicio recomendado para sintaxis, tour y referencias del lenguaje.
+- Concurrencia efectiva en Go: https://go.dev/doc/effective_go#concurrency — goroutines, channels y buenas prácticas de diseño.
+- Paquete `context`: https://pkg.go.dev/context — propagación de cancelación, deadlines y valores.
+- Paquete `sync` y `errgroup`: https://pkg.go.dev/sync y https://pkg.go.dev/golang.org/x/sync/errgroup — sincronización y manejo de goroutines con errores.
+- gRPC en Go: https://grpc.io/docs/languages/go/ — instalación, quickstart y ejemplos de cliente y servidor.
+- Módulos Go: https://go.dev/doc/modules/gomod-ref — gestión de dependencias con `go.mod` y `go.sum`.
+- Diagnóstico y profiling: https://go.dev/doc/diagnostics — `pprof`, `trace`, `race detector` y optimización.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Go: https://github.com/avelino/awesome-go — catálogo curado de frameworks, librerías y herramientas.
+- Go estándar de proyecto: https://github.com/golang-standards/project-layout — estructura `cmd/`, `internal/`, `pkg/` compatible con esta skill.
+- Ejemplos oficiales: https://github.com/golang/example — ejemplos mantenidos por el equipo de Go.
+- gRPC ejemplos Go: https://github.com/grpc/grpc-go/tree/master/examples — servidor, cliente, streaming y retry.
+- Go wiki: https://github.com/golang/go/wiki — patrones de la comunidad revisados por mantenedores.
+
+### Guías de profundización sugeridas
+
+- Revise `Effective Go` antes de definir interfaces públicas en `pkg/`.
+- Consulte `Go Concurrency Patterns` de las charlas oficiales para `fan-out` y `fan-in`.
+- Valide políticas de retry gRPC con la documentación de `service config` y códigos `codes.Unavailable`.
+- Verifique timeouts con `context.WithTimeout` en cada llamada externa y pruebe con `go test -race`.
+- Mida con `go vet`, `staticcheck` y `golangci-lint` antes de declarar el servicio listo para producción.
+
+### Checklist de verificación
+
+- [ ] Se consultó `go.dev/doc/` para la versión de Go declarada en `go.mod`.
+- [ ] Todo llamado externo tiene `context` como primer parámetro y timeout explícito.
+- [ ] Los errores se envuelven con `%w` y se verifican con `errors.Is` o `errors.As`.
+- [ ] No existen goroutines desnudas: se utiliza `errgroup` o `sync.WaitGroup`.
+- [ ] Los channels se cierran en el productor y nunca en el consumidor.
+- [ ] El servidor HTTP define `ReadTimeout`, `WriteTimeout` e `IdleTimeout`.
+- [ ] El cliente gRPC define política de reintento solo para códigos idempotentes.
+- [ ] `go vet ./...` y `go test -race ./...` finalizan sin errores.

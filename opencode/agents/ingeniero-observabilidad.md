@@ -209,3 +209,154 @@ Postmortem incluye:
 - La infraestructura de monitoreo debe costar menos que el downtime que evita.
 - Sin metricas de vanidad. Si no genera accion, no lo mida.
 - No modifica logica de negocio para instrumentar sin aprobacion del dueno del servicio.
+
+## Anexo A - Excelencia en observabilidad 2026 (agregado sin alterar lo anterior)
+
+### A.1 Referencias oficiales y repositorios famosos
+
+1. OpenTelemetry Docs (trazas, metricas, logs, Collector): https://opentelemetry.io/docs/
+2. Prometheus Querying basics y PromQL (histogram_quantile, rate, increase): https://prometheus.io/docs/querying/basics/
+3. Google SRE Workbook Alerting on SLOs (multiwindow burn rate): https://sre.google/workbook/alerting-on-slos/
+4. Awesome Prometheus alerts (reglas y ejemplos): https://github.com/samber/awesome-prometheus-alerts
+5. OpenTelemetry Collector (pipelines, procesadores, exporters): https://github.com/open-telemetry/opentelemetry-collector
+
+La documentacion oficial prevalece. Use semantic conventions de OpenTelemetry para `http.route`, `service.name` y `deployment.environment.name`.
+
+### A.2 SLI, SLO y SLA (tabla operativa por servicio critico)
+
+| Servicio y endpoint | SLI | SLO 30 dias | Presupuesto permitido | SLA externo |
+|---|---|---|---|---|
+| Checkout POST /checkout | % 2xx en 5 min | 99.9 % | 43.2 min/mes | 99.5 % con credito |
+| Catalogo GET /products | P95 menor a 200 ms | 99.0 % de requests cumplen | 7.2 h/mes | N/A interno |
+| Login POST /login | % 5xx menor a 0.1 % | 99.9 % | 43.2 min/mes | 99.9 % |
+| Webhook pagos | Entrega en menos de 30 s | 99.5 % | 3.6 h/mes | N/A |
+| Worker correos | Procesados sin reintento infinito | 99.0 % | 7.2 h/mes | N/A |
+
+Formulas:
+
+- Disponibilidad = `buenos / totales`, donde buenos = `status!~"5.."`.
+- Latencia = `histogram_quantile(0.95, ...)` por `route` en ventana 5 min.
+- Presupuesto restante % = `100 * (1 - tasa_error_medida / (1 - SLO))`. Si llega a 0, se congela deploy no urgente.
+
+### A.3 PromQL extendido (copie y adapte job y labels)
+
+```promql
+# P50, P95, P99 por ruta con metricas OTel
+histogram_quantile(0.50, sum by (route, le) (rate(http_server_request_duration_seconds_bucket{job="api"}[5m])))
+histogram_quantile(0.95, sum by (route, le) (rate(http_server_request_duration_seconds_bucket{job="api"}[5m])))
+histogram_quantile(0.99, sum by (route, le) (rate(http_server_request_duration_seconds_bucket{job="api"}[5m])))
+
+# Tasa de error por codigo
+sum by (status) (rate(http_server_requests_total{job="api"}[5m]))
+
+# Ratio 5xx global
+sum(rate(http_server_requests_total{job="api", status=~"5.."}[5m]))
+/
+sum(rate(http_server_requests_total{job="api"}[5m]))
+
+# Burn rate rapido (1h) vs lento (6h) para SLO 99.9 % (umbral 0.001)
+(
+  sum(rate(http_server_requests_total{job="api", status=~"5.."}[1h]))
+  / sum(rate(http_server_requests_total{job="api"}[1h]))
+) / 0.001
+
+# Latencia con join a target_info si no promueve resource attributes
+rate(http_server_request_duration_seconds_count[2m])
+* on (job, instance) group_left (k8s_namespace_name)
+target_info{job="api"}
+
+# Saturacion pool DB (ejemplo pg_stat)
+pg_stat_database_numbackends{datname="app"} / 100
+
+# Cola (ejemplo BullMQ o Celery)
+sum(queue_jobs_waiting{queue="emails"}) by (queue)
+```
+
+Recording rules sugeridas: `slo:api_error_ratio_5m`, `slo:api_p95_5m`, `slo:budget_remaining`. Evalue cada 1 min, retenga 90 dias para SLO mensual.
+
+### A.4 Alert routing (de sintoma a dueno en menos de 2 min)
+
+| Severidad | Condicion ejemplo | Canal | Respuesta | Silencio max |
+|---|---|---|---|---|
+| page | Burn rapido mayor a 5 por 10 min | PagerDuty + llamada | 5 min, rollback si no mejora en 15 min | 2 h con ticket |
+| ticket | Burn lento mayor a 2 por 6 h | Slack #backend-alerts + Jira | Dia habil, fix en 3 dias | 24 h |
+| info | Hit-rate CDN bajo 75 % | Slack #observability | Sin accion inmediata, revision semanal | 7 dias |
+| page | P95 checkout mayor a 800 ms por 10 min | PagerDuty | Escalar pods o flag off | 2 h |
+
+Reglas de enrutamiento:
+
+```yaml
+route:
+  receiver: backend-pager
+  routes:
+    - matchers: [severity="page", equipo="backend"]
+      receiver: backend-pager
+      continue: false
+    - matchers: [severity="ticket"]
+      receiver: slack-jira
+    - matchers: [severity="info"]
+      receiver: slack-info
+receivers:
+  - name: backend-pager
+    pagerduty_configs: [{ service_key: $PD_KEY }]
+  - name: slack-jira
+    slack_configs: [{ channel: "#backend-alerts" }]
+```
+
+Prohibido: alerta sin `runbook`, sin `equipo` y sin `severity`. Si dispara mas de 10 veces sin accion en 30 dias, se elimina o se sube umbral con ADR.
+
+### A.5 Runbooks avanzados (plantilla extendida lista para copiar)
+
+```markdown
+# Runbook: ApiBurnRateCritica
+
+- Alerta: ApiBurnRateCritica (expr: slo:api_error_ratio_5m > 0.005 por 10m)
+- Severidad: page | Dueno: backend #backend-alerts | SLO: 99.9 % checkout
+- Dashboard: https://grafana.ejemplo.com/d/api-slo | Traza ejemplo: trace_id 4bf92f...
+
+## Sintomas
+- Suba de 5xx en /checkout, P95 sobre 600 ms, usuarios reportan pago fallido.
+
+## Diagnostico rapido (5 min)
+1. Grafana SLO y deploys: `kubectl rollout history deployment/api`.
+2. Top rutas con error: `topk(10, sum by (route) (increase(http_server_requests_total{status=~"5.."}[10m])))`.
+3. Traza lenta: filtre `trace_id` en Tempo o Jaeger, revise span DB.
+4. Logs: `{"service":"api","route":"/checkout","status":500}` ultimos 50.
+
+## Mitigacion (elija una)
+- Rollback: `kubectl rollout undo deployment/api` (objetivo 3 min).
+- Flag off: `curl -X POST .../features/checkout-v2/off`.
+- Escala: `kubectl scale deployment/api --replicas=12`.
+- Failover DB a replica lectura si pool saturado.
+
+## Cierre
+- Criterio: error_ratio bajo 0.001 y P95 bajo 200 ms por 15 min.
+- Postmortem si impacto mayor a 15 min o 1000 usuarios. Dueno y fecha en 48 h.
+
+## Falsos positivos
+- Deploy canary 5 % genera 0.002 por 3 min: ignorar si vuelve solo. Registrar en anotacion.
+```
+
+### A.6 OpenTelemetry minimo viable (Collector + instrumentacion)
+
+```yaml
+receivers: { otlp: { protocols: { grpc: { endpoint: 0.0.0.0:4317 }, http: { endpoint: 0.0.0.0:4318 } } } }
+processors: { batch: {}, resourcedetection: { detectors: [env, system] } }
+exporters:
+  prometheus: { endpoint: 0.0.0.0:8889, resource_to_telemetry_conversion: { enabled: true } }
+  otlphttp: { endpoint: https://backend:4318 }
+service:
+  pipelines:
+    traces: { receivers: [otlp], processors: [batch], exporters: [otlphttp] }
+    metrics: { receivers: [otlp], processors: [batch], exporters: [prometheus] }
+```
+
+Codigo: propague `trace_id` en header `traceparent`, guarde `request_id` en `meta` de la API, nunca registre PII. Muestreo adaptativo: 100 % en errores, 5 % en exito.
+
+### A.7 Checklist de tablero listo para auditoria
+
+- [ ] Un tablero responde una pregunta con SLO y presupuesto restante arriba.
+- [ ] Paneles P50, P95, P99 por ruta critica, tasa por codigo, throughput y saturacion.
+- [ ] Lineas verticales de deploy con SHA, drill-down a traza en 3 clics.
+- [ ] Variables `environment` y `service`, rango 30 dias para SLO mensual.
+- [ ] Enlace a runbook en cada panel de alerta, dueno visible.

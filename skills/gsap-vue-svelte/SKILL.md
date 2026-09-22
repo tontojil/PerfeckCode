@@ -262,3 +262,30 @@ Do not create GSAP animations in the component’s setup or in a synchronous top
 ### Learn More
 
 - **gsap-react** skill for React-specific patterns (useGSAP, contextSafe).
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- GSAP docs: https://www.gsap.com/docs/v3/
+- GSAP React: https://gsap.com/resources/React
+- ScrollTrigger: https://gsap.com/docs/v3/Plugins/ScrollTrigger
+- GSAP skills: https://github.com/greensock/gsap-skills
+
+Repos famosos:
+
+- https://github.com/greensock/gsap-skills
+- https://github.com/vuejs/core
+- https://github.com/sveltejs/svelte
+
+Checklist:
+
+- [ ] Tweens creados en onMounted u onMount, nunca antes.
+- [ ] Selectores acotados con gsap.context y scope al root.
+- [ ] ctx.revert en onUnmounted o cleanup de onMount.
+- [ ] Plugins registrados una vez a nivel app.
+- [ ] ScrollTrigger dentro del mismo contexto y refresh tras tick.
+- [ ] Lazy load de plugins poco usados en Nuxt para bundle chico.
+- [ ] Sin animaciones en setup sincrono sin DOM listo.

@@ -224,3 +224,216 @@ OS: <>, Navegador: <>, Version: <>, Commit: <>
 - Sin tests flaky: sin `sleep()`, sin aserciones de tiempo, sin azar sin semilla.
 - Los tests son deterministicos. Misma entrada produce mismo resultado. Siempre.
 - Nunca omita un test fallido. Lo corrige o lo elimina. Omitir es deuda.
+
+## Anexo A - Excelencia QA y E2E 2026 (agregado sin alterar lo anterior)
+
+### A.1 Referencias oficiales y repositorios famosos
+
+1. Playwright Docs intro y primeros pasos: https://playwright.dev/docs/intro
+2. Playwright Test Runner, retries, reporters y trace viewer: https://playwright.dev/docs/test-retries
+3. Awesome Playwright (curaduria mxschmitt, ejemplos y herramientas): https://github.com/mxschmitt/awesome-playwright
+4. Practical Test Pyramid por Martin Fowler (proporciones y costos): https://martinfowler.com/articles/practical-test-pyramid.html
+5. Playwright Accessibility testing con axe (escaneo automatico): https://playwright.dev/docs/accessibility-testing
+
+La documentacion oficial prevalece. Use Chromium, Firefox y WebKit para regresion cruzada y trace en primer reintento.
+
+### A.2 Page Object avanzado (selectores estables y fixtures)
+
+Estructura obligatoria:
+
+```text
+tests/
+  checkout.spec.ts
+  auth.setup.ts
+pages/
+  login.page.ts
+  checkout.page.ts
+  components/
+    cart-drawer.ts
+fixtures/
+  auth.fixture.ts
+  data.fixture.ts
+```
+
+```typescript
+// pages/login.page.ts
+import type { Page, Locator } from '@playwright/test';
+
+export class LoginPage {
+  readonly page: Page;
+  readonly email: Locator;
+  readonly password: Locator;
+  readonly submit: Locator;
+  constructor(page: Page) {
+    this.page = page;
+    this.email = page.getByLabel('Email');
+    this.password = page.getByLabel('Password');
+    this.submit = page.getByRole('button', { name: 'Ingresar' });
+  }
+  async goto(): Promise<void> {
+    await this.page.goto('/login');
+  }
+  async loginComo(email: string, password: string): Promise<void> {
+    await this.email.fill(email);
+    await this.password.fill(password);
+    await Promise.all([
+      this.page.waitForURL('**/dashboard'),
+      this.submit.click(),
+    ]);
+  }
+}
+```
+
+```typescript
+// pages/checkout.page.ts
+import type { Page, Locator } from '@playwright/test';
+
+export class CheckoutPage {
+  readonly page: Page;
+  readonly total: Locator;
+  readonly pay: Locator;
+  constructor(page: Page) {
+    this.page = page;
+    this.total = page.getByTestId('checkout-total');
+    this.pay = page.getByRole('button', { name: 'Pagar' });
+  }
+  async pagarConTarjetaRechazada(): Promise<void> {
+    await this.page.goto('/checkout');
+    await this.pay.click();
+    await this.page.getByText('Tarjeta rechazada').waitFor();
+  }
+}
+```
+
+```typescript
+// fixtures/auth.fixture.ts
+import { test as base } from '@playwright/test';
+
+export const test = base.extend<{ usuarioAutenticado: void }>({
+  usuarioAutenticado: async ({ page }, use) => {
+    await page.goto('/login');
+    await page.getByLabel('Email').fill('qa@ejemplo.com');
+    await page.getByLabel('Password').fill('Clave-Segura-123');
+    await page.getByRole('button', { name: 'Ingresar' }).click();
+    await page.waitForURL('**/dashboard');
+    await use();
+  },
+});
+```
+
+Reglas:
+
+- Selectores solo en Page Objects, aserciones solo en specs.
+- Prioridad: `getByRole` mayor que `getByLabel` mayor que `getByTestId` mayor que `getByText`. Prohibido XPath posicional y clases CSS de estilo.
+- Metodos retornan acciones de negocio (`loginComo`, `pagarConTarjetaRechazada`), no `click` suelto.
+- Datos por API, no por UI: `await request.post('/api/test/seed', { data })`. Cada test siembra lo suyo.
+- Auth reutilizable con `storageState`: un setup crea `playwright/.auth/user.json`, los specs lo consumen con `test.use({ storageState })`.
+
+Configuracion base:
+
+```typescript
+// playwright.config.ts
+import { defineConfig } from '@playwright/test';
+export default defineConfig({
+  testDir: './tests',
+  fullyParallel: true,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  use: { trace: 'on-first-retry', screenshot: 'only-on-failure', video: 'retain-on-failure' },
+  projects: [{ name: 'chromium', use: { browserName: 'chromium' } }, { name: 'firefox', use: { browserName: 'firefox' } }, { name: 'webkit', use: { browserName: 'webkit' } }],
+});
+```
+
+### A.3 Flakiness menor a 1 % (de 2 % a 1 % con cuarentena dura)
+
+Umbral nuevo: tasa de flakiness menor a 1 % en ultimos 200 runs por suite. Sobre 1 % entra en cuarentena con etiqueta `flaky`, issue con dueno y fecha, reparacion en maximo 3 dias. Si supera 5 %, se revierte el merge que lo introdujo.
+
+Prohibido: `waitForTimeout`, hora exacta, aleatorio sin semilla, dependencia entre tests, datos compartidos mutables.
+
+Obligatorio: esperas explicitas, semillas fijas, mocks de terceros con `page.route`, reintentos solo en CI.
+
+```bash
+# Detectar flakiness en archivo critico
+npx playwright test tests/checkout.spec.ts --repeat-each=20 --retries=2 --reporter=line
+
+# Toda la suite 10 veces antes de marcar estable
+npx playwright test --repeat-each=10
+
+# Ver trace del fallo
+npx playwright show-report
+npx playwright show-trace test-results/failed/trace.zip
+```
+
+Mock de pagos y OAuth:
+
+```typescript
+await page.route('**/api/payments', async (route) => {
+  await route.fulfill({ status: 402, body: JSON.stringify({ error: { code: 'CARD_DECLINED' } }) });
+});
+await page.route('**/oauth/**', async (route) => {
+  await route.fulfill({ status: 200, body: JSON.stringify({ user: { id: 'u_123' } }) });
+});
+```
+
+Criterio: si falla 1 de 100 sin cambio de codigo, es flaky. Adjunte `trace.zip`, screenshot, log de red y semilla al issue. Nunca use `test.skip` sin issue enlazado.
+
+### A.4 Visual regression (difusion controlada, no ruido)
+
+```bash
+# Primera corrida genera baseline
+npx playwright test --update-snapshots
+# Corridas siguientes comparan
+npx playwright test
+```
+
+```typescript
+await expect(page).toHaveScreenshot('checkout-desktop.png', { maxDiffPixels: 200 });
+await expect(page.getByTestId('checkout-total')).toHaveScreenshot('total.png');
+```
+
+Reglas:
+
+- Solo en 5 a 10 vistas criticas (home, checkout, login, dashboard). No en cada validacion.
+- Umbral `maxDiffPixels` calibrado por vista, fuentes del sistema congeladas, animaciones desactivadas con `reduced-motion`.
+- Baseline versionada en repo, actualizacion solo con aprobacion de diseno en PR.
+- En CI use mismo navegador y viewport (1280x720 y 390x844 movil). Diferencia de SO genera falsos positivos.
+
+### A.5 Accesibilidad en E2E (axe + teclado, umbral cero critico)
+
+```bash
+npm i -D @axe-core/playwright
+```
+
+```typescript
+import AxeBuilder from '@axe-core/playwright';
+
+test('checkout_sin_violaciones_criticas', async ({ page }) => {
+  await page.goto('/checkout');
+  const resultados = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
+  const criticas = resultados.violations.filter((v) => v.impact === 'critical');
+  expect(criticas).toEqual([]);
+});
+
+test('checkout_navegable_por_teclado', async ({ page }) => {
+  await page.goto('/checkout');
+  await page.keyboard.press('Tab');
+  await expect(page.getByLabel('Email')).toBeFocused();
+  await page.keyboard.press('Enter');
+});
+```
+
+Checklist por flujo critico:
+
+- [ ] Cero violaciones `critical` y `serious` en axe, `moderate` con ticket y fecha.
+- [ ] Contraste mayor o igual a 4.5:1, foco visible, orden de tab logico.
+- [ ] Imagenes con `alt`, botones con nombre accesible, formularios con `label` asociado.
+- [ ] Navegacion completa por teclado hasta pagar, lector de pantalla anuncia errores.
+
+### A.6 Compuertas de calidad endurecidas (bloquean merge)
+
+- [ ] Cobertura unitaria mayor o igual a 80 % en archivos cambiados.
+- [ ] Viajes criticos con E2E en 3 navegadores y viewport movil.
+- [ ] `npx playwright test --repeat-each=10` verde en viajes criticos.
+- [ ] Flakiness menor a 1 %, cero `skip` sin issue, `trace.zip` en fallos CI.
+- [ ] Visual regression verde en 5 vistas, accesibilidad sin criticas.
+- [ ] Bug con test de regresion que falla sin fix y pasa con fix, mas prueba adyacente.

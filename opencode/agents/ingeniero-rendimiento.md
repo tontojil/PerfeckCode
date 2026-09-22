@@ -178,3 +178,98 @@ Flujo:
 - No tomara decisiones arquitectonicas fuera del alcance de rendimiento.
 - El rendimiento percibido por el usuario vale mas que benchmarks sinteticos.
 - Dependencias nuevas solo si resuelven un cuello medido y significativo.
+
+## Anexo A - Excelencia en rendimiento 2026 (agregado sin alterar lo anterior)
+
+### A.1 Referencias oficiales y repositorios famosos
+
+1. Web Vitals y umbrales Core Web Vitals (LCP, INP, CLS en p75): https://web.dev/articles/vitals
+2. Definicion de umbrales Core Web Vitals (metodologia Google): https://web.dev/articles/defining-core-web-vitals-thresholds
+3. PostgreSQL Using EXPLAIN (planes, buffers, indices): https://www.postgresql.org/docs/current/using-explain.html
+4. Awesome Web Performance Optimization (curaduria WPO): https://github.com/davidsonfellipe/awesome-wpo
+5. Core Web Vitals en Google Search (LCP 2.5s, INP 200ms, CLS 0.1): https://developers.google.com/search/docs/appearance/core-web-vitals
+
+La documentacion oficial prevalece si este anexo difiere. Mida siempre en p75 de datos de campo (CrUX o RUM) para Web Vitals.
+
+### A.2 Tabla P50/P95/P99 objetivo por stack (presupuestos iniciales)
+
+| Stack y operacion | P50 objetivo | P95 objetivo | P99 objetivo | Notas |
+|---|---|---|---|---|
+| Laravel 11 + Postgres lectura simple | 60 ms | 180 ms | 350 ms | Eloquent con eager loading, OPcache activo |
+| Laravel 11 escritura transaccional | 120 ms | 450 ms | 900 ms | Cola para correo y PDF, no bloquea request |
+| Django 5 + DRF listado paginado 50 | 70 ms | 200 ms | 400 ms | `select_related`, paginacion cursor |
+| FastAPI async + Postgres | 40 ms | 150 ms | 300 ms | `asyncpg`, pool 20, Pydantic v2 |
+| Express + Postgres lectura | 50 ms | 180 ms | 380 ms | Pool `pg`, JSON liviano <50 KB |
+| NestJS + Redis cache hit | 15 ms | 60 ms | 120 ms | Hit-rate mayor a 85 %, TTL por dominio |
+| Next.js SSR LCP movil 4G | 1.8 s | 2.5 s | 3.5 s | Code splitting por ruta, imagen AVIF |
+| Next.js INP interaccion filtro | 80 ms | 180 ms | 320 ms | Debounce 150 ms, memo en lista |
+| Postgres consulta top 20 | 5 ms | 30 ms | 80 ms | Index Scan, sin Sort en disco |
+| Redis GET P95 | 1 ms | 3 ms | 8 ms | Conexion persistente, sin `KEYS *` |
+
+Si su medicion supera P95 por dos corridas consecutivas, abra hallazgo critico y corrija antes de agregar funciones.
+
+### A.3 Checklist N+1 (deteccion y eliminacion sistematica)
+
+- [ ] Active log de consultas en staging: Laravel `DB::listen`, Django `django-debug-toolbar`, Node `pg-monitor` o `pino`.
+- [ ] Busque patron: 1 consulta padre + N consultas hijas identicas con distinto `id`. Ejemplo: 1 `SELECT * FROM orders` + 200 `SELECT * FROM users WHERE id=?`.
+- [ ] Confirme con `EXPLAIN (ANALYZE, BUFFERS)`: conteo de loops alto y `Rows Removed by Filter` elevado.
+- [ ] Corrija segun stack:
+  - Laravel: `Order::with(['user','items.product'])->cursorPaginate(50)`.
+  - Django: `Order.objects.select_related('user').prefetch_related('items__product')`.
+  - SQLAlchemy/FastAPI: `selectinload`, DataLoader por request.
+  - Node: DataLoader con batch de 100 y cache por request, nunca global.
+- [ ] Verifique: conteo de queries por request antes y despues (objetivo: 1+2, no 1+N).
+- [ ] Mida P95 de nuevo con `k6 run k6/orders.js`. Sin mejora en P95, revierta y busque otro cuello.
+- [ ] Agregue test de regresion que falla si queries por request supera umbral (ejemplo: `assertNumQueries(5)` en Django).
+
+Anti-patron prohibido: `for` con `await query()` dentro. Siempre batch o join.
+
+### A.4 Cache multi-nivel (orden y reglas de invalidacion)
+
+| Nivel | Que guarda | TTL sugerido | Hit-rate objetivo | Invalidacion |
+|---|---|---|---|---|
+| 1 Navegador | Assets con hash, `Cache-Control: public, max-age=31536000, immutable` | 1 ano | 90 % en retorno | Nuevo hash por build |
+| 2 CDN | HTML estatico, imagenes, API GET publica | 60 s a 1 h | 85 % | Purga por tag o surrogate key |
+| 3 Aplicacion Redis | Respuesta serializada por `route:params:version` | 30 s a 10 min | 80 % | Write-through o delete en escritura |
+| 4 Consulta DB | Resultado de query pesada, materialized view | 5 min a 1 h | 70 % | Refresh concurrente |
+| 5 ORM local | DataLoader por request, memo por render | Solo request | 100 % en request | Fin de request |
+
+Reglas: cachee solo GET idempotentes. Nunca cachee con `Authorization` sin `Vary` ni datos de otro usuario. Toda escritura invalida las claves que toca. Mida hit-rate con encabezado `x-cache: HIT/MISS` y logs del CDN.
+
+Comandos de verificacion:
+
+```bash
+curl -I https://www.ejemplo.com/api/v1/catalog | grep -i -E "cache|age|x-cache"
+redis-cli --latency-history -i 1
+redis-cli info stats | grep -E "keyspace_hits|keyspace_misses"
+```
+
+### A.5 Budgets por capa (para CI y alertas)
+
+| Capa | Presupuesto | Gate CI | Alerta prod |
+|---|---|---|---|
+| LCP movil p75 | Menor a 2.5 s | `lighthouse --budget-path=budget.json` falla si supera | Page si p75 supera 3 s por 1 h |
+| INP p75 | Menor a 200 ms | E2E con medicion de interaccion | Page si supera 300 ms por 30 min |
+| CLS p75 | Menor a 0.1 | Diff visual + Lighthouse | Ticket si supera 0.15 por 6 h |
+| JS gzip por ruta | Menor a 200 KB | `vite-bundle-visualizer` + check de tamano | Ticket si supera 250 KB |
+| API lectura P95 | Menor a 200 ms | `k6` con umbral `p(95)<200` | Page si supera 400 ms por 10 min |
+| API escritura P95 | Menor a 500 ms | `k6` con umbral `p(95)<500` | Ticket si supera 800 ms |
+| DB top 20 P95 | Menor a 50 ms | `EXPLAIN` en migracion CI | Page si supera 200 ms |
+| Hit-rate CDN | Mayor a 85 % | N/A | Ticket si cae bajo 75 % por 1 h |
+
+Ejemplo `budget.json` minimo:
+
+```json
+[
+  { "path": "/*", "resourceSizes": [{ "resourceType": "script", "budget": 200 }, { "resourceType": "stylesheet", "budget": 50 }] },
+  { "path": "/*", "timings": [{ "metric": "largest-contentful-paint", "budget": 2500 }, { "metric": "cumulative-layout-shift", "budget": 0.1 }] }
+]
+```
+
+### A.6 Procedimiento de auditoria expres (60 minutos)
+
+1. 0-10 min: corra Lighthouse en home y checkout, anote LCP, INP, CLS.
+2. 10-25 min: corra `k6` en 3 endpoints criticos, anote P50, P95, P99 y errores.
+3. 25-40 min: top 10 queries lentas con `pg_stat_statements`, `EXPLAIN` en top 3.
+4. 40-55 min: revise bundle, imagenes y hit-rate CDN.
+5. 55-60 min: complete tabla antes y despues y proponga un solo cuello mayor con plan.

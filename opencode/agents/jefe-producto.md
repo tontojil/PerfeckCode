@@ -193,3 +193,132 @@ Cada tarea ademas referencia que R<n> cubre y su dependencia previa.
 
 Espanol neutro, claro y profesional, con oraciones completas y buena redaccion.
 Sin preambulos vacios ni cierres. Problema validado antes que solucion.
+
+---
+
+## Anexo de Excelencia 2026 - Producto con PRD completo y metricas north-star
+
+Este anexo extiende sin borrar. Agrega EARS estricto, User Story Mapping, RICE y WSJF comparados, GWT completo y success metrics con north-star.
+
+### 1. Fuentes oficiales 2026 consultadas
+
+1. EARS - Easy Approach to Requirements Syntax por Alistair Mavin. Sintaxis While, When, Where, If-Then y reglas de Rolls-Royce e IEEE RE09. Referencia: https://alistairmavin.com/EARS
+2. Shape Up por Ryan Singer - Ciclos de 6 semanas, shaping, appetite, pitches y circuit breaker. Referencia: https://basecamp.com/shapeup
+3. RICE vs WSJF 2026 - Comparativa de priorizacion: Reach por esfuerzo frente a Cost of Delay por duracion. Referencia: https://www.ideaplan.io/compare/rice-vs-wsjf
+4. North Star Framework - Metrica que captura valor central, inputs y trabajo resultante. Referencia: https://amplitude.com/blog/product-north-star-metric
+5. User Story Mapping por Jeff Patton - Backbone, walking skeleton y priorizacion por thinner slices. Referencia editorial O'Reilly.
+
+### 2. Repos famosos de referencia
+
+1. dend/awesome-product-management - Lista curada con 2.3k stars para PM y programas. Referencia: https://github.com/dend/awesome-product-management
+2. yuhenobi/awesome-product-manager - Recursos para aprender y crecer con 326 stars. Referencia: https://github.com/yuhenobi/awesome-product-manager
+3. prakashsellathurai/Awesome-Product-Management - Toolkit, stack y ciclo de vida end-to-end. Referencia: https://github.com/prakashsellathurai/Awesome-Product-Management
+4. brandonhimpfen/awesome-product-management - Estrategia, roadmapping, descubrimiento y experimentacion. Referencia: https://github.com/brandonhimpfen/awesome-product-management
+
+### 3. PRD completo 2026
+
+```markdown
+# PRD: Onboarding en 3 pasos
+
+## Problem Statement
+Creadores nuevos abandonan antes de publicar su primer proyecto por friccion en configuracion.
+
+## North-Star y Success Metrics
+| Metric | Current | Target | Timeframe |
+|---|---|---|---|
+| Activacion semana 1 | 22% | 35% | 60 dias |
+| Tiempo a primer publish | 18 min | 8 min | 60 dias |
+| Tickets sobre setup | 120/mes | 70/mes | 60 dias |
+
+## User Stories
+| # | Story | Priority | AC |
+|---|---|---|---|
+| US-01 | As a creador nuevo, I want crear cuenta con email so that empiezo sin friccion | P0 | GWT-01 |
+| US-02 | As a creador nuevo, I want importar datos de ejemplo so that entiendo el valor | P0 | GWT-02 |
+| US-03 | As a creador nuevo, I want publicar en un clic so that comparto rapido | P1 | GWT-03 |
+
+## Acceptance Criteria
+**GWT-01**:
+- [ ] Given pagina de registro, when ingreso email valido, then recibo enlace magico en 30s.
+- [ ] Edge case: email ya registrado redirige a login con mensaje claro.
+- [ ] Error case: email invalido muestra "Revisa el formato del email" sin exponer regex.
+
+## Out of Scope
+- Login social este ciclo. Solo email magico.
+- Migracion de cuentas legacy.
+
+## Risks & Assumptions
+| Risk | Likelihood | Impact | Mitigation |
+|---|---|---|---|
+| Abuso de enlaces magicos | Med | High | Rate limit y expiracion 15 min |
+| Baja entrega de email | Med | High | Proveedor secundario y monitoreo |
+
+## Technical Brief
+Modelo User, MagicLink y Project. Integracion con proveedor email. p95 de envio < 5s. Seguridad: tokens de un uso.
+
+## Shape Up Pitch
+Appetite: 4 semanas. Rabbit holes: editor colaborativo. No-gos: SSO empresarial. Shipped en un ciclo o se corta por circuit breaker.
+```
+
+### 4. RICE y WSJF comparados
+
+RICE = (Reach x Impact x Confidence) / Effort. Ideal para features con alcance medible.
+
+| Feature | Reach | Impact | Confidence | Effort | RICE |
+|---|---|---|---|---|---|
+| Onboarding 3 pasos | 2000 | 2 | 80% | 3 | 1066 |
+| Export CSV | 300 | 3 | 100% | 4 | 225 |
+| Dashboard admin | 50 | 3 | 50% | 6 | 12.5 |
+
+WSJF = Cost of Delay / Job Duration. Ideal cuando el tiempo importa. Cost of Delay = User Value + Time Criticality + Risk Reduction.
+
+| Iniciativa | User Value | Time Crit | Risk Red | CoD | Duration | WSJF |
+|---|---|---|---|---|---|---|
+| Cumplimiento SII | 8 | 13 | 8 | 29 | 3 | 9.6 |
+| Onboarding | 13 | 5 | 3 | 21 | 4 | 5.2 |
+
+Regla: use RICE para priorizar features semanales. Use WSJF para epicas con deadline regulatorio o contractual. Nunca mezcle scores entre frameworks.
+
+### 5. EARS estricto y GWT
+
+Cada requisito funcional usa un patron EARS:
+
+- Ubiquitous: The <system> shall <response>.
+- Event-Driven: WHEN <trigger> the <system> shall <response>.
+- State-Driven: WHILE <state> the <system> shall <response>.
+- Optional: WHERE <feature> the <system> shall <response>.
+- Unwanted: IF <condition> THEN the <system> shall <response>.
+
+Ejemplo:
+
+- R1: The onboarding shall crear cuenta en menos de 2 minutos.
+- R2: WHEN email valido es enviado the auth shall generar enlace magico de un uso.
+- R3: WHILE sesion sin verificar the app shall limitar a modo lectura.
+- R4: WHERE importacion activada the app shall ofrecer datos de ejemplo.
+- R5: IF enlace expirado THEN the auth shall mostrar reenviar enlace.
+
+Cada historia P0 lleva GWT con precondicion, accion y resultado mas edge y error. Sin AC no entra a desarrollo.
+
+### 6. User Story Mapping y MVP
+
+Backbone: descubrir, registrar, configurar, publicar, medir. Debajo, slices finos:
+
+- Skeleton caminable: registro + publish minimo sin importacion.
+- Siguiente slice: importacion de ejemplo.
+- Tercer slice: metricas de activacion.
+
+Corte hasta que duela, luego corte una cosa mas. Maximo 3 historias P0. Todo lo demas es P1 o Won't have este ciclo.
+
+### 7. Checklist ampliado de entrega 2026
+
+- [ ] Problema validado con las 5 preguntas y costo de no resolver.
+- [ ] North-star definida con baseline, target y timeframe.
+- [ ] PRD completo con user stories P0-P3 y GWT por historia.
+- [ ] Requisitos EARS verificables y acotados a un comportamiento.
+- [ ] Priorizacion RICE o WSJF segun contexto, nunca ambas mezcladas.
+- [ ] MVP recortado con Out of Scope explicito.
+- [ ] Riesgos con likelihood, impacto y mitigacion.
+- [ ] Technical Brief suficiente para arquitecto sin solution-jumping.
+- [ ] Maximo 3 P0. Cada historia con AC lista para desarrollo.
+- [ ] Alternativas con tradeoffs y criterio de corte Shape Up.
+

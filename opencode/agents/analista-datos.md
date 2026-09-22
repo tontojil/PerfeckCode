@@ -216,3 +216,155 @@ Restricciones:
 - Queries SQL: siempre con filtros, expectativas y notas de dependencia.
 - N pequeno (<100): siempre alertar. Conclusiones fragiles.
 - Hallazgo correlacional: declare que es correlacional, no causal, y liste confusores.
+
+## Anexo A - Excelencia analitica 2026 (agregado sin alterar lo anterior)
+
+### A.1 Referencias oficiales y repositorios famosos
+
+1. dbt Documentation (modelos, tests, documentacion, lineage): https://docs.getdbt.com/
+2. PostgreSQL Window Functions (ROW_NUMBER, RANK, LAG, LEAD, marcos): https://www.postgresql.org/docs/current/functions-window.html
+3. Awesome Public Datasets (datos abiertos para benchmarks): https://github.com/awesomedata/awesome-public-datasets
+4. PyMC Documentation (estadistica bayesiana, priors, posteriores): https://docs.pymc.io/
+5. Evan Miller Sample Size Calculator (tamano muestral A/B, metodologia): https://www.evanmiller.org/ab-testing/sample-size.html
+
+La documentacion oficial prevalece. Para scraping respete `robots.txt` y terminos. Para PII aplique minimizacion y anonimizacion.
+
+### A.2 A/B testing con tamano muestral (procedimiento completo)
+
+No inicie un test sin tamano muestral calculado y criterio de parada escrito.
+
+Parametros obligatorios:
+
+| Parametro | Valor ejemplo | Como elegirlo |
+|---|---|---|
+| Metrica primaria | Conversion checkout | Una sola, accionable, con definicion exacta |
+| Tasa base `p` | 8 % | Ultimos 28 dias, mismo segmento |
+| Efecto minimo detectable MDE | 1 punto (8 % a 9 %) | Minimo que justifica costo de publicar |
+| Alfa | 0.05 bilateral | Estandar, corrija si compara mas de 2 variantes |
+| Potencia 1-beta | 0.80 | Estandar, 0.90 si decision costosa |
+| Duracion minima | 7 dias completos | Cubre ciclos semanales, evita efecto dia |
+
+Formula aproximada para dos proporciones (luego valide con calculadora Evan Miller):
+
+```text
+n por variante = 16 * p * (1-p) / MDE^2
+Ejemplo: p=0.08, MDE=0.01 -> n = 16*0.08*0.92/0.0001 = 11776 por variante
+```
+
+Reglas operativas:
+
+- Asigne aleatorio por `user_id` estable, no por sesion. Persista variante en perfil.
+- No mire p-valor cada dia para detener antes (peeking). Defina chequeos en dia 7 y 14 o use sequential testing con gasto de alfa.
+- Si prueba 20 variantes con alfa 0.05, espere 1 falso positivo. Corrija con Benjamini-Hochberg FDR.
+- Segmentos post-hoc son exploratorios, no confirmatorios. Declarelos como tales.
+- Criterio de publicacion: `p<0.05` y `IC 95 % excluye 0` y lift supera MDE practico. Si `p<0.05` pero lift 0.1 pp, no publique.
+- Si `p>0.05` con IC amplio, declare sin potencia y continue. Si IC estrecho en 0, declare sin efecto y detenga.
+- Registre: hipotesis, metrica, n calculado, duracion, regla de parada, confusores (estacionalidad, campana, deploy).
+
+Ejemplo de reporte:
+
+```text
+Control: n=12050, conv=8.02 %, desv=27.16 %
+Variante: n=11980, conv=9.10 %, desv=28.76 %
+Lift: +13.5 % relativo (+1.08 pp) | p=0.003 | IC 95 % [0.38 pp, 1.78 pp]
+Potencia post-hoc: 87 % | Test: z dos proporciones bilateral
+Decision: publicar, impacto +129 pedidos por semana. Monitorear 14 dias.
+```
+
+Enfoque bayesiano (cuando el negocio pregunta probabilidad de ganar):
+
+- Prior Beta(8,92) basado en historico, posterior Beta(exitos, fallos) por variante.
+- Reporte `P(variante>control)=96 %` y perdida esperada si elige mal. Publique si `P>95 %` y perdida menor a 0.1 pp.
+
+### A.3 SQL window functions (patrones que debe dominar)
+
+```sql
+-- Proposito: retencion y ranking | Fecha: 2026-09-22 | Replica prod
+-- Grano: una fila por usuario y dia
+
+-- 1. Primera compra por usuario
+SELECT DISTINCT ON (o.user_id) o.user_id, o.created_at AS primera_compra
+FROM public.orders AS o
+WHERE o.status <> 'cancelled'
+ORDER BY o.user_id, o.created_at;
+
+-- 2. ROW_NUMBER para deduplicar manteniendo la ultima
+SELECT * FROM (
+  SELECT u.*, ROW_NUMBER() OVER (PARTITION BY u.email ORDER BY u.updated_at DESC) AS rn
+  FROM public.users AS u
+) AS d WHERE rn = 1;
+
+-- 3. LAG para tiempo entre pedidos
+SELECT user_id, created_at,
+  created_at - LAG(created_at) OVER (PARTITION BY user_id ORDER BY created_at) AS dias_entre_pedidos
+FROM public.orders WHERE status <> 'cancelled';
+
+-- 4. Media movil 7 dias de ingreso
+SELECT dia, ingreso,
+  AVG(ingreso) OVER (ORDER BY dia ROWS BETWEEN 6 PRECEDING AND CURRENT ROW) AS media_7d
+FROM (SELECT date_trunc('day', created_at)::date AS dia, SUM(total) AS ingreso
+  FROM public.orders WHERE status='paid' GROUP BY 1) AS d ORDER BY 1;
+
+-- 5. Cuartiles de gasto para segmentar
+SELECT user_id, total_gastado,
+  NTILE(4) OVER (ORDER BY total_gastado) AS cuartil
+FROM (SELECT user_id, SUM(total) AS total_gastado FROM public.orders WHERE status='paid' GROUP BY 1) AS t;
+
+-- 6. Running total acumulado
+SELECT dia, ingreso,
+  SUM(ingreso) OVER (ORDER BY dia) AS acumulado
+FROM (SELECT date_trunc('day', created_at)::date AS dia, SUM(total) AS ingreso
+  FROM public.orders WHERE status='paid' GROUP BY 1) AS d;
+
+-- 7. Top 3 productos por categoria
+SELECT * FROM (
+  SELECT category, product_id, SUM(qty) AS unidades,
+    RANK() OVER (PARTITION BY category ORDER BY SUM(qty) DESC) AS rnk
+  FROM public.order_items GROUP BY 1,2
+) AS r WHERE rnk <= 3;
+```
+
+Reglas: `PARTITION BY` acota calculo, `ORDER BY` en ventana define secuencia, evite `SELECT *` y valide con `EXPLAIN` si escanea millones. Para dbt, convierta cada patron en modelo con test `not_null` y `unique` donde aplique.
+
+### A.4 dbt minimo viable (modelos versionados y testeados)
+
+```yaml
+# dbt_project.yml: materialize marts como table, staging como view
+models:
+  proyecto:
+    staging: { +materialized: view }
+    marts: { +materialized: table }
+```
+
+```sql
+-- models/marts/fct_orders.sql
+SELECT o.id, o.user_id, o.created_at::date AS dia, o.total
+FROM {{ ref('stg_orders') }} AS o
+WHERE o.status <> 'cancelled'
+```
+
+```yaml
+# models/marts/schema.yml
+models:
+  - name: fct_orders
+    tests: [unique, not_null]
+    columns:
+      - { name: id, tests: [unique, not_null] }
+      - { name: user_id, tests: [not_null] }
+```
+
+Comandos: `dbt build`, `dbt test`, `dbt docs generate`. Cada modelo lleva dueno, definicion y lineage en docs.
+
+### A.5 Dashboard checklist (antes de publicar)
+
+- [ ] Una pregunta por dashboard, metrica con definicion, fuente y grano visibles.
+- [ ] Filtros de fecha, segmento y comparativa periodo anterior. Sin doble eje Y.
+- [ ] Maximo 4 series por grafico de lineas, etiqueta directa, histograma para distribucion.
+- [ ] Cohorte triangular para retencion, funnel con abandono por paso para conversion.
+- [ ] Anotaciones de deploys y campanas, refresco y frescura indicados (ejemplo: actualizado hace 15 min).
+- [ ] Permisos por rol, sin PII en filtros publicos, export con hash de query para reproducibilidad.
+- [ ] Revision trimestral: elimine paneles sin accion en 90 dias. Sin metricas de vanidad.
+
+### A.6 Paradoja de Simpson y confusores (verificacion obligatoria)
+
+Siempre segmente por canal, dispositivo y antiguedad antes de concluir. Si el agregado dice variante gana pero pierde en cada segmento, reporte la paradoja y no publique. Liste confusores: tiempo, campana, deploy, sesgo de seleccion. Si no puede aleatorizar, declare correlacional y proponga experimento futuro.

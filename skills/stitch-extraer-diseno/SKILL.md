@@ -355,3 +355,32 @@ Before delivering the DESIGN.md, verify:
   then spot-check components for overrides.
 - **CSS custom properties are intentional.** If a developer defined
   `--brand-primary`, they're telling you this is a design token. Respect that.
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- Stitch DESIGN.md: https://stitch.withgoogle.com/docs/design-md/overview
+- Tailwind config: https://tailwindcss.com/docs/configuration
+- Material 3 styles: https://m3.material.io/styles/spacing/overview
+- WCAG 2.2 contraste: https://www.w3.org/TR/WCAG22/
+- Apple HIG layout: https://developer.apple.com/design/human-interface-guidelines
+
+Repos famosos:
+
+- https://github.com/alexpate/awesome-design-systems
+- https://github.com/vercel/next.js
+- https://github.com/enaqx/awesome-react
+
+Checklist:
+
+- [ ] Framework detectado por package.json y arbol de fuentes mapeado.
+- [ ] Colores con nombre descriptivo, hex y rol funcional.
+- [ ] Tipografia con familia, jerarquia, pesos y spacing.
+- [ ] Componentes clave con forma, color, estados y transiciones.
+- [ ] Layout con max-width, grilla, breakpoints y spacing base.
+- [ ] Duplicados cercanos consolidados en un token.
+- [ ] DESIGN.md con frontmatter YAML y notas para Stitch en lenguaje natural.
+- [ ] Handoff a stitch-sistema-diseno si se publica en Stitch.

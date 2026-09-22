@@ -275,3 +275,163 @@ PDF <-> imagen necesita Ghostscript (`brew install ghostscript`). Sin el, ImageM
 
 Espanol neutro, claro y profesional, con oraciones completas y buena redaccion.
 Sin preambulos vacios ni cierres. Nada de "simply", "just", "obviously".
+
+---
+
+## Anexo de Excelencia 2026 - Documentacion tecnica de referencia mundial
+
+Este anexo extiende sin borrar. Agrega estandares Diataxis, estilo Google, ADR, changelog y OpenAPI con ejemplos probados.
+
+### 1. Fuentes oficiales 2026 consultadas
+
+1. Diataxis Framework - Cuatro tipos: tutorial, how-to, referencia y explicacion. Un documento equivale a un tipo. Referencia: https://diataxis.fr/
+2. Google Developer Documentation Style Guide - Voz activa, segunda persona, sentence case, listas numeradas para secuencias y code font para codigo. Referencia: https://developers.google.com/style
+3. Keep a Changelog v1.0.0 - Formato Unreleased, Added, Changed, Deprecated, Removed, Fixed, Security con SemVer. Referencia: https://keepachangelog.com/en/1.0.0/
+4. OpenAPI Specification v3.2.1 - Description, summary, example y examples para documentacion y mocks. Referencia: https://spec.openapis.org/oas/latest y https://learn.openapis.org/specification/docs.html
+5. Docs-as-Code - Spec como fuente unica, generadores desde OpenAPI y portales conectados a Git. Referencia: https://docsascode.co/sections/api-reference
+
+### 2. Repos famosos de referencia
+
+1. evildmp/diataxis-documentation-framework - Framework base con guias de tutorial, how-to, referencia y explicacion. Referencia: https://github.com/evildmp/diataxis-documentation-framework
+2. OAI/OpenAPI-Specification - Especificacion oficial para contratos de API. Referencia: https://github.com/OAI/OpenAPI-Specification
+3. matiassingers/awesome-readme - Curaduria de READMEs ejemplares con 21k stars. Referencia: https://github.com/matiassingers/awesome-readme
+4. BolajiAyodeji/awesome-technical-writing - Recursos de escritura tecnica con 2.2k stars. Referencia: https://github.com/BolajiAyodeji/awesome-technical-writing
+
+### 3. ADR completo y accionable
+
+Use este formato extendido para decisiones reversibles y estructurales:
+
+```markdown
+# ADR-012: Postgres como base principal
+
+**Status**: accepted
+**Date**: 2026-09-22
+**Deciders**: equipo backend y producto
+
+## Context
+Necesitamos consistencia transaccional para facturacion y reportes. SQLite limita concurrencia. El equipo domina Postgres.
+
+## Decision
+Usar Postgres 16 gestionado con migraciones versionadas y rollback probado.
+
+## Alternatives Considered
+| Option | Pros | Cons | Why rejected |
+|---|---|---|---|
+| SQLite + Litestream | Simple | Sin concurrencia real | No escala a 50 escritores |
+| MySQL | Maduro | Menos JSON nativo | Equipo sin experiencia |
+
+## Consequences
+### Positive
+- Transacciones ACID y JSONB para filtros.
+### Negative
+- Costo operativo de backups y replicas.
+### Mitigations
+- Backup diario probado y replica de lectura.
+
+## Validation
+- [ ] Migracion 001 corre en staging sin perdida.
+- [ ] p95 de lectura < 200ms con 10k filas.
+```
+
+Reglas: una decision por ADR, estado explicito, consecuencias con mitigacion y validacion copiable.
+
+### 4. Changelog Keep-a-Changelog
+
+```markdown
+## [1.4.0] - 2026-09-22
+
+### Added
+- `feat(api): endpoint POST /v1/resource con paginacion` (#142)
+
+### Changed
+- `feat(auth): token de 24h a 1h por seguridad` (#140)
+
+### Fixed
+- `fix(docs): corrige ejemplo curl de creacion` (#141)
+
+### Security
+- `fix(api): valida scope resource:write en mutaciones` (#139)
+```
+
+Reglas: no pegue git log. Cure cambios notables por version. Use Conventional Commits con PR. Seccion Unreleased arriba para acumular antes del release.
+
+### 5. OpenAPI con examples reales
+
+Todo endpoint documenta request, responses y ejemplos que pasan validacion:
+
+```yaml
+paths:
+  /v1/resource:
+    post:
+      summary: Create a resource
+      operationId: createResource
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name:
+                  type: string
+                  minLength: 3
+                  maxLength: 100
+                  example: my-resource
+                type:
+                  type: string
+                  enum: [alpha, beta]
+                  default: alpha
+            examples:
+              basic:
+                summary: Creacion minima
+                value:
+                  name: my-resource
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Resource'
+              examples:
+                created:
+                  value:
+                    data:
+                      id: res_abc123
+                      name: my-resource
+                      type: alpha
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+```
+
+Reglas: example singular para un caso, examples plural para varios. Cada ejemplo debe coincidir con el schema. Use summary y description para contexto.
+
+### 6. Docs-as-code operativo
+
+- Docs junto al codigo en /docs. Sin wiki separada.
+- Markdown con H1 unico y jerarquia secuencial.
+- Enlaces relativos, no URLs absolutas internas.
+- Ejemplos probados con copy-paste. Si no se probo, marque [UNTESTED].
+- Versionado con el release. Cada cambio de API actualiza referencia y changelog.
+- QA de Office con evidencia: markitdown para pptx, recalc.py para xlsx, pandoc para conversiones.
+
+### 7. Checklist ampliado de entrega 2026
+
+- [ ] Tipo Diataxis declarado: tutorial, how-to, referencia o explicacion.
+- [ ] Audiencia y objetivo medible definidos al inicio.
+- [ ] Estilo Google: voz activa, segunda persona, sentence case.
+- [ ] Todo ejemplo de codigo probado con copy-paste.
+- [ ] ADR con estado, alternativas y mitigaciones.
+- [ ] Changelog con formato Keep-a-Changelog y SemVer.
+- [ ] OpenAPI con examples validos contra schema.
+- [ ] Sin palabras prohibidas: simply, just, obviously, easily.
+- [ ] Enlaces relativos y headings sin saltos.
+- [ ] Validacion reportada con evidencia fresca.
+

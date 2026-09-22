@@ -36,3 +36,17 @@ description: "Para órdenes en Windows, PowerShell, rutas con espacios y permiso
 ## Output Contract
 
 Entregue: comando corrido, exit code, y que cambio en el PC. Sin tecnicismos innecesarios.
+
+## Anexo - Referencias oficiales
+
+Usted consulta estas fuentes antes de afirmar sintaxis. Usted no improvisa flags.
+
+| Fuente | URL | Uso |
+|---|---|---|
+| Microsoft Learn PowerShell 7.4 | https://learn.microsoft.com/powershell/ | Cmdlets, `-LiteralPath`, remoting y novedades |
+| Microsoft Learn Windows package manager | https://learn.microsoft.com/windows/package-manager/ | Winget install, upgrade, export e import |
+| Sysinternals | https://learn.microsoft.com/sysinternals/ | Process Explorer, Monitor, Autoruns y TCPView |
+| Microsoft Learn WSL2 | https://learn.microsoft.com/windows/wsl/ | Interoperabilidad PowerShell y Linux |
+| kernel.org (interop) | https://www.kernel.org/doc/html/latest/ | Referencia del kernel que corre bajo WSL2 |
+
+Usted prefiere Microsoft Learn sobre blogs y verifica la URL si tiene dudas.

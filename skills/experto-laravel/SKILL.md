@@ -269,3 +269,44 @@ describe('User Registration', function () {
 - Policies for authorization. Never check roles directly.
 - Pest over PHPUnit for readability.
 - `phpstan analyse` for static analysis.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los patrones existentes. Úsela para validar versiones 11 y 12 y contrastar decisiones.
+
+### Documentación oficial
+
+- Documentación Laravel 11: https://laravel.com/docs/11.x — guía base para Eloquent, validación y colas.
+- Documentación Laravel 12: https://laravel.com/docs/12.x — verifique cambios antes de migrar desde 11.
+- Eloquent ORM: https://laravel.com/docs/11.x/eloquent — modelos, relaciones y `eager loading`.
+- API Resources: https://laravel.com/docs/11.x/eloquent-resources — transformación de respuestas JSON.
+- Validación con Form Requests: https://laravel.com/docs/11.x/validation — reglas, mensajes y autorización.
+- Sanctum: https://laravel.com/docs/11.x/sanctum — tokens personales y habilidades (`abilities`).
+- Queues y Horizon: https://laravel.com/docs/11.x/queues y https://laravel.com/docs/11.x/horizon — jobs, reintentos y monitoreo.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Laravel: https://github.com/chiraggude/awesome-laravel — paquetes, starters y recursos curados.
+- Laravel framework: https://github.com/laravel/laravel — esqueleto oficial de aplicación.
+- Pest: https://github.com/pestphp/pest — framework de testing utilizado en esta skill.
+- Laravel Horizon: https://github.com/laravel/horizon — dashboard y configuración de colas Redis.
+- Larastan: https://github.com/larastan/larastan — análisis estático para Eloquent y Laravel.
+
+### Guías de profundización sugeridas
+
+- Revise la guía de Eloquent antes de agregar un scope o una relación nueva.
+- Consulte Sanctum para decidir entre tokens personales y autenticación SPA con cookies.
+- Valide la estrategia de colas: conexión, `tries`, `backoff` y método `failed`.
+- Verifique políticas (`Policies`) antes de agregar verificaciones de rol en controladores.
+- Mida N+1 con `DB::listen`, Telescope o Debugbar en entorno local antes de optimizar.
+
+### Checklist de verificación
+
+- [ ] Se consultó `laravel.com/docs/11.x` para la funcionalidad utilizada.
+- [ ] Los controladores permanecen delgados y la lógica reside en Actions o Services.
+- [ ] Toda validación se realiza mediante Form Requests.
+- [ ] Toda respuesta JSON utiliza API Resources con `whenLoaded` y `whenCounted` cuando corresponde.
+- [ ] Las relaciones se cargan con `with()` y se confirma ausencia de N+1.
+- [ ] Las tareas superiores a 100 ms se envían a colas con reintentos definidos.
+- [ ] La autorización se implementa con Policies y `tokenCan` cuando aplica.
+- [ ] Los tests Pest cubren creación y validación, y `phpstan analyse` finaliza sin errores.

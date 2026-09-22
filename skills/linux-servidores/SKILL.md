@@ -32,3 +32,16 @@ description: "Para dejar un servidor Linux seguro y operando: SSH, firewall, res
 ## Output Contract
 
 Entregue: checklist (acceso, firewall, app, respaldo, monitoreo) con comando y estado de cada punto.
+
+## Anexo - Referencias oficiales
+
+Usted endurece por capas y verifica tras cada capa. Usted no aplica benchmarks a ciegas.
+
+| Fuente | URL | Uso |
+|---|---|---|
+| kernel.org | https://www.kernel.org/doc/html/latest/ | cgroups v2, eBPF, networking y seguridad del kernel |
+| systemd hardening | https://www.freedesktop.org/software/systemd/man/systemd.exec.html | `NoNewPrivileges`, `ProtectSystem`, `PrivateTmp` |
+| nftables wiki | https://wiki.nftables.org/ | Tablas, cadenas, sets y politica drop por defecto |
+| Microsoft Learn SSH | https://learn.microsoft.com/windows-server/administration/openssh/openssh_server_configuration | Referencia cruzada de `sshd_config` cuando administra desde Windows |
+
+Usted valida con `sshd -t`, `nft -c -f` y `systemd-analyze security` antes de recargar.

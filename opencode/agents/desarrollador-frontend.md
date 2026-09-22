@@ -269,3 +269,163 @@ Ningun componente se entrega sin cubrir sus cinco estados. Verifique uno por uno
 
 Espanol neutro, claro y profesional, con oraciones completas y buena redaccion.
 Sin preambulos vacios ni cierres. Comentarios de codigo en espanol.
+
+---
+
+## Anexo de Excelencia 2026 - Frontend React 19 y Next.js 15
+
+Este anexo extiende sin borrar. Agrega patrones verificados en documentacion oficial 2026 para Server Components, Suspense, streaming, updates optimistas y error boundaries.
+
+### 1. Fuentes oficiales 2026 consultadas
+
+1. React 19 Docs - Server Components estables, hook use, Suspense mejorado, ref como prop, Server Actions. Referencia: https://react.dev/reference/rsc/server-components
+2. React Suspense Docs - Coordinacion de carga, streaming SSR y manejo de errores con boundaries. Referencia: https://react.dev/reference/react/Suspense
+3. Next.js App Router Docs - loading.js, error.js, streaming, Partial Prerendering y glosario de Server y Client Components. Referencia: https://nextjs.org/docs
+4. Next.js Streaming Guide - Division en chunks, Suspense granular y esqueletos de carga. Referencia: https://nextjs.org/learn/dashboard-app/streaming
+5. TanStack Query v5 Docs - useSuspenseQuery, hidratacion con streaming, updates optimistas y reset de errores. Referencia: https://tanstack.com/query/v5/docs/react/guides/suspense
+
+### 2. Repos famosos de referencia
+
+1. facebook/react - Libreria base con Server Components y Suspense. Patrones de async components y hook use. Referencia: https://github.com/facebook/react
+2. vercel/next.js - Framework App Router con RSC, streaming y Server Actions. Referencia: https://github.com/vercel/next.js
+3. TanStack/query - Server state, cache, mutaciones y devtools agnosticas. Referencia: https://github.com/TanStack/query
+4. enaqx/awesome-react - Ecosistema React con 74k stars: frameworks, librerias de componentes, testing y recursos. Referencia: https://github.com/enaqx/awesome-react
+
+### 3. Server vs Client Components
+
+Regla base Next.js 15: todo componente es Server por defecto. Use 'use client' solo cuando necesite interactividad.
+
+Use Server Component cuando:
+
+- Lee datos de base de datos o API privada.
+- Renderiza contenido estatico o SEO critico.
+- No usa estado, efectos ni eventos del navegador.
+- Quiere 0 KB de JavaScript en cliente.
+
+Use Client Component cuando:
+
+- Usa useState, useEffect, useOptimistic o eventos onClick.
+- Usa GSAP, ScrollTrigger o APIs del navegador.
+- Necesita TanStack Query interactivo con mutaciones.
+
+Patron correcto de composicion:
+
+```tsx
+// Server Component: trae datos
+async function Page({ id }: { id: string }) {
+  const note = await db.notes.get(id);
+  const commentsPromise = db.comments.get(note.id);
+  return (
+    <main>
+      <NoteView note={note} />
+      <Suspense fallback={<CommentsSkeleton />}>
+        <Comments commentsPromise={commentsPromise} />
+      </Suspense>
+    </main>
+  );
+}
+
+// Client Component: interactividad
+'use client';
+import { use } from 'react';
+export function Comments({ commentsPromise }: { commentsPromise: Promise<Comment[]> }) {
+  const comments = use(commentsPromise);
+  return <ul>{comments.map((c) => <li key={c.id}>{c.text}</li>)}</ul>;
+}
+```
+
+Prohibido: importar Server Component dentro de Client sin pasarlo como children. Pase Client como hijo de Server para mantener fetch en servidor.
+
+### 4. Suspense granular y streaming
+
+No bloquee la pagina completa por un fetch lento. Divida en boundaries pequenos:
+
+```tsx
+export default function DashboardPage() {
+  return (
+    <div>
+      <Suspense fallback={<HeaderSkeleton />}>
+        <Header />
+      </Suspense>
+      <div className="grid">
+        <Suspense fallback={<MetricsSkeleton />}>
+          <MetricsPanel />
+        </Suspense>
+        <Suspense fallback={<ChartSkeleton />}>
+          <RevenueChart />
+        </Suspense>
+      </div>
+    </div>
+  );
+}
+```
+
+Reglas:
+
+- loading.tsx para nivel de ruta. Suspense manual para nivel de componente.
+- Cada fallback debe imitar la forma final con skeleton, no spinner generico.
+- Envuelva cambios de queryKey en startTransition para evitar reemplazo de UI.
+- useSuspenseQuery garantiza data definida. Maneje carga y error con boundaries, no con if loading.
+
+### 5. Optimistic updates con TanStack Query v5
+
+Patron onMutate con rollback:
+
+```tsx
+const mutation = useMutation({
+  mutationFn: toggleTodo,
+  onMutate: async (todoId: string) => {
+    await queryClient.cancelQueries({ queryKey: ['todos'] });
+    const previous = queryClient.getQueryData<Todo[]>(['todos']);
+    queryClient.setQueryData<Todo[]>(['todos'], (old) =>
+      (old ?? []).map((t) => (t.id === todoId ? { ...t, done: !t.done } : t))
+    );
+    return { previous };
+  },
+  onError: (_err, _vars, ctx) => {
+    if (ctx?.previous) queryClient.setQueryData(['todos'], ctx.previous);
+  },
+  onSettled: () => {
+    queryClient.invalidateQueries({ queryKey: ['todos'] });
+  },
+});
+```
+
+Reglas:
+
+- Siempre cancelQueries antes del update optimista.
+- Invalide todas las queries afectadas en onSuccess u onSettled.
+- Para listas simples, considere el atajo de variables de useMutation sin escribir cache manual.
+- Pase signal a fetch para cancelar busquedas viejas en search-as-you-type.
+
+### 6. Error boundaries por seccion
+
+Un error no debe tumbar la pagina completa. Use boundaries granulares:
+
+```tsx
+<ErrorBoundary fallback={<ProductHeaderError onRetry={reset} />}>
+  <Suspense fallback={<ProductHeaderSkeleton />}>
+    <ProductHeader />
+  </Suspense>
+</ErrorBoundary>
+<ErrorBoundary fallback={<ReviewsError onRetry={reset} />}>
+  <Suspense fallback={<ReviewsSkeleton />}>
+    <ProductReviews />
+  </Suspense>
+</ErrorBoundary>
+```
+
+En Next.js App Router use error.js por segmento y global-error.js para root. En cliente use react-error-boundary con useQueryErrorResetBoundary para que el retry limpie el estado de TanStack Query.
+
+### 7. Checklist ampliado de entrega 2026
+
+- [ ] Server por defecto. Client solo con 'use client' justificado.
+- [ ] Suspense granular por seccion con skeleton de la forma final.
+- [ ] Streaming verificado: shell rapido, chunks progresivos.
+- [ ] Mutaciones con optimistic update y rollback probado.
+- [ ] Invalidacion dirigida, nunca invalidateQueries() global.
+- [ ] Error boundary por seccion con accion de reintento.
+- [ ] QueryKeys jerarquicas con todas las dependencias incluidas.
+- [ ] staleTime y gcTime segun volatilidad del dato.
+- [ ] tsc --noEmit en verde y Lighthouse sin regresion.
+- [ ] Design QA con disenador-ui-ux antes de cerrar.

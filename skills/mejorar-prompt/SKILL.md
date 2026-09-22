@@ -202,3 +202,31 @@ Add a search bar to the header navigation.
 3. **Keep it structured** — Numbered sections help Stitch understand hierarchy
 4. **Include the design system** — Consistency is key for multi-page projects
 5. **One change at a time for edits** — Don't bundle unrelated changes
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- Stitch prompting: https://stitch.withgoogle.com/docs/learn/prompting
+- Stitch DESIGN.md: https://stitch.withgoogle.com/docs/design-md/overview
+- Google developer style headings: https://developers.google.com/style/headings
+- Material 3 typography: https://m3.material.io/styles/typography/applying-type
+- Apple HIG writing: https://developer.apple.com/design/human-interface-guidelines
+
+Repos famosos:
+
+- https://github.com/alexpate/awesome-design-systems
+- https://github.com/matiassingers/awesome-readme
+- https://github.com/BolajiAyodeji/awesome-technical-writing
+
+Checklist:
+
+- [ ] Plataforma, tipo de pagina y estructura numerada presentes.
+- [ ] Terminos vagos reemplazados por keywords UI especificas.
+- [ ] Vibe con adjetivos concretos y colores en formato Nombre (#hex) para rol.
+- [ ] DESIGN.md leido e incluido como DESIGN SYSTEM REQUIRED si existe.
+- [ ] Salida en orden: proposito, sistema, estructura por secciones.
+- [ ] Edits con ubicacion, visual y estructura en un solo cambio.
+- [ ] Sin sobre-diseno cuando el usuario pide simple.

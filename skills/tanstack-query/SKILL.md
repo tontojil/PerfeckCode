@@ -221,3 +221,31 @@ Poner `staleTime` en el prefetch para que no refetche inmediato. Delay de 100ms 
 | Memory leak en SPA | `gcTime: Infinity` | `gcTime` segun frecuencia de visita |
 | SSR flash de loading | Cliente refetcha tras hydrate | `staleTime > 0` en server |
 | Search input laggy | Requests viejas no canceladas | Pasar `signal` a fetch |
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- TanStack Query v5 Suspense: https://tanstack.com/query/v5/docs/react/guides/suspense
+- TanStack Query Optimistic Updates: https://tanstack.com/query/latest/docs/framework/react/guides/optimistic-updates
+- Repo TanStack/query: https://github.com/TanStack/query
+- React Suspense: https://react.dev/reference/react/Suspense
+- Next.js Streaming: https://nextjs.org/learn/dashboard-app/streaming
+
+Repos famosos:
+
+- https://github.com/TanStack/query
+- https://github.com/vercel/next.js
+- https://github.com/facebook/react
+
+Checklist:
+
+- [ ] QueryKeys jerarquicas con dependencias completas.
+- [ ] staleTime segun volatilidad y gcTime mayor a 2000ms en SSR.
+- [ ] Mutaciones con onMutate, rollback y onSettled con invalidacion.
+- [ ] signal pasado a fetch para cancelar requests viejas.
+- [ ] useSuspenseQuery con ErrorBoundary y reset habilitado.
+- [ ] Prefetch con staleTime para evitar refetch inmediato.
+- [ ] Sin invalidateQueries() global. Solo dirigida y exacta.

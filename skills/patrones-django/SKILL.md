@@ -244,3 +244,44 @@ class TestUserAPI:
 - `pytest-django` with `@pytest.mark.django_db`.
 - `only()` / `defer()` to limit query fields.
 - Signals for cross-app communication only.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los patrones existentes. Úsela para validar ORM, DRF y testing.
+
+### Documentación oficial
+
+- Documentación Django: https://docs.djangoproject.com/ — guía base de modelos, ORM y configuración.
+- Optimización de consultas: https://docs.djangoproject.com/en/stable/topics/db/optimization/ — `select_related`, `prefetch_related` y `only`.
+- Django REST Framework: https://www.django-rest-framework.org/ — viewsets, serializers, permisos y paginación.
+- Serializers DRF: https://www.django-rest-framework.org/api-guide/serializers/ — validación y `ModelSerializer`.
+- Caché Django: https://docs.djangoproject.com/en/stable/topics/cache/ — backends y estrategia de invalidación.
+- Signals: https://docs.djangoproject.com/en/stable/topics/signals/ — uso correcto entre aplicaciones.
+- Testing con pytest-django: https://pytest-django.readthedocs.io/ — fixtures, `django_db` y configuración.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Django: https://github.com/wsvincent/awesome-django — paquetes, recursos y proyectos de referencia.
+- Django: https://github.com/django/django — código fuente oficial del framework.
+- DRF: https://github.com/encode/django-rest-framework — viewsets, routers y permisos.
+- Django Debug Toolbar: https://github.com/jazzband/django-debug-toolbar — detección de N+1 en desarrollo.
+- Cookiecutter Django: https://github.com/cookiecutter/cookiecutter-django — estructura `config/`, `apps/` y `core/` lista para producción.
+
+### Guías de profundización sugeridas
+
+- Revise la guía de optimización de base de datos antes de agregar un endpoint de listado.
+- Consulte la guía de paginación de DRF para decidir entre cursor y page number.
+- Valide la estrategia de caché: clave, TTL e invalidación explícita por escritura.
+- Verifique permisos personalizados con `BasePermission` antes de agregar lógica en vistas.
+- Mida consultas con `django-debug-toolbar` o `django-silk` y registre el conteo antes y después.
+
+### Checklist de verificación
+
+- [ ] Se consultó `djangoproject.com` y `django-rest-framework.org` para la versión en uso.
+- [ ] Cada endpoint de listado utiliza `select_related` o `prefetch_related`.
+- [ ] La lógica de negocio reside en `services.py`, no en vistas.
+- [ ] Se utiliza paginación cursor para conjuntos grandes.
+- [ ] Cada valor cacheado define clave, TTL e invalidación.
+- [ ] Los tests utilizan `pytest-django` con marcador `django_db` y `APIClient`.
+- [ ] Los campos se limitan con `only()` o `defer()` cuando la tabla es ancha.
+- [ ] Las signals se limitan a comunicación entre aplicaciones.

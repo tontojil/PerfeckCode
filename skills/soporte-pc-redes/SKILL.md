@@ -34,3 +34,16 @@ description: "Para PC, WiFi, impresoras y respaldo: diagnóstico y arreglo en Wi
 ## Output Contract
 
 Entregue: causa encontrada, arreglo aplicado y prueba (ping OK, página impresa, archivo restaurado).
+
+## Anexo - Referencias oficiales
+
+Usted consulta estas fuentes antes de diagnosticar. Usted no cambia drivers ni red sin evidencia.
+
+| Fuente | URL | Uso |
+|---|---|---|
+| Microsoft Learn Windows networking | https://learn.microsoft.com/windows-server/networking/ | `Test-NetConnection`, DNS, DHCP y WiFi |
+| Microsoft Learn Print management | https://learn.microsoft.com/windows-server/administration/print-management/ | Cola de impresion, drivers y pagina de prueba |
+| Microsoft Learn Backup | https://learn.microsoft.com/windows-server/administration/windows-server-backup/ | Respaldo 3-2-1 y restauracion |
+| kernel.org (red y drivers) | https://www.kernel.org/doc/html/latest/networking/ | Base de red y drivers cuando el fallo es del router o firmware |
+
+Usted revisa fecha del equipo antes de declarar falla SSL y documenta ping con exit 0.

@@ -201,3 +201,44 @@ sealed interface UserDetailUiState {
 - Hilt for DI. Constructor injection preferred over field injection.
 - Mappers: DTO ↔ Entity ↔ Domain. No layer leaking.
 - Cache strategy in repository, not in ViewModel.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar la arquitectura existente. Úsela para validar capas, DI y persistencia.
+
+### Documentación oficial
+
+- Guía de arquitectura Android: https://developer.android.com/topic/architecture — capas UI, dominio y datos.
+- Hilt: https://developer.android.com/training/dependency-injection/hilt-android — módulos, componentes y scopes.
+- Room: https://developer.android.com/training/data-storage/room — DAOs, entidades y migraciones.
+- Retrofit: https://square.github.io/retrofit/ — clientes HTTP declarativos para `UserApi`.
+- Kotlinx Serialization: https://github.com/Kotlin/kotlinx.serialization/blob/master/docs/basic-serialization.md — DTO con `@Serializable`.
+- ViewModel: https://developer.android.com/topic/libraries/architecture/viewmodel — `viewModelScope` y `SavedStateHandle`.
+- DataStore: https://developer.android.com/topic/libraries/architecture/datastore — preferencias y caché ligera.
+
+### Repositorios famosos y listas curadas
+
+- Android Architecture Blueprints: https://github.com/android/architecture-samples — MVVM y capas oficiales.
+- Now in Android: https://github.com/android/nowinandroid — app moderna de referencia con Hilt y modularización.
+- Awesome Android: https://github.com/JStumpp/awesome-android — librerías y herramientas curadas.
+- Hilt: https://github.com/google/dagger — implementación y ejemplos de DI.
+- Room: https://developer.android.com/training/data-storage/room — referencia y codelabs oficiales.
+
+### Guías de profundización sugeridas
+
+- Revise la guía de arquitectura antes de agregar dependencia Android en dominio.
+- Consulte Hilt para decidir entre `@Provides` y `@Binds` según caso.
+- Valide estrategia cache-first en repositorio con pruebas de DAO falso y API falsa.
+- Verifique mappers DTO, Entity y Dominio sin fugas entre capas.
+- Mida con inspector de base de datos y profiling de red antes de optimizar caché.
+
+### Checklist de verificación
+
+- [ ] Se consultó `developer.android.com/topic/architecture` para la estructura de capas.
+- [ ] El módulo dominio no importa clases Android.
+- [ ] Cada caso de uso expone un solo método público `invoke`.
+- [ ] La interfaz del repositorio reside en dominio y la implementación en datos.
+- [ ] Los errores se propagan con `Result` sin excepciones en casos de uso.
+- [ ] El estado UI utiliza `sealed interface` con Loading, Success y Error.
+- [ ] La DI utiliza Hilt con inyección por constructor.
+- [ ] La estrategia de caché reside en el repositorio, no en el ViewModel.

@@ -104,3 +104,105 @@ Despues de la tabla:
 - Si el codigo esta genuinamente limpio, responda: `LGTM — no issues found.`
 - Nunca revise codigo que no ha leido por completo.
 - Solo lectura: no edite archivos ni ejecute comandos de cambio.
+
+## Anexo A — Revision rigurosa, checklist por lenguaje y referencias (extension, no reemplazo)
+
+Este anexo extiende el Review Framework sin modificarlo. Apliquelo en toda revision de diff o PR. No borra criterios previos, solo agrega rigor.
+
+### A.1 Fuentes oficiales y famosas (3+ obligatorias)
+
+1. Google eng-practices — guia canonica de revision: https://google.github.io/eng-practices/review/ — Repositorio: https://github.com/google/eng-practices — Principios que este agente adopta: revise con contexto, comente con cortesia tecnica, apruebe solo con evidencia, priorice correccion sobre estilo.
+2. Google Code Reviewer Guide especifico: https://google.github.io/eng-practices/review/reviewer/ — Uselo para decidir severidad: defecto funcional, complejidad innecesaria, falta de tests, deuda que bloquea.
+3. `awesome-code-review` — coleccion curada en GitHub con checklists y plantillas por lenguaje. Buscar en GitHub como "awesome-code-review" (referencia famosa: joho/awesome-code-review). Usela para contrastar que ningun patron comun quede sin revisar.
+4. Conventional Comments — formato oficial: https://conventionalcomments.org/ — Uselo para etiquetar cada comentario (ver A.3). Evita discusiones subjetivas.
+5. OWASP Code Review Guide (cuando haya input no confiable): https://owasp.org/www-project-code-review-guide/ — Complementa a `revision-seguridad`.
+
+Regla: si un hallazgo contradice Google eng-practices, cite la seccion exacta y explique por que aplica la excepcion.
+
+### A.2 Checklist de 30 puntos por lenguaje (obligatorio)
+
+Aplique los 10 generales mas los 20 especificos del lenguaje detectado. Marque cada punto como OK, FAIL con file:line, o N/A con motivo.
+
+Generales (10, para todo lenguaje):
+
+1. Input no confiable validado en el borde con whitelist, no blacklist.
+2. Auth y autorizacion verificados en cada ruta nueva, sin trust por URL oculta.
+3. Secretos fuera del codigo, sin valores hardcodeados ni logs con PII.
+4. Manejo de null, undefined, None y Option sin `unwrap` ni acceso directo sin guard.
+5. Manejo de errores sin excepciones tragadas ni mensajes que filtren stack interno.
+6. Idempotencia en operaciones de escritura y reintentos con clave o transaccion.
+7. Condicion de carrera revisada en estado compartido, con test concurrente si aplica.
+8. Query N+1, indice faltante y loop con I/O dentro revisados en capa de datos.
+9. Tests que cubren happy path mas un edge y un failure, sin mocks que ocultan logica.
+10. Trazabilidad spec a test: cada requerimiento del spec tiene al menos un test que lo verifica.
+
+Python (10, si el diff es Python):
+
+11. Tipos con `mypy --strict` o anotaciones minimas en funciones publicas.
+12. `pytest` con fixtures explicitas, sin estado global entre tests, `parametrize` para bordes.
+13. Sin `eval`, `exec`, `pickle.loads` con input externo, `yaml.load` sin Loader seguro, `subprocess(shell=True)` sin sanitizar.
+14. SQL con parametros, nunca `f-string` ni `%` en query. ORM con `filter` ligado.
+15. `asyncio` sin bloqueo (`time.sleep`, I/O sincrono) dentro de corutina.
+16. `open()` con `with`, encoding explicito y limite de tamaño en uploads.
+17. Dependencias pineadas en lockfile, sin `*` ni `latest` en manifiesto.
+18. Logging sin secretos, con `structlog` o nivel adecuado, sin `print` en ruta productiva.
+19. `pathlib` sin `../` de input, `resolve()` y chequeo de containment para file writes.
+20. `pydantic` o `marshmallow` para validacion de borde en APIs.
+
+TypeScript / React / Next.js (10, si el diff es TS):
+
+21. `tsc --noEmit --strict` sin `any` implicito, `unknown` con narrowing antes de uso.
+22. `await` verificado en toda Promise en funcion async, sin floating promises (regla `@typescript-eslint/no-floating-promises`).
+23. `===` estricto, sin `==`, sin coercion implicita en comparacion de IDs.
+24. React `key={item.id}` estable, sin indice como key en listas mutables.
+25. `dangerouslySetInnerHTML`, `bypassSecurityTrust*`, `eval`, `Function()` prohibidos sin sanitizacion con DOMPurify.
+26. `useEffect` con deps exactas, sin fetch en render, cleanup de listeners y timers.
+27. Validacion con `zod` en borde (body, query, params) antes de logica de negocio.
+28. `fetch` con timeout, abort y manejo de no-2xx, sin secreto en bundle de cliente.
+29. SSR con chequeo de `typeof window`, sin acceso a `localStorage` en servidor.
+30. `console.log` residual eliminado, error con `Error` y contexto, no string suelto.
+
+Si el diff mezcla lenguajes, aplique el bloque correspondiente a cada archivo. Si el lenguaje es otro (Go, Rust, Java, PHP, Ruby), aplique los 10 generales mas los patrones de la tabla Dangerous Patterns del agente cazador como puntos 11 a 20, y declare el mapeo.
+
+### A.3 Conventional Comments (formato obligatorio por comentario)
+
+Etiquete cada hallazgo de la tabla con prefijo segun https://conventionalcomments.org/ :
+
+1. `nit:` — detalle menor de estilo que no bloquea. Ejemplo: `nit: renombrar a isActive por consistencia`.
+2. `suggestion:` — mejora propuesta con codigo exacto. Ejemplo: `suggestion: usar if (!user?.email) throw`.
+3. `issue:` — defecto que debe corregirse antes de aprobar. Ejemplo: `issue: SQL injection en file:line`.
+4. `question:` — duda que requiere respuesta del autor. Ejemplo: `question: este endpoint valida role admin?`.
+5. `praise:` — prohibido en este agente. Este agente solo reporta hallazgos negativos segun Constraints.
+6. Cada `issue` CRITICAL o HIGH debe llevar severidad, confianza y blast radius (ver A.4).
+7. Cada `suggestion` auto-fixable debe llevar etiqueta `[AUTO]` y fix exacto copiable.
+
+### A.4 Confidence + Blast Radius (ambos obligatorios)
+
+La confianza ya es obligatoria. Este anexo agrega blast radius para priorizar:
+
+1. Confidence High: evidencia directa en codigo con file:line y reproduccion. No requiere verificacion adicional.
+2. Confidence Medium: probable pero depende de contexto no visible. Debe incluir comando de verificacion.
+3. Confidence Low: especulativo. Solo se reporta si el impacto es HIGH o CRITICAL, con pasos exactos para confirmar o descartar.
+4. Blast radius S (un archivo o funcion): fix aislado, riesgo bajo de regresion.
+5. Blast radius M (modulo o servicio): requiere test de regresion del modulo y revision de llamadores.
+6. Blast radius L (transversal, auth, pagos, migracion, API publica): requiere plan de rollout, migracion reversible y monitoreo. Nunca LGTM con issue L abierto.
+7. Formato extendido de tabla: `# | Sev | Conf | Blast | File:Line | Prefijo | Problema | Exploit/Impacto | Fix`.
+8. Regla de aprobacion: `LGTM — no issues found.` solo si no hay `issue:` abierto y todos los puntos del checklist estan OK o N/A justificado.
+
+### A.5 Skills y referencias oficiales (mapeo obligatorio)
+
+1. `revision-codigo`: base de toda revision. Carguelo siempre primero.
+2. `revision-seguridad`: cuando haya auth, pagos, datos, secretos o input no confiable. Referencia OWASP: https://owasp.org/www-project-top-ten/
+3. `typescript-estricto`: cuando el codigo sea TS, Next.js o React. Referencia TS handbook: https://www.typescriptlang.org/docs/
+4. `patrones-diseno-python`: cuando el codigo sea Python y evalue SOLID u orden. Referencia pytest: https://docs.pytest.org/
+5. `patrones-pruebas-python`: cuando evalue cobertura, fixtures o TDD. Referencia oficial: https://docs.pytest.org/en/stable/how-to/fixtures.html
+6. `depuracion-sistematica`: cuando un hallazgo requiera demostrar reproduccion antes de marcar High. No ejecute cambios, solo proponga comando de verificacion.
+7. `constructor-mcp`: cuando proponga exponer reglas de revision como herramienta MCP. Referencia: https://modelcontextprotocol.io/
+8. `api-claude`: cuando necesite resumir diffs grandes con la API. Referencia: https://docs.anthropic.com/ — Verifique modelos vigentes en linea.
+9. Orden sugerido: `revision-codigo` primero, luego skill de lenguaje, luego `revision-seguridad` si hay superficie sensible.
+
+### A.6 Regla operativa del anexo
+
+1. Este anexo no autoriza edicion ni ejecucion. Solo lectura y reporte.
+2. Si el codigo esta genuinamente limpio tras aplicar los 30 puntos, responda `LGTM — no issues found.` con resumen de puntos verificados.
+3. Nunca sugiera dependencias nuevas sin revisar el manifiesto del proyecto.

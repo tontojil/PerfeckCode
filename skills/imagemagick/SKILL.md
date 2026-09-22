@@ -199,3 +199,44 @@ magick identify -format '%wx%h %[size]\n' input.jpg    # custom format
 - `^` = fill (cover), `!` = force, `>` = shrink-only. Pick deliberately.
 - `magick mogrify` overwrites originals — always `-path` to a separate dir for safety.
 - High `-density` BEFORE the PDF input for crisp rasterization, not after.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los comandos existentes. Úsela para validar sintaxis v7, formatos y privacidad.
+
+### Documentación oficial
+
+- ImageMagick Usage: https://imagemagick.org/Usage/ — guía completa por operación y ejemplo.
+- Comando `magick`: https://imagemagick.org/script/command-line-processing.php — sintaxis v7 y orden de operadores.
+- Resize: https://imagemagick.org/Usage/resize/ — `resize`, `thumbnail`, `extent` y geometrías.
+- Formatos: https://imagemagick.org/script/formats.php — WebP, AVIF, PNG, JPG e ICO.
+- Color y perfiles: https://imagemagick.org/Usage/color_basics/ — `colorspace`, `modulate` y perfiles.
+- PDF con Ghostscript: https://imagemagick.org/Usage/formats/#pdf — densidad y delegados requeridos.
+- Seguridad y privacidad: https://imagemagick.org/script/security-policy.php — políticas y `strip` de metadata.
+
+### Repositorios famosos y listas curadas
+
+- ImageMagick: https://github.com/ImageMagick/ImageMagick — código fuente y releases v7.
+- Awesome Imaging: https://github.com/mahmoud/awesome-python-applications — sección de imágenes con ImageMagick.
+- Squoosh: https://github.com/GoogleChromeLabs/squoosh — referencia de compresión WebP y AVIF.
+- Sharp: https://github.com/lovell/sharp — alternativa Node para comparar calidad y velocidad.
+- libvips: https://github.com/libvips/libvips — referencia de procesamiento rápido por lotes.
+
+### Guías de profundización sugeridas
+
+- Revise Usage de resize antes de elegir entre `resize`, `thumbnail` y `extent`.
+- Consulte formatos para decidir WebP lossy 80, AVIF 50 o PNG lossless según destino.
+- Valide favicon ICO multi-resolución con `identify` antes de publicar.
+- Verifique PDFs con Ghostscript instalado y `-density` antes del input.
+- Mida peso antes y después con `identify -format` y confirme `strip` en exports web.
+
+### Checklist de verificación
+
+- [ ] Se consultó `imagemagick.org/Usage/` para el operador utilizado.
+- [ ] Se utiliza sintaxis v7 con `magick` y no `convert` legacy.
+- [ ] Todo export web incluye `-strip` para remover EXIF y GPS.
+- [ ] El formato se eligió deliberadamente: WebP, AVIF, PNG o JPG.
+- [ ] Después de `-crop` se aplica `+repage` cuando corresponde.
+- [ ] El batch con `mogrify` utiliza `-path` separado y no sobrescribe originales.
+- [ ] La densidad PDF se declara antes del input para raster nítido.
+- [ ] `identify` confirma dimensiones, peso y transparencia esperados.

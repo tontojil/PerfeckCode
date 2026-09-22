@@ -145,3 +145,26 @@ QC-01 paradigma unico + QC-05 plan trazable H->A + QC-06 afirmacion+evidencia + 
 4. NUNCA lenguaje edadista (abuelitos, viejitos, carga). Usar personas mayores, titulares de derechos.
 5. SIEMPRE devolucion con acta firmada. Sin devolucion no hay sistematizacion UC.
 6. SIEMPRE espanol neutro, trato de usted.
+
+## Referencias UC verificadas 2026 (anexo sin borrar contenido previo)
+
+Usted cita 5 o mas fuentes APA 7 con URL verificada el dia de entrega. Usted sigue la Guia Bibliotecas UC: https://guiastematicas.bibliotecas.uc.cl/apa7 (actualizada 16-06-2026). Usted verifica cada URL antes de declarar listo.
+
+Sistematizacion (3 autores, no mezclar en interpretacion):
+
+- Jara, O. (2018). La sistematizacion de experiencias: practica y teoria para otros mundos posibles. Bogota: CINDE. Ficha: https://repository.cinde.org.co/handle/20.500.11907/2121 . Guia: http://biblioteca.udgvirtual.udg.mx:8080/jspui/bitstream/123456789/3845/1/Orientaciones_teorico-practicas_sistematizar_experiencias.pdf y https://centroderecursos.alboan.org/ebooks/0000/0788/6_JAR_ORI.pdf
+- Martinic, S. (1998). El objeto de la sistematizacion y sus relaciones con la evaluacion y la investigacion. Ponencia Medellin, CEAAL. PDF: https://centroderecursos.alboan.org/ebooks/0000/0748/6_CEA_OBJ.pdf
+- Cifuentes, R. M. (1999). La sistematizacion de la practica del Trabajo Social. Buenos Aires: Lumen-Humanitas. Ficha: https://repositorio.ts.ucr.ac.cr/handle/123456789/196 . Entrevista 2024: https://uchile.cl/noticias/223640/entrevista-a-rosa-maria-cifuentes-educadora-colombiana y https://saludpublica.uchile.cl/noticias/223498/sistematizacion-de-experiencias-clave-para-construir-conocimiento
+
+Transversales UC:
+
+- Aylwin Acuna, N. Evolucion historica del trabajo social. Revista de Trabajo Social UC. URL: https://repositorio.uc.cl/handle/11534/6206
+- Schon, D. (1983). The Reflective Practitioner. New York: Basic Books. Resena en espanol: Camejo, S. (2017). Educacion en Contexto, II(5), 113-117. URL: https://dialnet.unirioja.es/descarga/articulo/6296650.pdf
+
+Institucional UC y vejez:
+
+- Admision UC Trabajo Social (grado, titulo, 10 semestres, vacantes 70, malla): https://admision.uc.cl/carreras/trabajo-social . Malla PDF: https://admision.uc.cl/htdocs/content/uploads/2021/09/70.-Trabajo-Social.pdf . Perfil de egreso: https://trabajosocial.uc.cl/pregrado/perfil-de-egreso
+- Revista de Trabajo Social UC N. 104 (2026): https://ojs.uc.cl/index.php/RTS/index y https://revistatrabajosocial.uc.cl/
+- Portal Tesis UC: https://repositorio.uc.cl/pagina/tesis . Ejemplos: Plan DPD https://repositorio.uc.cl/handle/11534/64474 ; fuerza laboral y envejecimiento https://repositorio.uc.cl/handle/11534/64990
+- CEVE UC vejez (Caro Puga, Miranda): https://inteligenciasocial.uc.cl/personas/sara-caro-puga y Reporte Vinculos: https://observatorioenvejecimiento.uc.cl/wp-content/uploads/2023/10/Reporte-Los-Vinculos-Sociales-de-las-Personas-Mayores-en-Chile.pdf
+- Sistematizacion con personas mayores en Chile (Temuco): https://www.redalyc.org/journal/5742/574275303003/html . Participacion social mayores: https://repositorio.utalca.cl/repositorio/handle/1950/13127

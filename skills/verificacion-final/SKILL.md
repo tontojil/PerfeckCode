@@ -50,3 +50,20 @@ Use:
 - **Result summary**
 - **Evidence snippet**
 - **Final status**: pass / fail / partial
+
+## Referencias oficiales y repositorios famosos
+
+1. Pytest docs (fixtures, parametrize, exit codes, reportes): https://docs.pytest.org/en/stable/
+2. Vitest guide (run, coverage, UI, CI): https://vitest.dev/guide/
+3. Playwright test retries y reporters (repetibilidad E2E): https://playwright.dev/docs/test-retries
+4. GitHub Actions docs (gates CI, environments, artefactos): https://docs.github.com/en/actions
+
+El comando del proyecto en `package.json`, `README` o `CLAUDE.md` prevalece sobre la tabla general.
+
+### Checklist aplicable antes de declarar listo
+
+- [ ] Comando fresco recien corrido con exit 0, sin reusar salida historica, con commit y fecha registrados.
+- [ ] Reclamo mapeado a evidencia: tests pasan con salida completa, build OK, bug con reproduccion que ya no falla mas test dirigido.
+- [ ] Warnings revisados, si el proyecto usa `--strict` cuentan como fallo, si no se reportan igual.
+- [ ] Suite afectada mas regresion adyacente en verde, `trace` o log adjunto si hubo fallo intermitente.
+- [ ] Estado final explicito pass, fail o partial con proximo paso y dueno, nunca listo sin evidencia.

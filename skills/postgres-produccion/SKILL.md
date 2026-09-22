@@ -30,3 +30,20 @@ description: "Para PostgreSQL en producción: modelo, índices, consultas rápid
 ## Output Contract
 
 Entregue: `EXPLAIN` antes y después, índice creado y tiempo medido.
+
+## Referencias oficiales y repositorios famosos
+
+1. PostgreSQL Documentation current (modelado, MVCC, mantenimiento): https://www.postgresql.org/docs/current/
+2. Using EXPLAIN (planes, BUFFERS, Index Scan vs Seq Scan): https://www.postgresql.org/docs/current/using-explain.html
+3. pg_stat_statements (top queries, tiempos, llamadas): https://www.postgresql.org/docs/current/pgstatstatements.html
+4. Awesome Postgres curaduria (herramientas, extensiones, monitoreo): https://github.com/dhamaniasad/awesome-postgres
+
+La documentacion oficial prevalece. Toda consulta lenta se explica antes de tocarla.
+
+### Checklist aplicable en produccion
+
+- [ ] `EXPLAIN (ANALYZE, BUFFERS)` en replica antes de crear indice, verifico `Index Scan` y tiempo P95.
+- [ ] Clave primaria siempre, foraneas con indice, unicos donde el negocio exige, sin `SELECT *`.
+- [ ] N+1 eliminado con join o carga agrupada, conteo de queries por request medido antes y despues.
+- [ ] Transacciones cortas con `SELECT ... FOR UPDATE` solo para folios y stock, commit rapido.
+- [ ] Respaldo diario con restauracion probada en copia y exit 0, `VACUUM` y bloat revisados, pool dimensionado.

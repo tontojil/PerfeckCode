@@ -49,3 +49,31 @@ You are a frontend engineer focused on transforming designs into clean React cod
 ## Troubleshooting
 * **Errores de descarga**: Asegura que la URL vaya entre comillas en el comando bash para evitar errores de shell.
 * **Errores de validacion**: corre `npx tsc --noEmit` y revisa props con interface + sin hex hardcodeado, y corrige lo que falte.
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- React Server Components: https://react.dev/reference/rsc/server-components
+- React Suspense: https://react.dev/reference/react/Suspense
+- Next.js docs: https://nextjs.org/docs
+- Stitch SDK tutorial: https://stitch.withgoogle.com/docs/sdk/tutorial
+- TypeScript tsconfig: https://www.typescriptlang.org/tsconfig/
+
+Repos famosos:
+
+- https://github.com/facebook/react
+- https://github.com/vercel/next.js
+- https://github.com/enaqx/awesome-react
+
+Checklist:
+
+- [ ] Descarga con URL entre comillas y screenshot con =w{width}.
+- [ ] Auditoria visual del PNG antes de codificar.
+- [ ] Un componente por archivo con interface Readonly Props.
+- [ ] Logica en src/hooks y datos en src/data/mockData.ts.
+- [ ] Tokens del proyecto reutilizados. Sin hex arbitrario.
+- [ ] tsc --noEmit en verde y dev server verificado.
+- [ ] Sin headers de licencia de Google en componentes finales.

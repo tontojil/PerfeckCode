@@ -260,3 +260,44 @@ jobs:
 - `FakeXxx` implementations over mocks for complex dependencies.
 - Test file mirrors source file path.
 - CI pipeline: unit → integration → UI.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar las estrategias existentes. Úsela para validar testing Android e iOS.
+
+### Documentación oficial
+
+- Testing Android: https://developer.android.com/training/testing — fundamentos, capas y estrategia.
+- Compose Testing: https://developer.android.com/develop/ui/compose/testing — `createComposeRule`, matchers y sincronización.
+- JUnit y Espresso: https://developer.android.com/training/testing/espresso — UI funcional en Android.
+- XCTest Apple: https://developer.apple.com/documentation/xctest — unit y performance en iOS y macOS.
+- XCUITest: https://developer.apple.com/documentation/xctest/user-interface-tests — automatización de interfaz.
+- Swift Testing: https://developer.apple.com/documentation/testing — framework moderno de pruebas Swift.
+- Firebase Test Lab: https://firebase.google.com/docs/test-lab — dispositivos reales en la nube para Android e iOS.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Mobile Testing: https://github.com/shellyln/awesome-mobile — recursos curados de testing móvil.
+- MockK: https://github.com/mockk/mockk — mocks para Kotlin y corutinas.
+- Roborazzi: https://github.com/takahashi-shubun/roborazzi — screenshot testing para Compose.
+- swift-snapshot-testing: https://github.com/pointfreeco/swift-snapshot-testing — snapshots en SwiftUI y UIKit.
+- Turbine: https://github.com/cashapp/turbine — testing de `Flow` y `StateFlow`.
+
+### Guías de profundización sugeridas
+
+- Revise la pirámide de testing Android antes de agregar UI tests costosos.
+- Consulte Compose Testing para aislar estado con `FakeViewModel` en cada test.
+- Valide XCUITest con `launchArguments` para datos deterministas.
+- Verifique snapshots en modo claro y oscuro antes de aprobar cambios visuales.
+- Mida cobertura y tiempo: unitarios en cada PR, UI en nightly o Test Lab.
+
+### Checklist de verificación
+
+- [ ] Se consultó `developer.android.com/training/testing` o `developer.apple.com/documentation/xctest` según plataforma.
+- [ ] Los unitarios aíslan dependencias externas y utilizan objetos reales para el resto.
+- [ ] Los tests UI verifican flujos de usuario, no implementación interna.
+- [ ] Existen snapshots en tema claro y oscuro cuando hay cambios visuales.
+- [ ] Los tests Swift de ViewModel utilizan `@MainActor`.
+- [ ] Los tests Kotlin utilizan `runTest` con `advanceUntilIdle` o `advanceTimeBy`.
+- [ ] Cada archivo de test replica la ruta del archivo fuente.
+- [ ] El pipeline CI ejecuta en orden: unit, integración y UI.

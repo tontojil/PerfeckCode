@@ -149,3 +149,30 @@ Un one-liner por plugin. Ver `references/plugins.md` para config completa, tabla
 ### Learn More
 
 https://gsap.com/docs/v3/Plugins/
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- GSAP Plugins: https://gsap.com/docs/v3/Plugins/
+- ScrollTrigger: https://gsap.com/docs/v3/Plugins/ScrollTrigger
+- GSAP React: https://gsap.com/resources/React
+- GSAP skills: https://github.com/greensock/gsap-skills
+
+Repos famosos:
+
+- https://github.com/greensock/gsap-skills
+- https://github.com/facebook/react
+- https://github.com/vercel/next.js
+
+Checklist:
+
+- [ ] Todo plugin registrado con registerPlugin antes de usar.
+- [ ] Instalacion desde gsap publico. Sin .npmrc ni Club token.
+- [ ] Flip con getState antes de mutar DOM.
+- [ ] Draggable con bounds y edgeResistance. Inertia con plugin registrado.
+- [ ] SplitText solo en lo animado y revertido en cleanup.
+- [ ] Registro una vez a nivel app, no por render.
+- [ ] GSDevTools solo en dev, nunca en produccion.

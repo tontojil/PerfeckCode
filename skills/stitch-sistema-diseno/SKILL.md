@@ -102,3 +102,31 @@ Guarda este archivo junto a DESIGN.md para llevar el estado:
 - Hex exacto siempre entre parentesis.
 - Mismo vocabulario en todo el archivo.
 - Cambios chicos y verificados, no todo de una vez.
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- Stitch DESIGN.md overview: https://stitch.withgoogle.com/docs/design-md/overview
+- Stitch view edit export: https://stitch.withgoogle.com/docs/design-md/usage
+- Stitch MCP guide: https://stitch.withgoogle.com/docs/mcp/guide
+- Material 3 tokens: https://m3.material.io/
+- W3C Design Tokens: https://www.w3.org/community/design-tokens/
+
+Repos famosos:
+
+- https://github.com/alexpate/awesome-design-systems
+- https://github.com/klaufel/awesome-design-systems
+- https://github.com/jbranchaud/awesome-react-design-systems
+
+Checklist:
+
+- [ ] DESIGN.md con 6 secciones y hex exactos por color.
+- [ ] metadata.json con project, colors, fonts y screens al dia.
+- [ ] assetId guardado tras create o update via MCP.
+- [ ] Confirmacion del usuario antes de crear o actualizar sistema.
+- [ ] apply_design_system solo a pantallas reales, sin instancias de sistema.
+- [ ] Verificacion visual de colores, fuentes y redondeo en pantalla aplicada.
+- [ ] Cambios chicos con vocabulario consistente por rol.

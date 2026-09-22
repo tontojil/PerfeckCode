@@ -29,3 +29,31 @@ description: "Para páginas usables con teclado y lector de pantalla. Checklist 
 ## Output Contract
 
 Entregue: tabla elemento | problema | cambio, y como se probo (teclado + lector).
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- WCAG 2.2 W3C: https://www.w3.org/TR/WCAG22/
+- Understanding Focus Visible 2.4.7: https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html
+- Apple HIG Accessibility: https://developer.apple.com/design/human-interface-guidelines
+- Material 3 Accessibility: https://m3.material.io/foundations/accessible-design/overview
+
+Repos famosos:
+
+- https://github.com/dequelabs/axe-core
+- https://github.com/alexpate/awesome-design-systems
+- https://github.com/enaqx/awesome-react
+
+Checklist:
+
+- [ ] Tab llega a todo. Enter activa. Esc cierra. Sin trampas.
+- [ ] Foco visible con :focus-visible y contraste 3:1 minimo.
+- [ ] Contraste 4.5:1 texto normal, 3:1 texto grande y UI.
+- [ ] Toda img con alt. Inputs con label. Iconos decorativos con aria-hidden.
+- [ ] Headings en orden h1 luego h2, sin saltos.
+- [ ] Targets 44x44 mobile, 24x24 minimo desktop segun 2.5.8.
+- [ ] Error nunca solo con color: texto mas icono.
+- [ ] prefers-reduced-motion y 200% zoom verificados.

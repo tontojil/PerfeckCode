@@ -92,3 +92,20 @@ Good:
 | **Laravel** | `->nullable()` | `->default()` | Manual (raw SQL) | `migrate:rollback` |
 | **golang-migrate** | Pointer type `*string` | Default in SQL | Raw SQL in `.up.sql` | Explicit `.down.sql` |
 | **Alembic** | `nullable=True` | `server_default=` | `postgresql_concurrently=True` | `alembic downgrade -1` |
+
+## Referencias oficiales y repositorios famosos
+
+1. PostgreSQL ALTER TABLE y DDL concurrente (locks, CONCURRENTLY): https://www.postgresql.org/docs/current/sql-altertable.html
+2. Django Migrations docs (operaciones, squashing, rollback): https://docs.djangoproject.com/en/5.0/topics/migrations/
+3. golang-migrate repositorio famoso (up/down SQL versionados): https://github.com/golang-migrate/migrate
+4. Expand and Contract pattern por Martin Fowler (cambios compatibles): https://martinfowler.com/bliki/ParallelChange.html
+
+La documentacion oficial prevalece. Nunca bloquee tabla productiva mas de 2 segundos.
+
+### Checklist aplicable antes de desplegar una migracion
+
+- [ ] Migracion `up` y `down` probadas en staging con copia anonimizada y `EXPLAIN` en queries nuevas.
+- [ ] Estrategia expandir y contraer: agregar compatible, doble escritura, backfill por lotes de 10k, contraer en deploy posterior.
+- [ ] Indices con `CONCURRENTLY` en Postgres o `ALGORITHM=INPLACE, LOCK=NONE` en MySQL InnoDB.
+- [ ] Tiempo estimado con `ANALYZE` real, rollback cronometrado menor a 5 minutos y dueno asignado.
+- [ ] Sin `SELECT *`, sin `UPDATE` masivo sin `LIMIT`, restricciones FK y CHECK validadas contra datos reales.

@@ -236,3 +236,44 @@ class UserResponse(BaseModel):
 - Dependency injection via constructor.
 - Immutable data with `@dataclass(frozen=True)`.
 - `asyncio` for I/O-bound, sync for CPU-bound.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los patrones existentes. Úsela para validar diseño, tipado y validación.
+
+### Documentación oficial
+
+- Documentación Python 3: https://docs.python.org/3/ — referencia base del lenguaje y biblioteca estándar.
+- `typing` y `Protocol`: https://docs.python.org/3/library/typing.html — `Protocol`, genéricos y `TypeVar`.
+- `dataclasses`: https://docs.python.org/3/library/dataclasses.html — dataclasses inmutables y configurables.
+- `asyncio`: https://docs.python.org/3/library/asyncio.html — concurrencia para I/O-bound.
+- `match` estructural: https://docs.python.org/3/tutorial/controlflow.html#match-statements — pattern matching desde 3.10.
+- Pydantic v2: https://docs.pydantic.dev/latest/ — validación en bordes con `BaseModel` y validadores.
+- Mypy: https://mypy.readthedocs.io/ — verificación con `mypy --strict`.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Python: https://github.com/vinta/awesome-python — frameworks, librerías y herramientas curadas.
+- CPython: https://github.com/python/cpython — implementación de referencia del lenguaje.
+- Pydantic: https://github.com/pydantic/pydantic — validación y serialización.
+- Dependency Injector: https://github.com/ets-labs/python-dependency-injector — contenedor DI para Python.
+- Returns: https://github.com/dry-python/returns — tipos `Result`, `Maybe` y programación funcional.
+
+### Guías de profundización sugeridas
+
+- Revise `typing.Protocol` antes de crear una interfaz nueva; prefiera composición.
+- Consulte Pydantic para validar en bordes y mantener el dominio con dataclasses puras.
+- Valide inmutabilidad con `@dataclass(frozen=True)` para objetos de valor.
+- Verifique concurrencia: `asyncio` para I/O, funciones síncronas para CPU-bound.
+- Mida tipado con `mypy --strict` y linter `ruff` antes de integrar cambios.
+
+### Checklist de verificación
+
+- [ ] Se consultó `docs.python.org/3` para la versión de Python declarada.
+- [ ] Toda función pública incluye anotaciones de tipos completas.
+- [ ] Las interfaces utilizan `Protocol` en lugar de herencia innecesaria.
+- [ ] La validación de entrada utiliza Pydantic en bordes del sistema.
+- [ ] La inyección se realiza por constructor, sin singletons ocultos.
+- [ ] Los datos inmutables utilizan `@dataclass(frozen=True)` cuando corresponde.
+- [ ] `match` se utiliza solo en Python 3.10 o superior verificado.
+- [ ] `mypy --strict` finaliza sin errores.

@@ -30,3 +30,16 @@ description: "Para publicar páginas y apps: dominio, SSL, hosting y tiendas de 
 ## Output Contract
 
 Entregue: URL pública verificada, prueba real exitosa y cómo volver atrás.
+
+## Anexo - Referencias oficiales
+
+Usted no declara produccion sin dominio real, candado SSL y rollback probado.
+
+| Fuente | URL | Uso |
+|---|---|---|
+| Microsoft Learn TLS y DNS | https://learn.microsoft.com/windows-server/networking/dns/dns-top | Dominio, DNS y certificado vigente |
+| kernel.org networking | https://www.kernel.org/doc/html/latest/networking/ | Base TCP/TLS cuando depura handshake |
+| Docker docs deploy | https://docs.docker.com/ | Publicacion en su servidor con proxy y HTTPS |
+| Caddy docs TLS | https://caddyserver.com/docs/caddyfile/directives/tls | Certificado automatico y renovacion |
+
+Usted verifica con `curl -v https://<dominio>` y guarda evidencia de 200 con candado.

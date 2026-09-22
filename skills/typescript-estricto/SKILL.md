@@ -28,3 +28,30 @@ description: "Para código TypeScript sin errores de tipos, Next.js y React. Exi
 ## Output Contract
 
 Entregue: archivo:linea del error de tipos, tipo agregado, y `tsc` con exit 0.
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- TypeScript Handbook strict: https://www.typescriptlang.org/docs/handbook/2/basic-types.html
+- tsconfig strict y noUncheckedIndexedAccess: https://www.typescriptlang.org/tsconfig/
+- React TypeScript Cheatsheet: https://react-typescript-cheatsheet.netlify.app/
+- Next.js TypeScript: https://nextjs.org/docs/app/building-your-application/configuring/typescript
+- Zod validacion de bordes: https://zod.dev/
+
+Repos famosos:
+
+- https://github.com/microsoft/TypeScript
+- https://github.com/vercel/next.js
+- https://github.com/colinhacks/zod
+
+Checklist:
+
+- [ ] strict true y noUncheckedIndexedAccess true en tsconfig.
+- [ ] Cero any implicito. Todo parametro y retorno con tipo.
+- [ ] Bordes de API validados con zod, nunca as any.
+- [ ] null y undefined controlados con if, sin operador !.
+- [ ] npx tsc --noEmit con exit 0 antes de declarar listo.
+- [ ] Props de componentes con interface Readonly y nombres claros.

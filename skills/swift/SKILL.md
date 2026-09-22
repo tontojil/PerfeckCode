@@ -220,3 +220,44 @@ func loadDashboard() async throws -> Dashboard {
 - NavigationSplitView for iPad/macOS, NavigationStack for iPhone.
 - `#Preview` macros for all views.
 - `Sendable` conformance for types crossing concurrency boundaries.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los patrones existentes. Úsela para validar SwiftUI, concurrencia y SwiftData.
+
+### Documentación oficial
+
+- Lenguaje Swift: https://docs.swift.org/swift-book/ — referencia base del lenguaje y concurrencia.
+- SwiftUI: https://developer.apple.com/documentation/swiftui — vistas, estado y navegación.
+- Observation: https://developer.apple.com/documentation/observation — `@Observable` y seguimiento de estado.
+- SwiftData: https://developer.apple.com/documentation/swiftdata — modelos, `@Query` y relaciones.
+- Concurrencia: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/ — `async`, `await` y actores.
+- NavigationStack: https://developer.apple.com/documentation/swiftui/navigationstack — destinos y `NavigationPath`.
+- Human Interface Guidelines: https://developer.apple.com/design/human-interface-guidelines — patrones iOS y macOS.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Swift: https://github.com/matteocrippa/awesome-swift — librerías y recursos curados.
+- Swift: https://github.com/swiftlang/swift — compilador y evolución del lenguaje.
+- SwiftUI Examples: https://github.com/jordansinger/SwiftUI-Kit — componentes y patrones visuales.
+- Alamofire: https://github.com/Alamofire/Alamofire — red para casos donde `URLSession` no basta.
+- swift-snapshot-testing: https://github.com/pointfreeco/swift-snapshot-testing — snapshots de vistas.
+
+### Guías de profundización sugeridas
+
+- Revise Observation antes de elegir entre `@State`, `@Environment` y modelo compartido.
+- Consulte SwiftData para definir `deleteRule` e inversos antes de modelar relaciones.
+- Valide concurrencia con `actor` para estado mutable compartido y `Sendable` en bordes.
+- Verifique navegación con `NavigationPath` centralizado en `AppRouter`.
+- Mida con Instruments y `XCTest` de performance antes de optimizar listas grandes.
+
+### Checklist de verificación
+
+- [ ] Se consultó `developer.apple.com/documentation/swiftui` para el API utilizado.
+- [ ] Se utiliza `@Observable` en lugar de `ObservableObject` en código nuevo.
+- [ ] El estado de vista utiliza `@State` y el compartido utiliza `@Environment`.
+- [ ] El estado mutable compartido reside en `actor` con conformidad `Sendable`.
+- [ ] Toda red utiliza `async` y `await` sin completion handlers nuevos.
+- [ ] La persistencia nueva utiliza SwiftData con relaciones e inversos definidos.
+- [ ] Cada vista principal incluye `#Preview` con contenedor en memoria cuando usa datos.
+- [ ] `NavigationStack` se utiliza en iPhone y `NavigationSplitView` en iPad y macOS cuando corresponde.

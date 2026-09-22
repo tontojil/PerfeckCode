@@ -217,3 +217,44 @@ Addressables.Release(handle);
 - Addressables for asset management in production.
 - Separate logic from MonoBehaviour when possible (testability).
 - Cache component references in Awake, not per-frame.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los patrones existentes. Úsela para validar Unity 6 LTS, render y Addressables.
+
+### Documentación oficial
+
+- Unity Manual 6 LTS: https://docs.unity3d.com/Manual/index.html — referencia base del motor y flujos.
+- Scripting API: https://docs.unity3d.com/ScriptReference/ — `MonoBehaviour`, `ScriptableObject` y ciclo de vida.
+- Input System: https://docs.unity3d.com/Packages/com.unity.inputsystem@1.0/manual/index.html — acciones, bindings y dispositivos.
+- Addressables: https://docs.unity3d.com/Packages/com.unity.addressables@2.0/manual/index.html — carga, escenas y liberación.
+- URP: https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@17.0/manual/index.html — configuración para móvil y sobremesa.
+- Profiler: https://docs.unity3d.com/Manual/Profiler.html — CPU, GPU, memoria y Frame Debugger.
+- Best Practices: https://unity.com/resources — guías de rendimiento y arquitectura de Unity.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Unity: https://github.com/RyanNielson/awesome-unity — frameworks, herramientas y patrones curados.
+- Unity Examples: https://github.com/Unity-Technologies/UnityCsReference — referencia C# del motor.
+- FPS Sample: https://github.com/Unity-Technologies/FPSSample — multijugador y rendimiento de referencia.
+- Input System Samples: https://github.com/Unity-Technologies/InputSystem — ejemplos de acciones y UI.
+- Addressables Sample: https://github.com/Unity-Technologies/Addressables-Sample — carga remota y grupos.
+
+### Guías de profundización sugeridas
+
+- Revise el Manual LTS correspondiente a la versión exacta instalada antes de usar API nueva.
+- Consulte Input System para migrar controles legacy a `InputActions` con mapas por contexto.
+- Valide Addressables con perfiles local y remoto antes de publicar contenido descargable.
+- Verifique pooling con pruebas de spawn masivo y medición de GC en Profiler.
+- Mida con Profiler, Memory Profiler y Frame Debugger antes de optimizar draw calls.
+
+### Checklist de verificación
+
+- [ ] Se consultó `docs.unity3d.com` para la versión 6 LTS instalada.
+- [ ] La configuración utiliza `ScriptableObject` y no valores hardcodeados.
+- [ ] Los sistemas se comunican por eventos sin referencias directas innecesarias.
+- [ ] Todo objeto instanciado con frecuencia utiliza object pooling.
+- [ ] Se utiliza New Input System con `InputActions` habilitado por contexto.
+- [ ] La gestión de assets en producción utiliza Addressables con `Release` explícito.
+- [ ] Las referencias a componentes se cachean en `Awake`.
+- [ ] El Profiler valida CPU, memoria y GC antes de declarar optimización completa.

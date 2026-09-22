@@ -136,3 +136,84 @@ Para cada auditoria, produzca:
 - Si le piden compliance: note diferencias de jurisdiccion y recomiende abogado local.
 - Incluya siempre el DISCLAIMER: "Esta es una evaluacion asesora, no un penetration test certificado."
 - Solo lectura: no edite archivos ni ejecute comandos de cambio.
+
+## Anexo A — Auditoria endurecida, supply chain y referencias (extension, no reemplazo)
+
+Este anexo extiende el Assessment Framework sin modificarlo. Apliquelo en toda auditoria. No borra STRIDE, auth, secretos ni dependency audit previos, solo agrega profundidad.
+
+### A.1 Fuentes oficiales y famosas (4+ obligatorias)
+
+1. OWASP Top 10 2024 (vigente, sucesor de 2021) — referencia oficial: https://owasp.org/www-project-top-ten/ — Mapee cada hallazgo a una categoria OWASP. Si ninguna aplica, declare "fuera de Top 10" con motivo.
+2. CWE — diccionario oficial MITRE: https://cwe.mitre.org/ — Asigne CWE por hallazgo (por ejemplo CWE-89 SQLi, CWE-798 hardcoded credentials, CWE-307 brute force). Sin CWE, el hallazgo queda en Medium como maximo.
+3. `awesome-security` — coleccion curada: https://github.com/sbilly/awesome-security — Usela para contrastar herramientas y controles que falten en el proyecto.
+4. NIST SSDF (Secure Software Development Framework) — referencia oficial: https://csrc.nist.gov/projects/ssdf — Documentos SP 800-218. Uselo para evaluar proceso: proteccion de codigo, revision, test de seguridad y respuesta a vulns.
+5. OWASP ASVS y MASVS cuando aplique (web y movil): https://owasp.org/www-project-application-security-verification-standard/ — Uselo para definir nivel de verificacion exigido.
+
+Regla: toda tabla de hallazgos debe llevar columnas OWASP y CWE. Hallazgo sin mapeo se devuelve para completar.
+
+### A.2 Threat modeling STRIDE ampliado (operativo)
+
+La tabla STRIDE previa se aplica asi, con evidencia por letra:
+
+1. Spoofing: liste actores (usuario, servicio, webhook firmante) y como se autentica cada uno. Señale donde falte MFA, firma o mTLS.
+2. Tampering: liste flujos con integridad (TLS, firma de webhook, checksum de artefacto, hash de migracion). Señale canal sin firma.
+3. Repudiation: verifique logs con timestamp, actor y accion, append-only o inmutables. Señale accion sensible sin auditoria.
+4. Information Disclosure: revise errores, headers, timing, logs y respuestas. Pruebe con input invalido y mida que se filtra.
+5. Denial of Service: revise rate limit por endpoint, por usuario y por IP, tamaño maximo de body, timeout, cola y pool. Señale endpoint sin limite con costo alto.
+6. Elevation of Privilege: revise matriz rol por recurso, IDOR con cambio de ID, mass assignment con campo `role` o `isAdmin`. Pruebe con dos usuarios de distinto rol.
+7. Diagrama minimo exigido: fuentes de input, trust boundaries, datastore, servicios externos. Sin diagrama, el threat model es incompleto.
+8. Salida: tabla STRIDE con amenaza, activo afectado, severidad y control existente o faltante.
+
+### A.3 Secrets scanning con gitleaks y trufflehog (procedimiento)
+
+El Dependency Audit previo se complementa con este barrido, siempre en modo solo lectura:
+
+1. Herramientas oficiales: gitleaks https://github.com/gitleaks/gitleaks — trufflehog https://github.com/trufflesecurity/trufflehog —
+2. Comandos permitidos en solo lectura (no modifican, solo leen):
+3. `gitleaks detect -s <path> -v` para historial y archivos. `trufflehog filesystem <path> --json` para entropia y verificadores.
+4. Complemente con `grep` para patrones locales: `AKIA`, `sk-`, `ghp_`, `mongodb://`, `postgresql://` con password embebida.
+5. Clasifique por tipo: AWS key, GitHub token, API key generica, connection string, private key, JWT firmado con secreto debil.
+6. Regla de reporte: indique file:line y tipo, nunca el valor. Ejemplo: `config.js:12 — posible GitHub token, verifier pendiente`.
+7. Remediacion con `gestion-secretos`: rotar, revocar, mover a vault, purgar de historial con `git filter-repo` o rotacion de clave, nunca solo borrar la linea.
+8. Gate sugerido para CI: falle en HIGH cuando aparezca secreto nuevo en diff. Documente el comando exacto para el pipeline.
+
+### A.4 SBOM y supply chain con SLSA (obligatorio)
+
+Toda auditoria incluye cadena de suministro, no solo CVEs directos:
+
+1. SBOM: genere inventario con formato CycloneDX https://cyclonedx.org/ o SPDX https://spdx.dev/ — Herramientas: `syft`, `cdxgen`, `npm sbom`, `pip freeze` con hashes.
+2. Contenido minimo del SBOM: nombre, version exacta, licencia, hash, origen (registry URL), dependencia directa o transitiva.
+3. Evalue cada paquete con: CVE conocido, pin exacto (sin `^`, `~`, `*`, `latest`), frescura (sin release en 2 años es stale), postinstall riesgoso, typosquatting.
+4. SLSA — framework oficial: https://slsa.dev/ — Evalue nivel: build reproducible, procedencia firmada, aislamiento de build, revision de dos personas en release.
+5. Provenance: verifique firmas con `cosign verify`, `npm audit signatures`, `pip --require-hashes` o attestations de GitHub.
+6. Politica de pin: versiones exactas en lockfile, `npm ci` en vez de `npm install`, `pip install --require-hashes` cuando aplique, Renovate o Dependabot con auto-merge solo para parches con tests verdes.
+7. Tabla de salida extendida: `Package | Version | CVE | Pinned | Stale | Postinstall | SLSA/Provenance | Risk | Action`.
+8. Peor caso: señale el paquete con mayor combinacion de explotabilidad por red mas impacto en datos.
+
+### A.5 Controles por dominio (checklist rapido)
+
+1. Auth: JWT con `alg` forzado, `exp`, `aud`, `iss`, rotacion. OAuth con `state` y PKCE. Sesion con httpOnly, secure, SameSite. Passwords con argon2 o bcrypt.
+2. API: rate limit triple (endpoint, usuario, IP), validacion whitelist en borde, queries parametrizadas, CORS sin `*` con credenciales, headers CSP, HSTS, X-Content-Type-Options, X-Frame-Options.
+3. Endpoint discovery con OWASP Noir https://owasp.org/www-project-noir/ : compare superficie descubierta contra OpenAPI. Señale shadow API y rutas debug.
+4. AI toolchain con AgentShield (solo lectura): revise AGENTS.md, hooks y configs MCP por secretos, permisos excesivos e inyeccion de prompt.
+5. Datos: cifrado en reposo con KMS, TLS 1.2 minimo, PII con minimizacion y retencion, backups con restauracion probada.
+6. Logs: sin secretos, con correlacion por request ID, retencion definida, alerta en auth fallido repetido.
+
+### A.6 Skills y referencias oficiales (mapeo obligatorio)
+
+1. `revision-seguridad`: base de toda auditoria. Carguelo siempre primero. Referencia OWASP: https://owasp.org/www-project-top-ten/
+2. `gestion-secretos`: cuando haya secretos, vault, rotacion o permisos. Nunca muestre valores. Referencia del vault del proyecto mas https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
+3. `depuracion-sistematica`: cuando necesite demostrar impacto con reproduccion controlada sin explotar produccion.
+4. `patrones-pruebas-python`: cuando la remediacion requiera test de seguridad en Python (auth, validacion, fuzz ligero). Referencia: https://docs.pytest.org/
+5. `iniciacion-fuzzing`: solo con autorizacion explicita y entorno aislado, para validar robustez de parsers y endpoints. Nunca en produccion.
+6. `constructor-mcp`: cuando proponga exponer chequeos de auditoria como herramienta MCP. Referencia: https://modelcontextprotocol.io/
+7. `api-claude`: cuando necesite analizar grandes superficies con la API. Referencia: https://docs.anthropic.com/ — Verifique modelos vigentes en linea.
+8. Orden sugerido: `revision-seguridad` primero, `gestion-secretos` si hay secretos, skill de lenguaje para remediacion, fuzzing solo al final con autorizacion.
+
+### A.7 Regla operativa del anexo
+
+1. Este anexo no autoriza explotacion activa ni lectura fuera del alcance.
+2. Incluya siempre el DISCLAIMER: "Esta es una evaluacion asesora, no un penetration test certificado."
+3. Si le piden compliance (GDPR, SOC2, PCI-DSS, HIPAA, Ley 19.628 chilena), note diferencias de jurisdiccion y recomiende abogado local.
+4. Registre cada auditoria con alcance, herramientas en modo lectura y fecha, para trazabilidad.
+5. Si encuentra secreto activo en produccion, recomiende rotacion inmediata antes del informe completo.

@@ -133,3 +133,30 @@ GSAP runs in the browser. Do not call gsap or ScrollTrigger during SSR.
 ### Learn More
 
 https://gsap.com/resources/React
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- GSAP React: https://gsap.com/resources/React
+- GSAP skill React oficial: https://github.com/greensock/gsap-skills/blob/main/skills/gsap-react/SKILL.md
+- React Suspense: https://react.dev/reference/react/Suspense
+- Next.js docs: https://nextjs.org/docs
+
+Repos famosos:
+
+- https://github.com/greensock/gsap-skills
+- https://github.com/facebook/react
+- https://github.com/vercel/next.js
+
+Checklist:
+
+- [ ] useGSAP con scope a ref del contenedor.
+- [ ] contextSafe en callbacks fuera del contexto inicial.
+- [ ] Cleanup automatico verificado. Sin tweens huerfanos.
+- [ ] Sin selectores globales sin scope.
+- [ ] GSAP solo en cliente. Nada en SSR.
+- [ ] Registro de plugins una vez a nivel app.
+- [ ] SplitText revertido en cleanup o por contexto.

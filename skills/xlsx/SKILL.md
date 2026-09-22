@@ -298,3 +298,45 @@ The script returns JSON with error details:
 - Add comments to cells with complex formulas or important assumptions
 - Document data sources for hardcoded values
 - Include notes for key calculations and model sections
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar las reglas existentes. Agrega Power Query y validación de compatibilidad.
+
+### Documentación oficial
+
+- openpyxl: https://openpyxl.readthedocs.io/ — creación, formato y fórmulas con Python.
+- pandas Excel: https://pandas.pydata.org/docs/reference/api/pandas.read_excel.html — lectura y análisis.
+- Power Query: https://learn.microsoft.com/power-query/ — conexión, transformación y combinación de datos.
+- Power Query M: https://learn.microsoft.com/powerquery-m/ — lenguaje M para transformaciones reproducibles.
+- Funciones Excel: https://support.microsoft.com/en-us/office/excel-functions-alphabetical-b3944572-255d-4efb-bb96-c569c1c055ff — referencia de `SUM`, `INDEX`, `MATCH` y compatibilidad.
+- Compatibilidad `_xlfn`: https://learn.microsoft.com/office/client-developer/excel/excel-home — prefijos para funciones 365 fuera de 365.
+- Accesibilidad Excel: https://support.microsoft.com/en-us/office/make-your-excel-workbooks-accessible-to-people-with-disabilities-6cc05fc5-1314-48b5-8eb3-683e49b3e593 — tablas, encabezados y texto alternativo.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Excel: https://github.com/robwormald/awesome-excel — plantillas, herramientas y recursos curados.
+- openpyxl: https://github.com/theorchard/openpyxl — código fuente y ejemplos.
+- XlsxWriter: https://github.com/jmcnamara/XlsxWriter — gráficos y formato avanzado.
+- pandas: https://github.com/pandas-dev/pandas — análisis y exportación.
+- Mito: https://github.com/mito-ds/mito — edición visual que genera Python auditable.
+
+### Power Query obligatorio cuando corresponda
+
+- Utilice Power Query para importar CSV, TXT o bases antes de copiar y pegar manual.
+- Aplique pasos reproducibles: tipo de dato, encabezados, nulos, duplicados y merge con claves.
+- Prefiera `Merge` con `INDEX` y `MATCH` validados en lugar de `XLOOKUP` sin `_xlfn` fuera de 365.
+- Documente origen, fecha y consulta M en hoja `README` o comentario de tabla.
+- Actualice con `Refresh All` y verifique recálculo con `scripts/recalc.py` antes de entregar.
+- Para accesibilidad, convierta rangos en Tablas (`Ctrl+T`) con fila de encabezado y nombre descriptivo.
+
+### Checklist de verificación
+
+- [ ] Se consultó `openpyxl.readthedocs.io` y `support.microsoft.com` para funciones utilizadas.
+- [ ] Solo se utiliza lista blanca `SUM`, `AVERAGE`, `SUMIFS`, `INDEX` más `MATCH` salvo `_xlfn` justificado.
+- [ ] `wb.calculation.fullCalcOnLoad = True` se define antes de `wb.save()`.
+- [ ] `python scripts/recalc.py salida.xlsx` retorna `status success` con cero errores.
+- [ ] Power Query documenta origen y pasos; `Refresh All` finaliza sin errores.
+- [ ] Las Tablas poseen encabezados, nombres descriptivos y formatos de número correctos.
+- [ ] Cero errores `#REF!`, `#DIV/0!`, `#VALUE!`, `#N/A` y `#NAME?` verificados por script.
+- [ ] El archivo abre en Excel y LibreOffice con recálculo correcto.

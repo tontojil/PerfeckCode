@@ -146,3 +146,29 @@ Responsive y reduced-motion van en `references/easings.md` (`gsap.matchMedia()` 
 - **gsap-complementos** — Flip, Draggable, Observer, ScrollTo, texto, CustomEase plugin.
 - **gsap-utilidades** — `clamp`, `mapRange`, `random`, `snap`, `toArray`, `wrap`.
 - **gsap-rendimiento** — 60fps, transforms, `will-change`, batching.
+
+---
+
+## Anexo 2026 - Referencias oficiales y checklist
+
+Fuentes oficiales:
+
+- GSAP docs home: https://www.gsap.com/docs/v3/
+- GSAP React: https://gsap.com/resources/React
+- GSAP skills oficiales: https://github.com/greensock/gsap-skills
+- ScrollTrigger: https://gsap.com/docs/v3/Plugins/ScrollTrigger
+
+Repos famosos:
+
+- https://github.com/greensock/gsap-skills
+- https://github.com/facebook/react
+- https://github.com/vercel/next.js
+
+Checklist:
+
+- [ ] camelCase, aliases x y scale y autoAlpha sobre opacity.
+- [ ] Tweens guardados para playback. Timelines sobre delay encadenado.
+- [ ] Easing documentado. Sin nombres inventados.
+- [ ] matchMedia para breakpoints y prefers-reduced-motion.
+- [ ] Sin animar width height top left si sirve transform.
+- [ ] immediateRender false en from apilados sobre misma prop.

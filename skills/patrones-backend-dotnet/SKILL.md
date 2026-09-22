@@ -276,3 +276,44 @@ public class UserServiceTests
 - Primary constructors (C# 12) for DI.
 - `Results<T>` for typed HTTP responses.
 - Test with mocks for units, real DB for integration.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los patrones existentes. Úsela para validar Minimal APIs, EF Core y xUnit.
+
+### Documentación oficial
+
+- ASP.NET Core Minimal APIs: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis — mapeo, parámetros y `Results`.
+- Entity Framework Core: https://learn.microsoft.com/ef/core/ — DbContext, migraciones y configuración fluida.
+- Configuración con Options: https://learn.microsoft.com/aspnet/core/fundamentals/configuration/options — `IOptions`, validación y secciones.
+- Inyección de dependencias: https://learn.microsoft.com/aspnet/core/fundamentals/dependency-injection — lifetimes `Scoped`, `Transient` y `Singleton`.
+- Middleware: https://learn.microsoft.com/aspnet/core/fundamentals/middleware/ — pipeline y manejo de excepciones.
+- xUnit: https://xunit.net/docs/getting-started/netfx/visual-studio — hechos, teorías y ejecución.
+- Dapper: https://github.com/DapperLib/Dapper — micro-ORM para consultas ligeras y de alto rendimiento.
+
+### Repositorios famosos y listas curadas
+
+- Awesome .NET: https://github.com/quozd/awesome-dotnet — librerías, herramientas y recursos curados.
+- eShopOnWeb: https://github.com/dotnet-architecture/eShopOnWeb — referencia de arquitectura limpia con repositorios.
+- eShopOnContainers: https://github.com/dotnet-architecture/eShopOnContainers — microservicios .NET de referencia.
+- Moq: https://github.com/devlooped/moq — mocks para pruebas unitarias con xUnit.
+- EF Core: https://github.com/dotnet/efcore — código fuente y roadmap del ORM.
+
+### Guías de profundización sugeridas
+
+- Revise Minimal APIs antes de decidir entre endpoints y controladores.
+- Consulte EF Core para elegir entre `Include`, proyecciones y consultas divididas.
+- Valide lifetimes de DI: `DbContext` siempre `Scoped`, servicios stateless según necesidad.
+- Verifique migraciones con `dotnet ef migrations script` antes de aplicar en producción.
+- Mida consultas con logging de EF o MiniProfiler y confirme uso de `CancellationToken` en todo método asíncrono.
+
+### Checklist de verificación
+
+- [ ] Se consultó `learn.microsoft.com` para la versión LTS de .NET en uso.
+- [ ] Todo método asíncrono acepta `CancellationToken` y lo propaga a EF o Dapper.
+- [ ] El mapeo utiliza `IEntityTypeConfiguration` y no atributos dispersos.
+- [ ] La configuración utiliza Options pattern con sección tipada.
+- [ ] Ningún tipo de EF se expone fuera de la capa de infraestructura.
+- [ ] El middleware centraliza `NotFound`, validación y errores 500 con logging.
+- [ ] Los tests unitarios utilizan mocks y los de integración utilizan base real.
+- [ ] `dotnet build` y `dotnet test` finalizan sin errores ni advertencias críticas.

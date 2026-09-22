@@ -171,3 +171,44 @@ ffmpeg -i input.mp4 -vf "select='not(mod(n,30))',scale=160:90,tile=5x5" -frames:
 - `ffprobe` to inspect before processing.
 - Always specify `-c:a` explicitly. Default varies by format.
 - `-movflags +faststart` for web-playable MP4s.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los comandos existentes. Úsela para validar filtros, codecs y uso web.
+
+### Documentación oficial
+
+- Documentación FFmpeg: https://ffmpeg.org/documentation.html — manual, formatos y componentes.
+- Wiki FFmpeg: https://trac.ffmpeg.org/wiki — guías de H.264, H.265, VP9 y streaming.
+- Filtros: https://ffmpeg.org/ffmpeg-filters.html — `scale`, `setpts`, `atempo`, `subtitles` y `overlay`.
+- ffprobe: https://ffmpeg.org/ffprobe.html — inspección de duración, streams y metadata.
+- H.264 Guide: https://trac.ffmpeg.org/wiki/Encode/H.264 — CRF, presets y tuning.
+- H.265 Guide: https://trac.ffmpeg.org/wiki/Encode/H.265 — compresión eficiente para archivo.
+- Faststart: https://trac.ffmpeg.org/wiki/Encode/H.264#faststart-for-web-video — MP4 reproducible en web.
+
+### Repositorios famosos y listas curadas
+
+- Awesome FFmpeg: https://github.com/transitive-bullshit/awesome-ffmpeg — scripts, herramientas y recursos curados.
+- FFmpeg: https://github.com/FFmpeg/FFmpeg — código fuente oficial y changelog.
+- awesome-video: https://github.com/krzemienski/awesome-video — codecs, streaming y procesamiento.
+- HandBrake: https://github.com/HandBrake/HandBrake — presets de compresión de referencia.
+- Shaka Player: https://github.com/shaka-project/shaka-player — validación de MP4 web con `faststart`.
+
+### Guías de profundización sugeridas
+
+- Revise la wiki antes de elegir entre CRF y 2-pass según objetivo de tamaño.
+- Consulte la guía H.264 para seleccionar `preset` según equilibrio velocidad y compresión.
+- Valide subtítulos: `mov_text` para soft y `subtitles` para quemados, con archivo `.srt` revisado.
+- Verifique con `ffprobe` duración, resolución y codecs antes de concatenar.
+- Mida calidad con VMAF o comparación visual antes de cambiar CRF en lote.
+
+### Checklist de verificación
+
+- [ ] Se consultó `ffmpeg.org` o `trac.ffmpeg.org/wiki` para el filtro utilizado.
+- [ ] Se inspeccionó la entrada con `ffprobe` antes de procesar.
+- [ ] Se utiliza `-c copy` cuando no se requiere recodificar.
+- [ ] El CRF se mantiene en 18-28 para H.264 salvo justificación documentada.
+- [ ] El codec de audio se declara explícito con `-c:a`.
+- [ ] Los MP4 web incluyen `-movflags +faststart`.
+- [ ] El batch conserva nombres y no sobrescribe originales sin respaldo.
+- [ ] La salida se reproduce completa con audio y subtítulos verificados.

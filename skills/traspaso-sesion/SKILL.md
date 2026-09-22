@@ -60,3 +60,44 @@ Generar el archivo con ESTE formato exacto:
 
 1. Decir explícitamente: "HANDOFF.md creado. Cierra esta sesión y abre una nueva. Leerá el handoff automáticamente."
 2. No seguir trabajando después de generar el handoff. El punto es CERRAR la sesión.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar el formato HANDOFF existente. Úsela para traspasos consistentes y auditables.
+
+### Documentación oficial
+
+- GitHub Docs Markdown: https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github — formato `HANDOFF.md`.
+- Conventional Commits: https://www.conventionalcommits.org/ — mensajes citados en Cambios Hechos.
+- Git Log: https://git-scm.com/docs/git-log — historial para documentar cambios con precisión.
+- Git Status: https://git-scm.com/docs/git-status — estado limpio antes de cerrar sesión.
+- Gitignore: https://git-scm.com/docs/gitignore — mantener `HANDOFF.md` como temporal fuera del repo.
+- GitHub Flow: https://docs.github.com/get-started/using-github/github-flow — rama, cambios y próximos pasos.
+- OWASP Secrets: https://owasp.org/www-community/vulnerabilities/Information_exposure_through_temporary_files — no incluir secretos en handoff.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Handoffs: https://github.com/sindresorhus/awesome — curaduría general aplicable a plantillas.
+- OpenCode Docs: https://opencode.ai/docs/ — sesiones, `/clear` y continuidad de contexto.
+- Claude Code Best Practices: https://github.com/anthropics/claude-code — handoffs y compactación de contexto.
+- Conventional Commits: https://github.com/conventional-changelog/commitlint — validación de mensajes citados.
+- gitignore Templates: https://github.com/github/gitignore — patrones para excluir `HANDOFF.md`.
+
+### Guías de profundización sugeridas
+
+- Revise `git log --oneline -10` y `git status` antes de redactar Estado Actual.
+- Consulte `.gitignore` para confirmar que `HANDOFF.md` permanece temporal.
+- Valide rutas absolutas en Archivos Clave con `pwd` o explorador antes de escribir.
+- Verifique Intentos Fallidos con comandos y salidas reales, sin reconstruir de memoria.
+- Mida frescura: si el handoff supera una sesión larga, regenere en lugar de editar parcial.
+
+### Checklist de verificación
+
+- [ ] Se incluye fecha y hora en el título del handoff.
+- [ ] El Objetivo describe una sola meta clara sin ambigüedad.
+- [ ] El Estado Actual distingue verificado de no verificado con honestidad.
+- [ ] Todos los Archivos Clave utilizan rutas absolutas con propósito descrito.
+- [ ] Los Intentos Fallidos explican causa y prohíben repetir el enfoque.
+- [ ] Los Próximos Pasos son concretos, ordenados y ejecutables en sesión nueva.
+- [ ] No se incluyen secretos, tokens ni credenciales en el archivo.
+- [ ] `HANDOFF.md` no se commitea y la sesión se cierra tras generarlo.
