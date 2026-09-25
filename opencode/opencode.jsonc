@@ -1,14 +1,19 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  // Formato automatico despues de editar (patron oh-my-opencode).
+  // Formato automático después de editar (patrón oh-my-opencode).
   "formatter": true,
-  // Defensa en profundidad: secretos piden confirmacion antes de abrir.
+  // Tono: español neutro y normal en todas las respuestas.
+  // Esta instrucción garantiza que el cambio queda aplicado aunque AGENTS.md no se cargue.
+  "instructions": [
+    "Habla en español neutro, claro y normal en todas las respuestas. Usa oraciones completas y buena redacción. Ver opencode/AGENTS.md para las reglas completas."
+  ],
+  // Defensa en profundidad: secretos piden confirmación antes de abrir.
   "permission": {
     "read": {
       "**/.env*": "ask",
       "**/secrets/**": "ask",
       "**/credentials.json": "ask",
-      // Llaves privadas y config de editor con tokens: preguntan, no pasan directo.
+      // Llaves privadas y configuración de editor con tokens: preguntan, no pasan directo.
       "**/*.pem": "ask",
       "**/*.key": "ask",
       "**/*.p12": "ask",
@@ -21,7 +26,7 @@
       "**/.env*": "ask",
       "**/secrets/**": "ask",
       "**/credentials.json": "ask",
-      // Llaves privadas y config de editor con tokens: preguntan, no pasan directo.
+      // Llaves privadas y configuración de editor con tokens: preguntan, no pasan directo.
       "**/*.pem": "ask",
       "**/*.key": "ask",
       "**/*.p12": "ask",
@@ -33,7 +38,7 @@
     "skill": {
       "*": "allow"
     },
-    // Solo comandos seguros por defecto, instalacion con confirmacion, destructivos denegados.
+    // Solo comandos seguros por defecto, instalación con confirmación, destructivos denegados.
     "bash": {
       "git status": "allow",
       "git diff*": "allow",

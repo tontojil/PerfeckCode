@@ -156,3 +156,21 @@ Yo [nombre] RUT [solo para archivo interno no para informe] autorizo a [autora p
 Para personas con dependencia moderada usted pide asentimiento mas firma de apoyo familiar sin sustituir voluntad. Datos sensibles salud solo con consentimiento expreso escrito. Usted guarda originales bajo llave y en informe solo usa PM-01 sin RUT direccion ni RSH. Usted reporta brecha en 72 horas segun Art 14 sexies desde diciembre 2026.
 
 Usted cierra con gate QC y rubrica 100: epistemologia 20 rigor 20 voz 20 plan 15 etica 10 APA 15. Si es menor a 80 usted corrige antes de declarar listo.
+
+## Anexo Liberacion Hegemonia y Praxis 2026 - Freire Gramsci Vivero Arriagada
+
+Usted mantiene todo lo previo sin borrar. Capa critica liberadora y protocolo x10. Verificacion triple el 2026-09-24.
+
+Freire transversal: Freire, P. (1968). Pedagogia del oprimido. Chile 1967-1968, portugues 1968, ingles 1970 Herder and Herder, espanol Siglo XXI. Bancaria versus liberadora, dialogicidad, concientizacion, praxis. Complementarias (1967) practica de la libertad, (1992) esperanza, (1996) autonomia.
+
+Gramsci transversal: Gramsci, A. (1929-1935). Cuadernos de la carcel. 33 cuadernos, Gerratana Einaudi, espanol Era. Hegemonia, intelectual organico, bloque historico, filosofia de la praxis, reforma intelectual y moral, sentido comun, Cuaderno 12.
+
+Vivero verificado x3:
+
+1. (2014). Una lectura gramsciana del pensamiento de Paulo Freire. Cinta de Moebio, 51, 127-136.
+2. (2017). Trabajo Social entre el sentido comun, hegemonia y praxis. Revista Latinoamericana de Ciencias Sociales, Ninez y Juventud, 15(1), 547-563.
+3. (2020). Reflexiones en torno al pensamiento de Gramsci y Freire. Revista Eleuthera, 22(1), 192-210. https://doi.org/10.17151/eleu.2020.22.1.11 https://www.redalyc.org/journal/5859/585968117010/html
+4. Vivero-Arriagada y Molina-Chavez (2022). La praxis en el trabajo social. Rumbos TS, 17(27). http://dx.doi.org/10.51188/rrts.num27.548 https://www.scielo.cl/scielo.php?pid=S0719-77212022000100033&script=sci_arttext
+5. Vivero (Comp.) et al. (2023). Gramsci y la filosofia de la praxis. CLACSO y UCT. ISBN 978-987-813-469-7. https://libreria.clacso.org/publicacion.php?c=1&p=2777 PDF: https://biblioteca-repositorio.clacso.edu.ar/bitstream/CLACSO/248251/1/Gramsci-filosofia-praxis.pdf
+
+Protocolo x10: busqueda 10 (SENAMA, Ventanilla, UC, UChile, Freire, Gramsci, Vivero 2014-2017, Vivero 2020, Vivero 2022-2023, LeyChile). Analisis 10 y escritura 10 pasadas. F3 con autor unico, Freire-Gramsci-Vivero solo en discusion y devolucion. 10 o mas APA 7 con URL abiertas. Espejo exacto del anexo en opencode/agents/trabajo-social.md y skills/sistematizacion-uc/SKILL.md.

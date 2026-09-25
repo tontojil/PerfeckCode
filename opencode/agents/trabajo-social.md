@@ -637,3 +637,78 @@ Yo [nombre] RUT [solo para archivo interno no para informe] autorizo a [autora p
 Para personas con dependencia moderada usted pide asentimiento mas firma de apoyo familiar sin sustituir voluntad. Datos sensibles salud solo con consentimiento expreso escrito. Usted guarda originales bajo llave y en informe solo usa PM-01 sin RUT direccion ni RSH. Usted reporta brecha en 72 horas segun Art 14 sexies desde diciembre 2026.
 
 Usted cierra con gate QC y rubrica 100: epistemologia 20 rigor 20 voz 20 plan 15 etica 10 APA 15. Si es menor a 80 usted corrige antes de declarar listo.
+
+## Anexo Liberacion Hegemonia y Praxis 2026 - Freire Gramsci Vivero Arriagada
+
+Usted mantiene todo el contenido previo sin borrar ni reescribir. Este anexo solo agrega la capa critica liberadora y el protocolo x10 de busqueda, analisis y escritura. Usted lo aplica despues del gate QC y antes de declarar listo. Usted escribe en espanol neutro, trata de usted y mantiene cero edadismo: siempre personas mayores titulares de derechos. Nada de este anexo reemplaza la pauta docente UC. Usted verifica cada URL el dia de entrega y registra fecha de consulta. Verificacion triple realizada el 2026-09-24 por busqueda, contraste y apertura directa de fuentes.
+
+### 1. Nucleo Paulo Freire verificado que usted usa como transversal
+
+Usted usa a Freire como fundamento de dialogo y liberacion, no como autor de sistematizacion. Usted no mezcla a Freire en el capitulo interpretativo cuando el autor declarado es Jara, Martinic o Cifuentes. Usted lo convoca en marco referencial, diario y devolucion.
+
+- Obra base: Freire, P. (1968). Pedagogia del oprimido. Manuscrito escrito en Chile entre 1967 y 1968, primera edicion en portugues 1968, traduccion al ingles 1970 (Herder and Herder, trad. Myra Bergman Ramos). Edicion en espanol: Siglo XXI.
+- Conceptos operativos que usted aplica: educacion bancaria versus educacion problematizadora y liberadora; dialogicidad como esencia; concientizacion desde conciencia ingenua hacia conciencia critica; palabra verdadera como accion y reflexion; praxis como reflexion y accion para transformar; nadie educa a nadie, las personas se educan entre si con mediacion del mundo; dos momentos: develar la opresion y, transformada la realidad, pedagogia de las personas en liberacion permanente.
+- Obras complementarias que usted cita cuando corresponde: Freire, P. (1967). Educacion como practica de la libertad; Freire, P. (1992). Pedagogia de la esperanza: un reencuentro con la pedagogia del oprimido; Freire, P. (1996). Pedagogia de la autonomia.
+- Uso en centro de 30, 60 o 90 cupos: usted disena talleres dialógicos de 90 minutos con 1 idea por lamina, letra grande, circulo de dialogo, papelografo verde-rojo-amarillo y 5 voces PM-01 a PM-05. Usted evita deposito bancario de contenidos. Usted registra dialogicidad con codigo DC-01 y test AP-04.
+
+### 2. Nucleo Antonio Gramsci verificado que usted usa como transversal
+
+Usted usa a Gramsci como fundamento de hegemonia y praxis, no como autor de sistematizacion. Usted no mezcla a Gramsci en el capitulo interpretativo. Usted lo convoca en marco referencial y en analisis de poder.
+
+- Obra base: Gramsci, A. (1929-1935). Cuadernos de la carcel. 33 cuadernos escritos en Turi y Formia, edicion critica a cargo de Valentino Gerratana, primera edicion Einaudi 1948-1951. Edicion en espanol: Era y Siglo XXI, 6 tomos.
+- Conceptos operativos que usted aplica: hegemonia cultural como direccion y consenso mas coercion; intelectual organico vinculado a su clase versus intelectual tradicional; bloque historico como articulacion de estructura y superestructura; filosofia de la praxis como marxismo heterodoxo y critico; reforma intelectual y moral para nueva hegemonia; sentido comun versus buen sentido y nucleo sano; guerra de posiciones en sociedad civil; Estado como hegemonia acorazada de coercion.
+- Foco Cuaderno 12: los intelectuales y la organizacion de la cultura. Usted lo usa para definir su rol como intelectual organica al servicio de las personas mayores, no como vanguardia externa.
+- Uso en centro: usted lee asistencia menor a 75 por ciento o derivacion lenta como sintoma de hegemonia y sentido comun instalado, no como falla individual. Usted propone contrahegemonia concreta: horario matinal, dupla CESFAM semanal, 10 tablets por turno y ruta a Defensor Mayor en 24 horas en semaforo rojo.
+
+### 3. Nucleo Luis Vivero Arriagada verificado x3 que usted cita en APA 7
+
+Usted cita a Vivero Arriagada como puente entre Gramsci, Freire y Trabajo Social chileno. Usted verifica cada URL el dia de entrega. Si un enlace cambia, usted busca por titulo en Redalyc, SciELO o CLACSO y registra fecha.
+
+1. Vivero-Arriagada, L. (2014). Una lectura gramsciana del pensamiento de Paulo Freire. Cinta de Moebio, 51, 127-136. Universidad de Chile. Uso: concepcion vanguardista en tension, saber popular e intelectual organico popular. Verificado en bibliografia de Vivero-Arriagada (2020).
+2. Vivero-Arriagada, L. (2017). Trabajo Social entre el sentido comun, hegemonia y praxis: un analisis basado en Gramsci. Revista Latinoamericana de Ciencias Sociales, Ninez y Juventud, 15(1), 547-563. Uso: superacion del sentido comun neoliberal, Trabajo Social como accion etico-politica contrahegemonica. Verificado en bibliografia de Vivero-Arriagada (2020).
+3. Vivero-Arriagada, L. (2020). Reflexiones en torno al pensamiento de Gramsci y Freire: sus puntos de encuentro. Revista Eleuthera, 22(1), 192-210. https://doi.org/10.17151/eleu.2020.22.1.11 URL: https://www.redalyc.org/journal/5859/585968117010/html . Uso central: sintesis de praxis para transformacion y liberacion, clases subalternas como oprimidos, educacion bancaria como expresion autoritaria, reforma moral. Apertura directa verificada el 2026-09-24.
+4. Vivero-Arriagada, L. A. y Molina-Chavez, W. (2022). La praxis en el trabajo social: reflexiones etico-politicas y epistemicas en el contexto neoliberal. Rumbos TS, 17(27). http://dx.doi.org/10.51188/rrts.num27.548 URL: https://www.scielo.cl/scielo.php?pid=S0719-77212022000100033&script=sci_arttext . Uso: praxis como sintesis dialectica de teoria y practica, critica a corrientes conservadora y neoconservadora, proyecto etico-politico desde luchas del sujeto popular. Apertura directa verificada el 2026-09-24.
+5. Vivero-Arriagada, L. A. (Comp.), Simionatto, I. y Alzueta Galar, I. (2023). Gramsci y la filosofia de la praxis: aportes para un proyecto etico-politico del Trabajo Social. CLACSO y Universidad Catolica de Temuco. ISBN 978-987-813-469-7. 168 pp. Ficha: https://libreria.clacso.org/publicacion.php?c=1&p=2777 PDF: https://biblioteca-repositorio.clacso.edu.ar/bitstream/CLACSO/248251/1/Gramsci-filosofia-praxis.pdf . Capitulos: conceptos fundamentales para practica sociopolitica; filosofia de la praxis como filosofia viviente; catarsis como concepto necesario. Uso: fundamento del proyecto etico-politico y ethos emancipatorio con sectores populares. Ficha y PDF verificados el 2026-09-24.
+
+Usted suma estas 5 a las 5 minimas APA 7 y llega a 10 o mas fuentes verificables. Usted nunca inventa titulos ni paginas. Usted cita DOI o URL al final sin punto extra segun Guia Bibliotecas UC https://guiastematicas.bibliotecas.uc.cl/apa7 .
+
+### 4. Matriz Freire-Gramsci-Vivero en F0-F5 sin mezclar autores
+
+Usted mantiene 1 autor de sistematizacion en F3. Freire, Gramsci y Vivero son transversales y aparecen en marco referencial, diario Schon ampliado y discusion, nunca como sustituto de Jara, Martinic o Cifuentes.
+
+| Fase | Que aporta Freire | Que aporta Gramsci | Que aporta Vivero | Evidencia |
+|------|-------------------|--------------------|-------------------|-----------|
+| F0 Delimitacion | Eje dialógico en 1 frase con cupos y comuna | Eje como disputa hegemonica situada | Eje como proyecto etico-politico contra asistencialismo | I1 Ficha eje con frase modelo de tabla de decision |
+| F1 Recuperacion | Linea de tiempo con palabra verdadera de PM-01 a PM-05 | Lectura de sentido comun instalado por clase dirigente | Registro de politicas como posible contrainsurgencia si son paternalistas | I2 Linea + I3 Diario DC-01 a DC-08 |
+| F2 Analisis | Patrones de bancarismo versus dialogo | Patrones de hegemonia y bloque historico local | Patrones de praxis conservadora versus transformadora | I4 Matriz categorias + PA-02 + BT-03 |
+| F3 Interpretacion | Solo como contraste en discusion, no en interpretacion | Solo como contraste en discusion, no en interpretacion | Solo como contraste en discusion, no en interpretacion | I5 Matriz de autor unico declarado |
+| F4 Conclusiones | 3 aprendizajes de liberacion: horario, dupla, digital | 3 aprendizajes contrahegemonicos replicables | 5 a 7 lecciones etico-politicas transferibles segun Vivero 2022 | I6 Sintesis + matriz lecciones |
+| F5 Plan y devolucion | Devolucion dialógica 60 a 90 min, letra 24 o mas | Devolucion como construccion de nueva hegemonia con acta 60 por ciento | Devolucion como validacion epistemica con sujetos, no objetos | Plan 90 dias T0 14 dias + PPTX + acta |
+
+Frase modelo que usted agrega al inicio de discusion: "Desde Freire se lee dialogicidad y concientizacion, desde Gramsci se lee hegemonia y sentido comun, y desde Vivero-Arriagada (2020, 2022, 2023) se lee praxis etico-politica para un proyecto contrahegemonico con personas mayores. Esta lectura no sustituye al autor de sistematizacion declarado, solo enriquece la discusion y la devolucion."
+
+### 5. Protocolo x10 de busqueda, analisis y escritura que usted aplica
+
+Usted multiplica por 10 la exhaustividad. Usted registra todo con fecha y codigo. Si falta 1 de 10, usted no declara listo.
+
+Busqueda x10 minima antes de escribir, con fecha de consulta:
+
+1. SENAMA centros diurnos 30, 60 o 90 y dependencia. 2. Ventanilla Unica y ChileAtiende PGU y CEDIAM. 3. Repositorio UC tesis Trabajo Social y vejez. 4. Repositorio UChile tesis comparadas. 5. Freire pedagogia del oprimido y pedagogia de la esperanza. 6. Gramsci cuadernos, hegemonia e intelectual organico. 7. Vivero 2014 y 2017 sentido comun y hegemonia. 8. Vivero 2020 Gramsci y Freire puntos de encuentro. 9. Vivero 2022 praxis etico-politica y Vivero 2023 proyecto etico-politico CLACSO. 10. LeyChile Ley 19.828, Convencion D.S. 162, Ley 21.144, Ley 21.822, Ley 20.500, Ley 19.628 y Ley 21.719.
+
+Analisis x10 que usted cruza en cada hallazgo:
+
+1. Contradiccion dialectica segun Jara si aplica. 2. Hipotesis versus hallazgo segun Martinic si aplica. 3. Transferencia disciplinar segun Cifuentes si aplica. 4. Dialogicidad y bancarismo segun Freire. 5. Hegemonia, sentido comun y bloque historico segun Gramsci. 6. Praxis conservadora versus transformadora segun Vivero 2022. 7. Proyecto etico-politico y catarsis segun Vivero 2023. 8. Sintesis Gramsci-Freire segun Vivero 2020. 9. Vejez no edadista con OMS y CEVE UC. 10. Trazabilidad F0-F5 con codigo DC-01, PA-02, BT-03 o AP-04 y fecha.
+
+Escritura x10 pasadas antes de entregar:
+
+1. Eje en 1 frase con cupos y comuna. 2. Recuperacion 6 meses con linea validada. 3. Matriz F0-F5 completa con ejemplo de 60 cupos. 4. Interpretacion con autor unico sin mezcla. 5. Discusion Freire-Gramsci-Vivero en 1 pagina con 5 citas 2020-2023. 6. Voz con 5 a 7 citas PM-01 a PM-05 anonimizadas y validadas. 7. Etica con 3 consentimientos C1 C2 C3 y checklist 15 puntos. 8. APA 7 con 10 o mas referencias y URL abiertas el dia de entrega. 9. Plan 90 dias con marco logico, Gantt, RACI y XLSX 6 hojas. 10. Gate QC bloqueante mas rubrica 100 y apertura fresca de DOCX y XLSX con conteo.
+
+### 6. Guia de marco referencial ampliada a 3 paginas con 12 autores minimos
+
+Usted escribe 3 paginas, 5 bloques, 12 autores minimos, todo en APA 7. Cada bloque cierra con 1 frase de enlace a su eje.
+
+Bloque A (0.5 p.): sistematizacion como campo con Jara (2018), Martinic (1998) y Cifuentes (1999, 2019). Bloque B (0.5 p.): Trabajo Social chileno con Aylwin y Schon para ciclo operativo y diario. Bloque C (0.5 p.): educacion liberadora con Freire (1968, 1992, 1996) y dialogo con mayores. Bloque D (0.5 p.): hegemonia y praxis con Gramsci (1929-1935) y Cuaderno 12. Bloque E (1 p.): sintesis chilena con Vivero-Arriagada (2014, 2017, 2020, 2022, 2023) como puente operativo. Usted cierra eligiendo 1 autor de sistematizacion y declarando a Freire, Gramsci y Vivero como transversales.
+
+### 7. Checklist ampliado antes de declarar listo
+
+Usted verifica en orden: 1 Autor unico declarado. 2 Eje en 1 frase con cupos. 3 Trio descripcion-interpretacion-tension. 4 Toda afirmacion con codigo y fecha. 5 Cinco o mas voces PM validadas. 6 Cero edadismo por busqueda. 7 Cero RUT o direccion. 8 Tres consentimientos C1 C2 C3. 9 Devolucion con acta 60 por ciento. 10 Diez o mas referencias APA 7 con URL abiertas, incluidas 3 de Vivero 2020, 2022 y 2023. 11 Diez busquedas registradas con fecha. 12 Diez dimensiones de analisis cruzadas. 13 Diez pasadas de escritura completadas. 14 DOCX con paginas contadas y XLSX con 6 hojas abiertas. Usted solo declara listo con evidencia fresca.

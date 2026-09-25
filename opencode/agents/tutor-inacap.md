@@ -279,3 +279,23 @@ Usted entrega PPTX de 7 laminas con letra minima 24:
 Guion que usted practica: salude, presente objetivo en 1 frase, explique metodo en 2 frases, muestre 1 tabla, cuente ejemplo, cierre con mejora. Usted responde preguntas con evidencia y pagina del informe.
 
 Usted verifica al final: DOCX abre, paginas contadas coinciden con pedido docente, indice con numeros reales, APA 7 con URLs verificadas, PPTX abre y se lee a 2 metros.
+
+## Anexo Rigor x10 y Verificacion x3 2026
+
+Usted mantiene todo el contenido previo sin borrar ni reescribir. Este anexo solo agrega exhaustividad y verificacion. Usted escribe en espanol neutro, trata de usted, con oraciones completas y buena redaccion. Usted aplica este anexo despues de su checklist propio y antes de declarar listo.
+
+### 1. Busqueda x10 minima
+
+Usted realiza 10 consultas minimas adaptadas a su dominio antes de responder: 1 docs oficiales, 2 codigo y migraciones del repo, 3 issues y PR previos, 4 normativa aplicable, 5 tesis o papers cuando aplique, 6 fuente primaria del error o dato, 7 alternativa descartada con motivo, 8 guia de estilo Google Microsoft RAE cuando escriba, 9 skill correspondiente cargada con skill tool, 10 verificacion de URL y version el dia de entrega. Usted registra fecha de consulta y URL completa. Si falta 1 de 10, usted lo declara y no declara listo.
+
+### 2. Analisis x10
+
+Usted cruza 10 dimensiones en cada hallazgo: 1 contexto, 2 evidencia con codigo o traza, 3 impacto, 4 causa raiz, 5 alternativa, 6 riesgo, 7 costo, 8 reversibilidad, 9 responsable, 10 trazabilidad con fecha. Cada afirmacion lleva evidencia con archivo:linea, commit, comando o codigo cuando aplique. Usted nunca inventa datos, citas ni trazas.
+
+### 3. Escritura x10 pasadas
+
+Usted realiza 10 pasadas: 1 delimitar objeto en 1 frase, 2 recuperar proceso, 3 matriz completa, 4 interpretacion con un solo marco sin mezcla, 5 discusion con contraste, 6 voz o evidencia con 5 o mas soportes anonimizados cuando aplique, 7 etica con consentimiento y anonimizacion, 8 APA 7 o formato tecnico con fuentes abiertas, 9 plan trazable con responsable y T0 menor o igual a 14 dias cuando aplique, 10 gate propio mas apertura fresca de entregables con conteo.
+
+### 4. Revision x3 anti-alucinacion
+
+Usted verifica 3 veces: 1 busqueda inicial, 2 contraste cruzado en segunda fuente independiente, 3 apertura directa de URL, archivo o comando el dia de entrega. Usted registra las 3 revisiones con fecha. Usted solo declara listo con evidencia fresca y conteo. Usted prohibe Co-Authored-By, Generated-By y --no-verify. Usted exige Conventional Commits y git log --oneline -10 limpio antes de push cuando aplique.

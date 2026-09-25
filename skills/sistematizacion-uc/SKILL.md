@@ -168,3 +168,33 @@ Institucional UC y vejez:
 - Portal Tesis UC: https://repositorio.uc.cl/pagina/tesis . Ejemplos: Plan DPD https://repositorio.uc.cl/handle/11534/64474 ; fuerza laboral y envejecimiento https://repositorio.uc.cl/handle/11534/64990
 - CEVE UC vejez (Caro Puga, Miranda): https://inteligenciasocial.uc.cl/personas/sara-caro-puga y Reporte Vinculos: https://observatorioenvejecimiento.uc.cl/wp-content/uploads/2023/10/Reporte-Los-Vinculos-Sociales-de-las-Personas-Mayores-en-Chile.pdf
 - Sistematizacion con personas mayores en Chile (Temuco): https://www.redalyc.org/journal/5742/574275303003/html . Participacion social mayores: https://repositorio.utalca.cl/repositorio/handle/1950/13127
+
+## Anexo Liberacion Hegemonia y Praxis 2026 - Freire Gramsci Vivero Arriagada
+
+Mantiene todo lo previo sin borrar. Agrega capa critica liberadora y protocolo x10. Verificacion triple el 2026-09-24 por busqueda, contraste y apertura directa.
+
+### Nucleo Freire transversal
+
+Freire, P. (1968). Pedagogia del oprimido. Escrito en Chile 1967-1968, portugues 1968, ingles 1970 Herder and Herder trad. Myra Bergman Ramos, espanol Siglo XXI. Conceptos: educacion bancaria versus problematizadora, dialogicidad, concientizacion, palabra verdadera, praxis, nadie educa a nadie. Complementarias: (1967) Educacion como practica de la libertad; (1992) Pedagogia de la esperanza; (1996) Pedagogia de la autonomia. Uso: talleres dialógicos 90 min, letra grande, 5 voces PM-01 a PM-05, codigo DC-01 y AP-04. No sustituye a Jara, Martinic o Cifuentes en F3.
+
+### Nucleo Gramsci transversal
+
+Gramsci, A. (1929-1935). Cuadernos de la carcel. 33 cuadernos, edicion Gerratana Einaudi, espanol Era y Siglo XXI. Conceptos: hegemonia cultural, intelectual organico versus tradicional, bloque historico, filosofia de la praxis, reforma intelectual y moral, sentido comun versus buen sentido, Cuaderno 12. Uso: lee inasistencia menor a 75 por ciento como hegemonia situada, propone contrahegemonia con horario matinal, dupla CESFAM y ruta Defensor Mayor 24 horas en rojo.
+
+### Nucleo Vivero Arriagada verificado x3
+
+1. Vivero-Arriagada, L. (2014). Una lectura gramsciana del pensamiento de Paulo Freire. Cinta de Moebio, 51, 127-136.
+2. Vivero-Arriagada, L. (2017). Trabajo Social entre el sentido comun, hegemonia y praxis: un analisis basado en Gramsci. Revista Latinoamericana de Ciencias Sociales, Ninez y Juventud, 15(1), 547-563.
+3. Vivero-Arriagada, L. (2020). Reflexiones en torno al pensamiento de Gramsci y Freire: sus puntos de encuentro. Revista Eleuthera, 22(1), 192-210. https://doi.org/10.17151/eleu.2020.22.1.11 URL: https://www.redalyc.org/journal/5859/585968117010/html
+4. Vivero-Arriagada, L. A. y Molina-Chavez, W. (2022). La praxis en el trabajo social: reflexiones etico-politicas y epistemicas en el contexto neoliberal. Rumbos TS, 17(27). http://dx.doi.org/10.51188/rrts.num27.548 URL: https://www.scielo.cl/scielo.php?pid=S0719-77212022000100033&script=sci_arttext
+5. Vivero-Arriagada, L. A. (Comp.), Simionatto, I. y Alzueta Galar, I. (2023). Gramsci y la filosofia de la praxis: aportes para un proyecto etico-politico del Trabajo Social. CLACSO y Universidad Catolica de Temuco. ISBN 978-987-813-469-7. 168 pp. Ficha: https://libreria.clacso.org/publicacion.php?c=1&p=2777 PDF: https://biblioteca-repositorio.clacso.edu.ar/bitstream/CLACSO/248251/1/Gramsci-filosofia-praxis.pdf
+
+Suma a 10 o mas fuentes APA 7. Guia UC: https://guiastematicas.bibliotecas.uc.cl/apa7 . Verifica cada URL el dia de entrega.
+
+### Matriz F0-F5 sin mezclar
+
+F0 eje dialógico y hegemonico con cupos. F1 linea y diario con palabra verdadera. F2 patrones de bancarismo, hegemonia y praxis conservadora. F3 interpretacion con autor unico, Freire-Gramsci-Vivero solo en discusion. F4 3 aprendizajes mas 5 a 7 lecciones etico-politicas. F5 plan 90 dias T0 14 dias mas devolucion letra 24 y acta 60 por ciento. Frase: "Desde Freire se lee dialogicidad, desde Gramsci se lee hegemonia, desde Vivero-Arriagada (2020, 2022, 2023) se lee praxis etico-politica. No sustituye al autor declarado."
+
+### Protocolo x10
+
+Busqueda x10: 1 SENAMA, 2 Ventanilla y PGU, 3 Repositorio UC, 4 Repositorio UChile, 5 Freire, 6 Gramsci, 7 Vivero 2014-2017, 8 Vivero 2020, 9 Vivero 2022-2023, 10 LeyChile. Analisis x10: 1 contradiccion, 2 hipotesis, 3 transferencia, 4 dialogicidad, 5 hegemonia, 6 praxis 2022, 7 proyecto 2023, 8 sintesis 2020, 9 vejez OMS-CEVE, 10 trazabilidad con codigo y fecha. Escritura x10: 1 eje, 2 recuperacion, 3 matriz, 4 interpretacion unica, 5 discusion 1 pagina con 5 citas, 6 voz 5 a 7 PM, 7 etica C1 C2 C3 y 15 puntos, 8 APA 10 o mas, 9 plan mas XLSX 6 hojas, 10 gate QC y apertura fresca.
