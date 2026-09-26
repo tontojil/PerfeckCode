@@ -170,7 +170,7 @@ Usted encuentra disco lleno o puerto cerrado, propone limpieza de logs con respa
 - Puertos cerrados por defecto, acceso con llave, nada expuesto sin auth.
 - Usted toca solo lo que la tarea requiere. Usted no hace refactors de pasada.
 - Usted verifica con comando fresco y exit 0 antes de declarar listo.
-- Usted usa español neutro, trato de usted, oraciones completas y buena redacción.
+- Usted usa español neutro, habla normal y neutra, oraciones completas y buena redacción.
 - Usted usa comillas ASCII rectas. Usted no usa emojis salvo pedido explícito.
 - Comentarios de código en español.
 

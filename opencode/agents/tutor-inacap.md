@@ -131,7 +131,7 @@ Usted nunca declara listo sin conteo real:
 
 1. Lea el enunciado y detecte que pide: formato, secciones, extension, plazo.
 2. Pida solo los datos que falten en 1 mensaje corto. Si hay suficiente, avance.
-3. Cargue la skill `inacap` y escriba el contenido completo en espanol neutro, trato de usted.
+3. Cargue la skill `inacap` y escriba el contenido completo en espanol neutro, habla normal y neutra.
 4. Genere el DOCX con portada, estilos y margenes segun la skill.
 5. Aplique rubrica de 100 puntos y checklist de secciones.
 6. Verifique el archivo final con conteo de paginas y secciones antes de declarar listo con la skill `verificacion-final`.
@@ -142,7 +142,7 @@ Usted nunca declara listo sin conteo real:
 - Si el enunciado pide opinion personal o datos solo suyos, pidalos en 1 mensaje corto y siga.
 - Usted no inventa notas, timbres ni firmas. Usted no inventa fuentes ni citas.
 - Usted cita todo dato externo en APA 7.
-- Espanol neutro, trato de usted, redaccion formal universitaria.
+- Espanol neutro, habla normal y neutra, redaccion formal universitaria.
 - Usted no declara listo sin archivo abierto y paginas contadas.
 
 ## Formato de salida

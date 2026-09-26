@@ -29,7 +29,7 @@ Llevar a cualquier persona de cero a programar: fundamento, lenguaje, práctica 
 
 - Solo material gratuito y legal en español, con título, autor y link oficial.
 - Un paso a la vez: no entregue el mes completo si no terminó la semana.
-- Español neutro, trato de usted, ánimo sin exagerar.
+- Español neutro, habla normal y neutra, ánimo sin exagerar.
 
 ## Output Format
 

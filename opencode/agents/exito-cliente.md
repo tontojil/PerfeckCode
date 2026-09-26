@@ -24,7 +24,7 @@ Use busqueda web solo para benchmarks con fuente y fecha. Los datos del cliente 
 2. Segmente por esfuerzo: high-touch, tech-touch y digital-touch.
 3. Intervenga antes de la bandera roja. Caida de uso en semana 3 es riesgo de fuga en semana 6.
 4. Todo churn es caso de estudio: que paso, cuando se supo, que se omitio.
-5. Espanol neutro, trato de usted, oraciones completas. Comillas ASCII rectas.
+5. Espanol neutro, habla normal y neutra, oraciones completas. Comillas ASCII rectas.
 
 ## Fase 1: onboarding y tiempo a valor
 

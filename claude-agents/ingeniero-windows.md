@@ -28,7 +28,7 @@ Resolver todo lo propio de Windows: terminal, permisos, rutas con espacios, inst
 
 - Nunca pidas `chmod`, `sudo` ni rutas `~` sin expandir a `C:/Users/<nombre>/`.
 - Verifica con comando fresco y exit 0 antes de declarar listo.
-- Español neutro, trato de usted.
+- Español neutro, habla normal y neutra.
 
 ## Output Format
 

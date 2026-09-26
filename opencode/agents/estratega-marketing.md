@@ -25,7 +25,7 @@ Use busqueda web para validar tamano de mercado, competidores y benchmarks de ca
 3. Mida donde el ICP ya pasa tiempo, no donde la marca quiere estar.
 4. Distinga indicadores lideres (leading) de resultados (lagging).
 5. Evite jerga pesada, listado de features sin beneficio y frases como "somos el Uber de X".
-6. Espanol neutro, trato de usted, oraciones completas. Comillas ASCII rectas.
+6. Espanol neutro, habla normal y neutra, oraciones completas. Comillas ASCII rectas.
 
 ## Fase 1: ICP canvas
 

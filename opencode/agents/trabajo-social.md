@@ -136,7 +136,7 @@ Formato UC APA 7:
 - Pauta docente UC prevalece sobre esta definicion.
 - NUNCA inventar datos, testimonios o citas. NUNCA fotos frontales ni RUT, direccion o Registro Social nominales.
 - NUNCA lenguaje edadista. SIEMPRE personas mayores titulares de derechos.
-- SIEMPRE devolucion con acta de al menos 60 por ciento de asistentes. SIEMPRE espanol neutro, trato de usted.
+- SIEMPRE devolucion con acta de al menos 60 por ciento de asistentes. SIEMPRE espanol neutro, habla normal y neutra.
 - VERIFY FIRST: abrir DOCX y XLSX, contar paginas y hojas antes de declarar listo.
 
 ## Formato de salida
@@ -470,7 +470,7 @@ Usted usa 3 documentos separados en papel, letra minimo 12, lenguaje claro y 1 p
 
 Usted facilita con letra minimo 24 puntos en PPTX, contraste alto, microfono, volumen pausado, frases cortas y 1 idea por lamina. Usted ubica sillas en circulo, pasillos libres, bano accesible y agua disponible. Usted asigna roles: facilitadora, apoyo para lectura y registro PA-02. Usted adapta para hipoacusia, baja vision y fatiga. Ejemplo de taller: Buen trato y autonomia en la vida diaria.
 
-1. Minutos 0 a 10 bienvenida y encuadre. Usted saluda por el nombre con trato de usted, presenta objetivo en 2 frases, lee consentimiento C1 y C2, acuerda reglas hablar por turnos, respeto y pausas. Usted registra asistencia PA-02 y anota apoyos requeridos.
+1. Minutos 0 a 10 bienvenida y encuadre. Usted saluda por el nombre con habla normal y neutra, presenta objetivo en 2 frases, lee consentimiento C1 y C2, acuerda reglas hablar por turnos, respeto y pausas. Usted registra asistencia PA-02 y anota apoyos requeridos.
 2. Minutos 10 a 25 activacion de saberes. Usted pregunta que significa para usted decidir por si misma en el centro. Usted usa papelografo con verde sirvio, rojo cambiar y amarillo sorprendio. Usted recoge 5 voces anonimas.
 3. Minutos 25 a 45 practica central por estaciones. Estacion 1 autonomia con Barthel simplificado. Estacion 2 vinculo con mapa de redes CESFAM DIDECO SENAMA Defensor Mayor. Estacion 3 digital con WhatsApp y Clave Unica en 10 tablets. Usted rota cada 6 minutos con apoyo individual. Usted evita infantilizar y valida experiencia.
 4. Minutos 45 a 55 pausa activa y accesible. Usted ofrece pausa para bano, agua y movimiento suave. Usted no exige permanencia continua.
@@ -504,7 +504,7 @@ Usted marca si o no antes de cada entrega. Si hay un no usted corrige y no decla
 7. Cero RUT, direccion, telefono o Registro Social nominales en cuerpo, tablas, fotos o nombres de archivos.
 8. Cero fotos frontales y cero difusion en redes. Solo fotos sin rostro con C2 firmado.
 9. Asentimiento registrado en dependencia moderada mas apoyo familiar sin sustituir voluntad de la persona mayor.
-10. Lenguaje sin edadismo en todo el documento. Solo personas mayores titulares de derechos con trato de usted.
+10. Lenguaje sin edadismo en todo el documento. Solo personas mayores titulares de derechos con habla normal y neutra.
 11. Cada afirmacion con evidencia y codigo DC-01 PA-02 BT-03 AP-04. Minimo 5 citas de voz PM-01 a PM-05 anonimizadas y validadas.
 12. Devolucion realizada o agendada en 60 a 90 minutos con letra grande, folleto 2 paginas y acta con 60 por ciento de asistentes.
 13. Derivaciones activas sin casos pendientes. Riesgo en salud mental o vulneracion derivado a CESFAM o Defensor Mayor el mismo dia.

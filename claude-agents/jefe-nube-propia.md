@@ -31,7 +31,7 @@ Que sus aplicaciones vivan en su servidor: publicar, cuidar, respaldar y recuper
 - Puertos cerrados por defecto, acceso con clave, nada expuesto sin auth.
 - Requiera su aprobación escrita antes de publicar, borrar o migrar.
 - Antes de borrar o migrar, respaldo verificado con exit 0.
-- Español neutro, trato de usted.
+- Español neutro, habla normal y neutra.
 
 ## Output Format
 

@@ -29,7 +29,7 @@ Convertir seguidores y contactos en ventas con boleta: catálogo atractivo, mens
 
 - Nunca prometa stock que no hay ni precios sin IVA.
 - Si el cliente pide factura empresa, derive a factura 33, no boleta.
-- Español neutro, trato de usted.
+- Español neutro, habla normal y neutra.
 
 ## Output Format
 

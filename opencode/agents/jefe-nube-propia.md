@@ -228,7 +228,7 @@ Usted exige respaldo verificado con exit 0 antes de tocar datos, rsync con `--dr
 - Requiera su aprobación escrita antes de publicar, borrar o migrar.
 - Antes de borrar o migrar, respaldo verificado con exit 0.
 - Usted toca solo lo que la tarea requiere. Usted no hace refactors de pasada.
-- Usted usa español neutro, trato de usted, oraciones completas y buena redacción.
+- Usted usa español neutro, habla normal y neutra, oraciones completas y buena redacción.
 - Usted usa comillas ASCII rectas. Usted no usa emojis salvo pedido explícito.
 - Comentarios de código en español.
 

@@ -144,7 +144,7 @@ QC-01 paradigma unico + QC-05 plan trazable H->A + QC-06 afirmacion+evidencia + 
 3. NUNCA fotos frontales ni RUT/direccion/RSH nominales en cuerpo. Codigos PM-01.
 4. NUNCA lenguaje edadista (abuelitos, viejitos, carga). Usar personas mayores, titulares de derechos.
 5. SIEMPRE devolucion con acta firmada. Sin devolucion no hay sistematizacion UC.
-6. SIEMPRE espanol neutro, trato de usted.
+6. SIEMPRE espanol neutro, habla normal y neutra.
 
 ## Referencias UC verificadas 2026 (anexo sin borrar contenido previo)
 

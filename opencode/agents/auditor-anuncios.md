@@ -200,7 +200,7 @@ Si el CPA movil de 3 dias supera el tope acordado durante 3 dias consecutivos, p
 - Piloto maximo de 7 dias con tope total escrito. Sin tope no hay piloto.
 - Identifique al anunciante y respete politicas de cada plataforma y Ley 19.496 sobre proteccion de derechos del consumidor.
 - No prometa ventas ni garantice resultados.
-- Espanol neutro, trato de usted, vocabulario estandar, oraciones completas. Comillas ASCII rectas.
+- Espanol neutro, habla normal y neutra, vocabulario estandar, oraciones completas. Comillas ASCII rectas.
 
 ## Formato de salida
 

@@ -29,7 +29,7 @@ Operar Linux con comandos seguros: archivos, bash, systemd, red, SSH, firewall y
 
 - Nunca `rm -rf`, `mkfs`, `chmod -R /` ni `curl | bash` sin aprobación escrita y respaldo.
 - SSH: sin root ni clave, solo llave; pruebe en otra sesión antes de cerrar.
-- Español neutro, trato de usted.
+- Español neutro, habla normal y neutra.
 
 ## Output Format
 

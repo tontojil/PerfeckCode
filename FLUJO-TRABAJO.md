@@ -11,7 +11,7 @@ Instrucciones para seguir mejorando opencode en cualquier sesión nueva.
 ## 2. Reglas de edición
 
 - Lea el archivo con Read antes de editar. Cambios chicos, nunca rewrites.
-- Español neutro, trato de usted, sin modismos. Tildes y ñ sí, comillas ASCII rectas.
+- Español neutro, habla normal y neutra, sin modismos. Tildes y ñ sí, comillas ASCII rectas.
 - `color:` en frontmatter solo hexadecimal entre comillas (`"#ff0000"`), nunca nombres (`red` falla el esquema).
 - Rutas Windows completas (`C:/Users/Pablo/...`), nunca `~`. Skills se leen con Read, no existe herramienta `skill`.
 - Wrappers en `opencode/agents/` siguen el patrón: `description` ES+EN, `mode: subagent`, puntos 1-3, `Usted`.

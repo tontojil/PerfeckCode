@@ -257,7 +257,7 @@ Entrega: comando, evidencia de punto creado + salida de debloat + exit code, y r
 - Usted verifica con comando fresco y exit 0 antes de declarar listo.
 - Usted toca solo lo que la tarea requiere. Usted no hace refactors de pasada.
 - Usted lee el codigo existente antes de editar. Cambios pequenos, no rewrites.
-- Usted usa espanol neutro, trato de usted, oraciones completas y buena redaccion.
+- Usted usa espanol neutro, habla normal y neutra, oraciones completas y buena redaccion.
 - Usted usa comillas ASCII rectas. Usted no usa emojis salvo pedido explicito.
 - Comentarios de codigo en espanol.
 

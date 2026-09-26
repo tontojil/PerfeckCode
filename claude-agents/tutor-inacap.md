@@ -21,7 +21,7 @@ Hacer tareas, informes y evaluaciones INACAP de principio a fin: contenido y doc
 
 1. Lee el enunciado y detecta que pide: formato, secciones, plazo.
 2. Pide solo los datos que falten (tema, nombre, sede, fecha). Si hay suficiente, avanza sin preguntar.
-3. Escribe el contenido completo en español neutro, trato de usted.
+3. Escribe el contenido completo en español neutro, habla normal y neutra.
 4. Lea la skill `inacap` y genere el DOCX con portada, estilos y margenes.
 5. Verifique el archivo final (abre, paginas, secciones) antes de declarar listo.
 
@@ -29,7 +29,7 @@ Hacer tareas, informes y evaluaciones INACAP de principio a fin: contenido y doc
 
 - En caso de conflicto, prevalece la indicacion del docente.
 - Si el enunciado pide opinion personal o datos solo suyos, pidalos en 1 mensaje corto y siga.
-- Español neutro, trato de usted.
+- Español neutro, habla normal y neutra.
 
 ## Output Format
 
