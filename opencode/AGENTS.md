@@ -39,6 +39,8 @@ la primera; traduce la jerga cuando el usuario no sea técnico.
 
 Usa el subagente con @ según corresponda. Los agentes son autónomos en `~/.config/opencode/agents/<nombre>.md` con espejo de proyecto en `opencode/agents/<nombre>.md`, sin dependencia de Claude:
 
+Primario con Tab: `tonto jil`, identico a build (acceso total, en rojo). No se invoca con @.
+
 - Bug, test fallido, error raro -> @depurador "@depurador corrige este TypeError en auth.ts"
 - Revisar código/PR -> @revisor-codigo (solo lectura) "@revisor-codigo revisa este PR"
 - Seguridad, auth, secretos -> @auditor-seguridad (solo lectura) "@auditor-seguridad revisa este login"
@@ -62,7 +64,6 @@ Usa el subagente con @ según corresponda. Los agentes son autónomos en `~/.con
 - Procesos, SOP, proveedores -> @jefe-operaciones "@jefe-operaciones documenta el SOP de soporte"
 - Onboarding, churn, retención -> @exito-cliente "@exito-cliente propone un plan contra el churn"
 - Contratación, onboarding, clima -> @recursos-humanos "@recursos-humanos redacta la oferta para backend"
-- Tono neutro, estilo directo -> @tonto-jil (agente primario, tono neutro) "@tonto-jil revisa este texto en tono neutro"
 - Trabajos INACAP hechos y listos -> @tutor-inacap "@tutor-inacap haz mi informe con este enunciado"
 - Windows, PowerShell, rutas -> @ingeniero-windows "@ingeniero-windows corrige este error de terminal en Windows"
 - Linux, terminal, servidores, SSH -> @ingeniero-linux "@ingeniero-linux administra mi servidor sin romper nada"
@@ -99,7 +100,6 @@ Usa el subagente con @ según corresponda. Los agentes son autónomos en `~/.con
 | Procesos, SOP, proveedores | @jefe-operaciones |
 | Onboarding, churn, retención | @exito-cliente |
 | Contratación, onboarding, clima | @recursos-humanos |
-| Tono neutro, estilo directo | @tonto-jil |
 | Trabajos INACAP hechos y listos | @tutor-inacap |
 | Windows, PowerShell, rutas | @ingeniero-windows |
 | Linux, terminal, servidores, SSH | @ingeniero-linux |

@@ -30,7 +30,7 @@ Usted describe el objetivo en lenguaje normal y el sistema deriva al especialist
 Los asistentes de IA olvidan decisiones entre sesiones, no siguen las convenciones del proyecto y obligan a repetir contexto. PerfeckCode aporta tres elementos:
 
 - Memoria de trabajo: 73 skills con criterios por area (backend, frontend, movil, documentos, DevOps, testing, seguridad).
-- Oficios definidos: 31 agentes en opencode (30 especialistas mas el agente primario `tonto-jil`) y 30 agentes en Claude Code, cada uno con ambito y formato de salida propios.
+- Oficios definidos: 32 archivos en opencode/agents (31 especialistas con @ mas el primario `tonto jil`, identico a build) y 30 agentes en Claude Code, cada uno con ambito y formato de salida propios.
 - Disciplina: verificar con comandos recien ejecutados antes de decir "listo", commits atómicos con Conventional Commits y prohibicion de secretos en el codigo.
 
 El resultado es menos repeticion, menos errores evitables y menos tokens gastados.
@@ -76,7 +76,7 @@ El detalle del flujo (capturar, reproducir, aislar, probar, corregir) esta defin
 
 | Parte | Contenido |
 |---|---|
-| 31 agentes en opencode | 30 especialistas mas el agente primario `tonto-jil` (se elige con Tab) |
+| 32 archivos en opencode/agents | 31 especialistas con @ mas el primario `tonto jil`, identico a build (se elige con Tab) |
 | 30 agentes en Claude Code | Mismos 30 especialistas en `claude-agents/` |
 | 73 skills | Backend, frontend, movil, documentos universitarios, DevOps, testing, seguridad |
 | Comandos en opencode | `/verify` (evidencia antes del "listo"), `/ralph` (itera hasta terminar) |
@@ -123,7 +123,7 @@ chmod +x install.sh
 2. Si es primera vez, complete sus claves de proveedor en `~/.claude/settings.json` guiandose por `settings.template.json`.
 3. Reinicie opencode o Claude Code.
 4. Pruebe con `@depurador hola` (debe responder el depurador).
-5. Con Tab cambie al agente `tonto-jil`.
+5. Con Tab cambie al primario `tonto jil` (identico a build).
 
 ### Solución de problemas
 
@@ -136,7 +136,7 @@ chmod +x install.sh
 
 ```text
 PerfeckCode/
-├── opencode/               # 31 agentes, 2 comandos, AGENTS.md global, opencode.jsonc
+├── opencode/               # 32 archivos (31 especialistas + primario tonto jil), 2 comandos, AGENTS.md global, opencode.jsonc
 ├── claude-agents/          # 30 agentes para Claude Code
 ├── claude-commands/        # 4 comandos para Claude Code
 ├── skills/                 # 73 skills, cada una con SKILL.md
@@ -176,11 +176,11 @@ No. Ambos instaladores respaldan cada carpeta existente como `.backup-<fecha>` y
 
 **2. ¿Funciona igual en opencode y en Claude Code?**
 
-Si, con la misma base. opencode usa 31 agentes (incluye el primario `tonto-jil`) y 2 comandos; Claude Code usa 30 agentes y 4 comandos. Las 73 skills y las reglas son compartidas.
+Si, con la misma base. opencode usa 32 archivos (31 especialistas + primario `tonto jil`, identico a build) y 2 comandos; Claude Code usa 30 agentes y 4 comandos. Las 73 skills y las reglas son compartidas.
 
 **3. ¿Por que `@depurador` no responde despues de instalar?**
 
-En la mayoria de los casos falta reiniciar la aplicacion. Cierre opencode o Claude Code por completo, abralo de nuevo y pruebe `@depurador hola`. En opencode, use Tab para cambiar al agente `tonto-jil` si desea el trato general.
+En la mayoria de los casos falta reiniciar la aplicacion. Cierre opencode o Claude Code por completo, abralo de nuevo y pruebe `@depurador hola`. En opencode, use Tab para cambiar al primario `tonto jil` si desea el trato general.
 
 **4. ¿Como actualizo o revierto?**
 

@@ -2,6 +2,8 @@
   "$schema": "https://opencode.ai/config.json",
   // Formato automático después de editar (patrón oh-my-opencode).
   "formatter": true,
+  // Primario inicial: tonto jil, identico a build.
+  "default_agent": "tonto-jil",
   // Tono: español neutro y normal en todas las respuestas.
   // Esta instrucción garantiza que el cambio queda aplicado aunque AGENTS.md no se cargue.
   "instructions": [
