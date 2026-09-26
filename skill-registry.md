@@ -4,10 +4,10 @@ Catalogo central de skills para Claude Code. Las skills se auto-descubren desde
 `~/.claude/skills/` (cada una con su `SKILL.md`). Esta tabla es la referencia rapida:
 escanea triggers ANTES de codear y aplica la skill que calce.
 
-- **Total skills:** 73
+- **Total skills:** 74
 - **Fuente:** `~/.claude/skills/`
 - **Invocacion:** Claude carga la skill por su `name` del frontmatter cuando el contexto calza.
-- **Ultima sync:** 2026-09-13
+- **Ultima sync:** 2026-09-26
 
 ---
 
@@ -75,6 +75,7 @@ escanea triggers ANTES de codear y aplica la skill que calce.
 | `stitch-sistema-diseno` | Gestionar design systems via Stitch MCP. |
 | `stitch-extraer-diseno` | Extraer DESIGN.md desde codigo frontend. |
 | `stitch-componentes-react` | Disenos Stitch -> componentes Vite/React, validacion AST. |
+| `diagram-design` | Diagramas editoriales HTML+SVG: arquitectura, flujo, secuencia, ER, Kanban, Sankey, UML. |
 
 ## Media & Documents
 
