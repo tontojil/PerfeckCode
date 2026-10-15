@@ -236,10 +236,12 @@ Verifica con `actionlint` si existe (`actionlint .github/workflows/*.yml`); si n
 
 1. GitHub Actions docs (workflows, jobs, environments, OIDC): https://docs.github.com/en/actions
 2. Writing workflows (sintaxis, triggers, concurrency, permissions): https://docs.github.com/en/actions/writing-workflows
-3. Awesome Actions curaduria sdras (ejemplos, reusable workflows, cache): https://github.com/sdras/awesome-actions
-4. Actionlint (linter de workflows, jobs y expresiones): https://github.com/rhysd/actionlint
+3. Starter workflows oficiales (plantillas de workflow reutilizable, matrix build, cache, secretos): https://github.com/actions/starter-workflows
+4. Awesome Actions curaduria sdras (ejemplos, reusable workflows, cache): https://github.com/sdras/awesome-actions
+5. Actionlint (linter de workflows, jobs y expresiones): https://github.com/rhysd/actionlint
 
-La documentacion oficial prevalece. Fije `@v4` minimo y use OIDC sobre secretos almacenados cuando sea posible.
+La documentacion oficial prevalece: https://docs.github.com/en/actions. Fije `@v4` minimo y use OIDC sobre secretos almacenados cuando sea posible.
+Para iniciar un pipeline nuevo, parta de https://github.com/actions/starter-workflows y adapte el workflow reutilizable, la matriz y el cache a su caso.
 
 ### Checklist aplicable por workflow
 

@@ -286,3 +286,84 @@ Usted realiza 10 pasadas: 1 delimitar objeto en 1 frase, 2 recuperar proceso, 3 
 ### 4. Revision x3 anti-alucinacion
 
 Usted verifica 3 veces: 1 busqueda inicial, 2 contraste cruzado en segunda fuente independiente, 3 apertura directa de URL, archivo o comando el dia de entrega. Usted registra las 3 revisiones con fecha. Usted solo declara listo con evidencia fresca y conteo. Usted prohibe Co-Authored-By, Generated-By y --no-verify. Usted exige Conventional Commits y git log --oneline -10 limpio antes de push cuando aplique.
+
+## Anexo B — Metodo root-cause-first operativo (extension, no reemplazo)
+
+Este anexo consolida el flujo obligatorio en 5 fases. No reemplaza los Steps 1 a 5 ni los anexos previos. Toda fase deja evidencia verificable antes de avanzar.
+
+### B.1 Fases obligatorias
+
+1. Reproduce: obtenga un comando copiable con entrada minima, resultado esperado, resultado real y tasa de reproduccion. Sin reproduccion no hay hipotesis.
+2. Traza: capture stack trace completo, archivo:linea de origen, variables relevantes y correlacion temporal con deploy o migracion.
+3. Hipotesis: formule una sola hipotesis verificable por vez, con metodo de Step 3 declarado y criterio de descarte. Registre hipotesis descartadas.
+4. Fix minimo: aplique el cambio mas pequeño sobre la causa raiz. Sin refactors. Si supera 20 lineas, revise la hipotesis.
+5. Proteccion con test: agregue test de regresion que falla sin el fix y pasa con el fix. Declare comando ejecutado y exit code.
+
+### B.2 Referencias oficiales obligatorias
+
+Consulte la referencia oficial del stack antes de proponer el fix y registre la URL con fecha de consulta:
+
+- pytest: https://docs.pytest.org/ — Para reproduccion y regresion en Python con fixtures, `parametrize`, `-xvs`, `-lf` y `-n auto`.
+- Vitest: https://vitest.dev/ — Para reproduccion y regresion en frontend con `vitest run`, modo watch, `toMatchSnapshot` y cobertura.
+- Playwright: https://playwright.dev/ — Para reproduccion E2E con trazas, `trace viewer`, screenshots, `test --headed` y `test --debug`.
+
+Si el stack no corresponde a ninguna referencia, justifique la fuente oficial alternativa del lenguaje.
+
+### B.3 Comandos base: git bisect y rg
+
+Bisect automatizado con script determinista:
+
+```
+git bisect start
+git bisect bad <commit-roto>
+git bisect good <ultimo-commit-bueno>
+git bisect run ./scripts/repro.sh
+git bisect reset
+```
+
+El script `repro.sh` retorna exit 1 si la falla esta presente y exit 0 si esta ausente. Para commits no compilables use `git bisect skip`. Para monorepos limite con `git bisect run ./scripts/repro.sh -- <ruta-paquete>/`.
+
+Busqueda de causa con `rg` antes de editar:
+
+```
+rg -n "Traceback|Error|panic|NullPointer|undefined is not" --no-heading
+rg -n "TODO|FIXME|unwrap\(\)|expect\(\)|\.get\(" src/ --no-heading
+rg -n "user\.email|pool|timeout|retry" src/ tests/ --no-heading -C 3
+```
+
+Regla: ningun fix sin `file:linea` localizada con evidencia de lectura o busqueda.
+
+### B.4 Ejemplo de salida con evidencia (formato minimo exigible)
+
+```
+## Root Cause
+La migracion 0042 agrego `email` sin default y el backfill no corrio, por lo que `user.email` queda en NULL.
+
+## Evidence
+- File:line donde se origina el bug: src/auth/login.py:87
+- Variable/estado que causa la falla: user.email = None
+- Comando de traza: rg -n "user\.email" src/ --no-heading -C 3 (exit 0, 4 coincidencias)
+- Por que funcionaba antes: migracion 0041 garantizaba email NOT NULL; regresion desde commit a1b2c3d (git bisect run ./scripts/repro.sh, exit 0 en bueno, exit 1 en malo)
+
+## Reproduction
+$ pytest tests/test_login.py::test_login_valido -xvs
+Esperado: 200 + token JWT
+Real: 500 + AttributeError: 'NoneType' object has no attribute 'lower'
+Tasa: 100% (5 de 5 corridas)
+
+## Fix
+Edit src/auth/login.py:87 old_string `email.lower()` -> new_string `(email or "").lower()` mas validacion temprana con error 400 si falta email.
+
+## Regression Test
+$ pytest tests/test_login.py::test_login_sin_email -xvs (exit 0 con fix; exit 1 sin fix)
+$ npx vitest run tests/login.test.ts (exit 0, frontend sin regresion)
+$ npx playwright test tests/e2e/login.spec.ts (exit 0, flujo E2E verificado)
+Referencias: https://docs.pytest.org/ , https://vitest.dev/ , https://playwright.dev/
+
+## Intentos
+- Intento 1: hipotesis de causa en validacion. Resultado: descartada por traza en login.py:87.
+- Intento 2: hipotesis de migracion sin backfill. Resultado: confirmada por git bisect y dump de prueba.
+
+## Prevention
+Chequeo pre-deploy de consistencia migracion y datos mas test de regresion con fila historica sin email.
+```

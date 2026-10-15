@@ -1,97 +1,130 @@
 ---
 name: mejorar-prompt
-description: Convierte ideas vagas de UI en prompts pulidos para Stitch. Mejora el detalle, agrega claves UI/UX, mete contexto del design system y ordena la salida. Usalo cuando quierai mejorar un prompt antes de generar. (Stitch prompts, UI/UX, prompt engineering)
+description: Convierte ideas vagas de UI en prompts pulidos para Stitch. Mejora el detalle, agrega claves UI/UX, incluye contexto del design system y ordena la salida. Usalo cuando quieras mejorar un prompt antes de generar. (Stitch prompts, UI/UX, prompt engineering)
 allowed-tools:
   - "Read"
   - "Write"
+metadata:
+  version: "1.1.0"
 ---
 
-# Enhance Prompt for Stitch
+# Mejorar prompt para Stitch
 
-You are a **Stitch Prompt Engineer**. Your job is to transform rough or vague UI generation ideas into polished, optimized prompts that produce better results from Stitch.
+Actua como **ingeniero de prompts para Stitch**. Tu trabajo es transformar ideas vagas o incompletas de generacion de UI en prompts pulidos y optimizados que produzcan mejores resultados en Stitch.
 
-## Prerequisites
+## Prerrequisitos
 
-Before enhancing prompts, consult the official Stitch documentation for the latest best practices:
+Antes de mejorar prompts, consulta la documentacion oficial de Stitch para conocer las recomendaciones vigentes:
 
-- **Stitch Effective Prompting Guide**: https://stitch.withgoogle.com/docs/learn/prompting/
+- **Guia de prompting efectivo de Stitch**: https://stitch.withgoogle.com/docs/learn/prompting/
 
-This guide contains up-to-date recommendations that may supersede or complement the patterns in this skill.
+Esta guia contiene recomendaciones actualizadas que pueden complementar o reemplazar los patrones de esta skill.
 
-## When to Use This Skill
+## Cuando usar esta skill
 
-Activate when a user wants to:
-- Polish a UI prompt before sending to Stitch
-- Improve a prompt that produced poor results
-- Add design system consistency to a simple idea
-- Structure a vague concept into an actionable prompt
+Activar cuando la persona usuaria quiere:
 
-## Enhancement Pipeline
+- Pulir un prompt de UI antes de enviarlo a Stitch
+- Mejorar un prompt que produjo malos resultados
+- Agregar consistencia del design system a una idea simple
+- Estructurar un concepto vago en un prompt accionable
 
-Follow these steps to enhance any prompt:
+## Ejemplo minimo
 
-### Step 1: Assess the Input
+Entrada vaga y salida esperada en formato minimo:
 
-Evaluate what's missing from the user's prompt:
+**Entrada:**
 
-| Element | Check for | If missing... |
+> "quiero una pagina de precios"
+
+**Salida minima:**
+
+```markdown
+Pagina de precios clara, con tres planes y CTA principal destacado.
+
+**DESIGN SYSTEM (REQUIRED):**
+- Platform: Web, Desktop-first
+- Theme: Light, minimal, professional
+- Background: Clean White (#ffffff)
+- Primary Accent: Deep Blue (#2563eb) for CTA and links
+- Text Primary: Near Black (#111827)
+
+**Page Structure:**
+1. **Header:** Navigation with logo and menu items
+2. **Pricing:** Three plan cards, middle plan highlighted
+3. **Footer:** Links and copyright
+```
+
+Si el proyecto tiene `DESIGN.md`, reemplazar el bloque de sistema por los tokens reales de ese archivo.
+
+## Pipeline de mejora
+
+Seguir estos pasos para mejorar cualquier prompt:
+
+### Paso 1: Evaluar la entrada
+
+Verificar que elementos faltan en el prompt de la persona usuaria:
+
+| Elemento | Verificar | Si falta... |
 |---------|-----------|---------------|
-| **Platform** | "web", "mobile", "desktop" | Add based on context or ask |
-| **Page type** | "landing page", "dashboard", "form" | Infer from description |
-| **Structure** | Numbered sections/components | Create logical page structure |
-| **Visual style** | Adjectives, mood, vibe | Add appropriate descriptors |
-| **Colors** | Specific values or roles | Add design system or suggest |
-| **Components** | UI-specific terms | Translate to proper keywords |
+| **Plataforma** | "web", "mobile", "desktop" | Agregar segun contexto o preguntar |
+| **Tipo de pagina** | "landing page", "dashboard", "form" | Inferir desde la descripcion |
+| **Estructura** | Secciones o componentes numerados | Crear estructura logica de pagina |
+| **Estilo visual** | Adjetivos, ambiente, tono | Agregar descriptores adecuados |
+| **Colores** | Valores especificos o roles | Agregar design system o sugerir |
+| **Componentes** | Terminos especificos de UI | Traducir a keywords correctas |
 
-### Step 2: Check for DESIGN.md
+### Paso 2: Revisar DESIGN.md
 
-Look for a `DESIGN.md` file in the current project:
+Buscar un archivo `DESIGN.md` en el proyecto actual:
 
-**If DESIGN.md exists:**
-1. Read the file to extract the design system block
-2. Include the color palette, typography, and component styles
-3. Format as a "DESIGN SYSTEM (REQUIRED)" section in the output
+**Si DESIGN.md existe:**
 
-**If DESIGN.md does not exist:**
-1. Add this note at the end of the enhanced prompt:
+1. Leer el archivo para extraer el bloque del design system
+2. Incluir paleta de colores, tipografia y estilos de componentes
+3. Dar formato como seccion "DESIGN SYSTEM (REQUIRED)" en la salida
+
+**Si DESIGN.md no existe:**
+
+1. Agregar esta nota al final del prompt mejorado:
 
 ```
 ---
-💡 **Tip:** For consistent designs across multiple screens, create a DESIGN.md 
-file using the `buen-gusto-diseno` skill. This ensures all generated pages share the 
-same visual language.
+Tip: para disenos consistentes en varias pantallas, crea un archivo DESIGN.md
+con la skill `buen-gusto-diseno`. Asi todas las paginas comparten el mismo
+lenguaje visual.
 ```
 
-### Step 3: Apply Enhancements
+### Paso 3: Aplicar mejoras
 
-Transform the input using these techniques:
+Transformar la entrada con estas tecnicas:
 
-#### A. Add UI/UX Keywords
+#### A. Agregar keywords UI/UX
 
-Replace vague terms with specific component names:
+Reemplazar terminos vagos con nombres especificos de componentes:
 
-| Vague | Enhanced |
+| Vago | Mejorado |
 |-------|----------|
 | "menu at the top" | "navigation bar with logo and menu items" |
 | "button" | "primary call-to-action button" |
-| "list of items" | "card grid layout" or "vertical list with thumbnails" |
+| "list of items" | "card grid layout" o "vertical list with thumbnails" |
 | "form" | "form with labeled input fields and submit button" |
 | "picture area" | "hero section with full-width image" |
 
-#### B. Amplify the Vibe
+#### B. Amplificar el ambiente
 
-Add descriptive adjectives to set the mood:
+Agregar adjetivos descriptivos para fijar el tono:
 
-| Basic | Enhanced |
+| Basico | Mejorado |
 |-------|----------|
 | "modern" | "clean, minimal, with generous whitespace" |
 | "professional" | "sophisticated, trustworthy, with subtle shadows" |
 | "fun" | "vibrant, playful, with rounded corners and bold colors" |
 | "dark mode" | "dark theme with high-contrast accents on deep backgrounds" |
 
-#### C. Structure the Page
+#### C. Estructurar la pagina
 
-Organize content into numbered sections:
+Organizar el contenido en secciones numeradas:
 
 ```markdown
 **Page Structure:**
@@ -101,21 +134,23 @@ Organize content into numbered sections:
 4. **Footer:** Links, social icons, copyright
 ```
 
-#### D. Format Colors Properly
+#### D. Dar formato correcto a colores
 
-When colors are mentioned, format them as:
+Cuando se mencionan colores, usar este formato:
+
 ```
-Descriptive Name (#hexcode) for functional role
+Nombre descriptivo (#hexcode) para rol funcional
 ```
 
-Examples:
+Ejemplos:
+
 - "Deep Ocean Blue (#1a365d) for primary buttons and links"
 - "Warm Cream (#faf5f0) for page background"
 - "Soft Gray (#6b7280) for secondary text"
 
-### Step 4: Format the Output
+### Paso 4: Dar formato a la salida
 
-Structure the enhanced prompt in this order:
+Estructurar el prompt mejorado en este orden:
 
 ```markdown
 [One-line description of the page purpose and vibe]
@@ -134,22 +169,25 @@ Structure the enhanced prompt in this order:
 ...
 ```
 
-## Output Options
+## Opciones de salida
 
-**Default:** Return the enhanced prompt as text for the user to copy.
+**Por defecto:** devolver el prompt mejorado como texto para copiar.
 
-**Optional file output:** If the user requests, write to a file:
-- `next-prompt.md` — for use with the `stitch-generar-diseno` skill
-- Custom filename specified by user
+**Salida opcional a archivo:** si la persona usuaria lo pide, escribir en un archivo:
 
-## Examples
+- `next-prompt.md` — para usar con la skill `stitch-generar-diseno`
+- Nombre personalizado indicado por la persona usuaria
 
-### Example 1: Vague Input → Structured Prompt
+## Ejemplos completos
 
-**User input:**
+### Ejemplo 1: Entrada vaga a prompt estructurado
+
+**Entrada de la persona usuaria:**
+
 > "make me a login page"
 
-**Enhanced output:**
+**Salida mejorada:**
+
 ```markdown
 A clean, trustworthy login page with a centered form and subtle branding.
 
@@ -171,16 +209,18 @@ A clean, trustworthy login page with a centered form and subtle branding.
 4. **Footer:** "Don't have an account? Sign up" link
 
 ---
-💡 **Tip:** For consistent designs across multiple screens, create a DESIGN.md 
-file using the `buen-gusto-diseno` skill.
+Tip: para disenos consistentes en varias pantallas, crea un DESIGN.md
+con la skill `buen-gusto-diseno`.
 ```
 
-### Example 2: Feature Request → Targeted Edit
+### Ejemplo 2: Solicitud de feature a edicion puntual
 
-**User input:**
+**Entrada de la persona usuaria:**
+
 > "add a search bar"
 
-**Enhanced output:**
+**Salida mejorada:**
+
 ```markdown
 Add a search bar to the header navigation.
 
@@ -195,38 +235,29 @@ Add a search bar to the header navigation.
 **Context:** This is a targeted edit. Make only this change while preserving all existing elements.
 ```
 
-## Tips for Best Results
+## Consejos para mejores resultados
 
-1. **Be specific early** — Vague inputs need more enhancement
-2. **Match the user's intent** — Don't over-design if they want simple
-3. **Keep it structured** — Numbered sections help Stitch understand hierarchy
-4. **Include the design system** — Consistency is key for multi-page projects
-5. **One change at a time for edits** — Don't bundle unrelated changes
+1. **Ser especifico desde el inicio** — las entradas vagas necesitan mas mejora
+2. **Respetar la intencion** — no sobredisenar si la persona quiere algo simple
+3. **Mantener estructura** — las secciones numeradas ayudan a Stitch a entender jerarquia
+4. **Incluir el design system** — la consistencia es clave en proyectos multipagina
+5. **Un cambio por vez en ediciones** — no agrupar cambios sin relacion
 
----
+## Referencias oficiales
 
-## Anexo 2026 - Referencias oficiales y checklist
+- Guia de prompting de Stitch: https://stitch.withgoogle.com/docs/learn/prompting
+- DESIGN.md en Stitch (overview): https://stitch.withgoogle.com/docs/design-md/overview
+- Material 3, tipografia: https://m3.material.io/styles/typography/applying-type
+- Apple HIG, redaccion: https://developer.apple.com/design/human-interface-guidelines
+- Google Developer Style, encabezados: https://developers.google.com/style/headings
+- Patrones de prompts y skills: https://github.com/anthropics/skills — ejemplos de estructura y buenas practicas para redactar salidas.
 
-Fuentes oficiales:
-
-- Stitch prompting: https://stitch.withgoogle.com/docs/learn/prompting
-- Stitch DESIGN.md: https://stitch.withgoogle.com/docs/design-md/overview
-- Google developer style headings: https://developers.google.com/style/headings
-- Material 3 typography: https://m3.material.io/styles/typography/applying-type
-- Apple HIG writing: https://developer.apple.com/design/human-interface-guidelines
-
-Repos famosos:
-
-- https://github.com/alexpate/awesome-design-systems
-- https://github.com/matiassingers/awesome-readme
-- https://github.com/BolajiAyodeji/awesome-technical-writing
-
-Checklist:
+## Checklist de verificacion
 
 - [ ] Plataforma, tipo de pagina y estructura numerada presentes.
 - [ ] Terminos vagos reemplazados por keywords UI especificas.
-- [ ] Vibe con adjetivos concretos y colores en formato Nombre (#hex) para rol.
+- [ ] Ambiente descrito con adjetivos concretos y colores en formato Nombre (#hex) para rol.
 - [ ] DESIGN.md leido e incluido como DESIGN SYSTEM REQUIRED si existe.
 - [ ] Salida en orden: proposito, sistema, estructura por secciones.
-- [ ] Edits con ubicacion, visual y estructura en un solo cambio.
-- [ ] Sin sobre-diseno cuando el usuario pide simple.
+- [ ] Ediciones puntuales con ubicacion, estilo y alcance en un solo cambio.
+- [ ] Sin sobrediseno cuando la persona pide algo simple.

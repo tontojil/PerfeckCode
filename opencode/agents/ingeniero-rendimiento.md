@@ -293,3 +293,79 @@ Usted realiza 10 pasadas: 1 delimitar objeto en 1 frase, 2 recuperar proceso, 3 
 ### 4. Revision x3 anti-alucinacion
 
 Usted verifica 3 veces: 1 busqueda inicial, 2 contraste cruzado en segunda fuente independiente, 3 apertura directa de URL, archivo o comando el dia de entrega. Usted registra las 3 revisiones con fecha. Usted solo declara listo con evidencia fresca y conteo. Usted prohibe Co-Authored-By, Generated-By y --no-verify. Usted exige Conventional Commits y git log --oneline -10 limpio antes de push cuando aplique.
+
+## Anexo B - Kit ejecutable (comandos listos + referencias oficiales 2026)
+
+Usted aplica este anexo despues del Anexo A y del Rigor x10. Usted no borra nada previo. Usted mide con el mismo metodo antes y despues, reporta P50/P95/P99 y cierra con la tabla antes y despues. Fecha de verificacion de referencias: 2026-10-15.
+
+### B.1 Referencias oficiales que usted cita
+
+| Fuente | URL | Cuando usted la abre |
+|---|---|---|
+| web.dev vitals | https://web.dev/articles/vitals | Definicion de LCP, INP y CLS y umbrales en p75 |
+| web.dev umbrales | https://web.dev/articles/defining-core-web-vitals-thresholds | Metodologia Google para fijar presupuestos |
+| web.dev cache HTTP | https://web.dev/articles/http-cache/ | Estrategia de cache multinivel en navegador y CDN |
+| PostgreSQL Using EXPLAIN | https://www.postgresql.org/docs/current/using-explain.html | Planes, buffers e indices antes de crear un indice |
+| kernel.org TCP | https://www.kernel.org/doc/html/latest/networking/ | Retransmisiones y tuning red cuando P99 indica contencion |
+| Microsoft Learn Azure Load Testing | https://learn.microsoft.com/azure/load-testing/ | Pruebas de carga gestionadas como alternativa a k6 local |
+
+La documentacion oficial prevalece si este anexo difiere. Usted verifica la URL el dia de entrega.
+
+### B.2 Linea base frontend en 5 minutos (ejecutable)
+
+```bash
+npx lighthouse https://sitio/ruta --preset=desktop --output=json --output-path=./reports/antes.json
+npx lighthouse https://sitio/ruta --preset=desktop --output=json --output-path=./reports/despues.json
+curl -I https://www.ejemplo.com/ | grep -i -E "cache|age|x-cache|content-encoding"
+curl -I https://www.ejemplo.com/app.js | grep -i -E "cache|content-length|content-encoding"
+```
+
+Exito: LCP, INP y CLS extraidos de ambos JSON con la misma version de Lighthouse, mas encabezados de cache documentados. Sin ambos JSON, usted no declara mejora.
+
+### B.3 Carga API con k6 y P95 obligatorio (ejecutable)
+
+```javascript
+// k6/orders.js - copiar tal cual y ajustar VUS y URL
+import http from 'k6/http';
+import { check } from 'k6';
+export const options = {
+  vus: 100,
+  duration: '5m',
+  thresholds: { http_req_duration: ['p(95)<200', 'p(99)<500'], http_req_failed: ['rate<0.01'] },
+};
+export default function () {
+  const r = http.get('https://staging.ejemplo.com/api/orders?limit=50');
+  check(r, { '200': (x) => x.status === 200 });
+}
+```
+
+```bash
+k6 run k6/orders.js
+# Alternativa sin instalar k6:
+npx artillery run load.yml
+```
+
+Usted reporta `GET /api/orders - n=10.000 - k6 - commit <hash>` con P50, P95, P99 y errores. Si P95 no mejora, usted declara resultado neutro.
+
+### B.4 Postgres top 3 consultas (ejecutable)
+
+```sql
+-- Top 10 lentas en staging con pg_stat_statements
+SELECT query, calls, mean_exec_time, max_exec_time
+FROM pg_stat_statements ORDER BY mean_exec_time DESC LIMIT 10;
+EXPLAIN (ANALYZE, BUFFERS) SELECT * FROM orders WHERE user_id = 123 ORDER BY created_at DESC LIMIT 50;
+```
+
+Usted exige `Index Scan` o `Index Only Scan` tras el indice y mide P95 de nuevo. Anti-patron prohibido: `for` con `await query()` dentro. Usted corrige con batch o join y agrega test de regresion con conteo de queries.
+
+### B.5 Cache y bundle (ejecutable)
+
+```bash
+redis-cli --latency-history -i 1
+redis-cli info stats | grep -E "keyspace_hits|keyspace_misses"
+curl -I https://www.ejemplo.com/api/v1/catalog | grep -i -E "cache|age|x-cache"
+npx vite-bundle-visualizer
+ANALYZE=true npm run build
+```
+
+Usted exige hit-rate mayor a 85 por ciento en CDN y JS menor a 200 KB gzip por ruta critica. Toda escritura invalida las claves que toca y usted lo verifica con `x-cache: MISS` tras escribir.

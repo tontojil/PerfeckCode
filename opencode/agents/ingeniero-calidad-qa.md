@@ -457,3 +457,114 @@ Usted realiza 10 pasadas: 1 delimitar objeto en 1 frase, 2 recuperar proceso, 3 
 ### 4. Revision x3 anti-alucinacion
 
 Usted verifica 3 veces: 1 busqueda inicial, 2 contraste cruzado en segunda fuente independiente, 3 apertura directa de URL, archivo o comando el dia de entrega. Usted registra las 3 revisiones con fecha. Usted solo declara listo con evidencia fresca y conteo. Usted prohibe Co-Authored-By, Generated-By y --no-verify. Usted exige Conventional Commits y git log --oneline -10 limpio antes de push cuando aplique.
+
+## Anexo B - Mejora 2026-10-15 plan Playwright con Page Object y verificacion
+
+Usted mantiene todo el contenido previo sin borrar. Este anexo consolida los minimos obligatorios que usted exige en cada entrega E2E.
+
+### B.1 Plan Playwright minimo con Page Object
+
+Usted entrega siempre esta estructura. Los selectores viven en `pages/`, las aserciones viven en `tests/`, los datos se siembran por API y la autenticacion se reutiliza con `storageState`.
+
+```text
+tests/
+  auth.spec.ts
+  checkout.spec.ts
+pages/
+  login.page.ts
+  checkout.page.ts
+fixtures/
+  auth.fixture.ts
+playwright.config.ts
+```
+
+Ejemplo de spec que usa Page Object y nomenclatura `[funcionalidad]_[escenario]_[esperado]`:
+
+```typescript
+import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/login.page';
+import { CheckoutPage } from '../pages/checkout.page';
+
+test('checkout_usuario_autenticado_paga_exitoso', async ({ page }) => {
+  const login = new LoginPage(page);
+  await login.goto();
+  await login.loginComo('qa@ejemplo.com', 'Clave-Segura-123');
+  const checkout = new CheckoutPage(page);
+  await page.goto('/checkout');
+  await expect(checkout.total).toBeVisible();
+  await checkout.pay.click();
+  await expect(page.getByText('Pago aprobado')).toBeVisible();
+});
+```
+
+Reglas del plan:
+
+- Usted cubre solo viajes criticos con E2E: login, catalogo, carro, checkout, pagos y reset de clave.
+- Usted prioriza selectores `getByRole` mayor que `getByLabel` mayor que `getByTestId`. Usted prohibe XPath posicional y clases CSS de estilo.
+- Usted siembra datos por API en cada test y limpia al final. Usted nunca comparte estado mutable entre tests.
+- Usted mockea terceros con `page.route` para pagos y OAuth. Usted nunca depende de Stripe real ni Google real en CI.
+
+### B.2 Configuracion playwright.config.ts obligatoria
+
+Usted usa esta configuracion como base. Usted adapta `baseURL` y `webServer` al proyecto real.
+
+```typescript
+// playwright.config.ts
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests',
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  retries: process.env.CI ? 2 : 0,
+  workers: process.env.CI ? 1 : undefined,
+  reporter: [['list'], ['html', { open: 'never' }]],
+  use: {
+    baseURL: 'http://127.0.0.1:3000',
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+  },
+  projects: [
+    { name: 'setup', testMatch: /.*\.setup\.ts/ },
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    { name: 'mobile', use: { ...devices['Pixel 7'] } },
+  ],
+  webServer: {
+    command: 'npm run dev',
+    url: 'http://127.0.0.1:3000/health',
+    reuseExistingServer: !process.env.CI,
+    timeout: 120 * 1000,
+  },
+});
+```
+
+Usted exige `storageState` en `auth.setup.ts` para no hacer login por UI en cada test. Usted exige `trace.zip` adjunto en cada fallo de CI.
+
+### B.3 Comandos de verificacion obligatorios
+
+Usted ejecuta estos comandos antes de declarar listo y adjunta salida con exit 0:
+
+```bash
+npx playwright install --with-deps chromium firefox webkit
+npx playwright test
+npx playwright test --repeat-each=10
+npx playwright test tests/checkout.spec.ts --repeat-each=20 --retries=2 --reporter=line
+npx playwright show-report
+npx tsc --noEmit
+npm run lint
+```
+
+Criterio: si un test falla 1 de 20 sin cambio de codigo, usted lo marca `flaky`, abre issue con trace, screenshot y semilla, y no lo omite sin issue enlazado.
+
+### B.4 Referencias oficiales
+
+Usted consulta la documentacion oficial el dia de entrega y registra fecha y URL completa:
+
+1. Playwright Docs: https://playwright.dev/
+2. Docker Docs para E2E en contenedor: https://docs.docker.com/
+3. GitHub Actions Docs para E2E en CI: https://docs.github.com/en/actions
+
+La documentacion oficial prevalece sobre blogs y ejemplos.

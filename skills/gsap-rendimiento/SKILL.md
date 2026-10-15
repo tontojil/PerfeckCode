@@ -6,6 +6,19 @@ license: MIT
 
 # GSAP Performance
 
+## Version e instalacion
+
+Version de referencia: **GSAP 3.12**. Instalar con:
+
+```bash
+npm install gsap
+```
+
+Documentacion oficial: https://gsap.com/docs/v3/
+Repositorio: https://github.com/greensock/gsap
+
+Las pautas de esta skill aplican a cualquier proyecto GSAP 3.12, con o sin plugins.
+
 ## When to Use This Skill
 
 Apply when optimizing GSAP animations for smooth 60fps, reducing layout/paint cost, or when the user asks about performance, jank, or best practices for fast animations.
@@ -26,8 +39,12 @@ GSAP’s **x** and **y** use transforms (translate) by default; use them instead
 Use **will-change** in CSS on elements that will animate. It hints the browser to promote the layer.
 
 ```css
-will-change: transform;
+.animar {
+  will-change: transform;
+}
 ```
+
+Retirar despues de animar (ver seccion "will-change: Only While Animating").
 
 ## Batch Reads and Writes
 
@@ -41,7 +58,7 @@ GSAP batches updates internally. When mixing GSAP with direct DOM reads/writes o
 
 ## Frequently updated properties (e.g. mouse followers)
 
-Prefer **gsap.quickTo()** for properties that are updated often (e.g. mouse-follower x/y). It reuses a single tween instead of creating new tweens on each update. 
+Prefer **gsap.quickTo()** for properties that are updated often (e.g. mouse-follower x/y). It reuses a single tween instead of creating new tweens on each update.
 
 ```javascript
 let xTo = gsap.quickTo("#id", "x", { duration: 0.4, ease: "power3" }),
@@ -52,6 +69,69 @@ document.querySelector("#container").addEventListener("mousemove", (e) => {
   yTo(e.pageY);
 });
 ```
+
+## Ejemplo minimo completo (GSAP 3.12)
+
+Requiere `npm install gsap`. Compara animar con `x` (compositor) y usa `quickTo` para un follower con buena respuesta.
+
+`index.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GSAP 3.12 rendimiento minimo</title>
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; }
+    #area { height: 80vh; background: #f1f5f9; position: relative; overflow: hidden; }
+    #punto { width: 40px; height: 40px; border-radius: 50%; background: #0ea5e9; will-change: transform; }
+    .grid { display: grid; grid-template-columns: repeat(10, 40px); gap: 8px; padding: 16px; }
+    .celda { width: 40px; height: 40px; background: #22c55e; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <div id="area"><div id="punto"></div></div>
+  <div class="grid"></div>
+  <script type="module" src="./perf.js"></script>
+</body>
+</html>
+```
+
+`perf.js`:
+
+```javascript
+import { gsap } from "gsap";
+
+// Follower eficiente: un solo tween reutilizado.
+const xTo = gsap.quickTo("#punto", "x", { duration: 0.4, ease: "power3" });
+const yTo = gsap.quickTo("#punto", "y", { duration: 0.4, ease: "power3" });
+
+document.querySelector("#area").addEventListener("mousemove", (e) => {
+  const rect = e.currentTarget.getBoundingClientRect();
+  xTo(e.clientX - rect.left);
+  yTo(e.clientY - rect.top);
+});
+
+// Stagger con transform y opacity, no con width o top.
+const grid = document.querySelector(".grid");
+for (let i = 0; i < 40; i++) {
+  const div = document.createElement("div");
+  div.className = "celda";
+  grid.appendChild(div);
+}
+
+gsap.from(".celda", {
+  y: 20,
+  autoAlpha: 0,
+  duration: 0.4,
+  ease: "power2.out",
+  stagger: 0.02
+});
+```
+
+Verificacion: el punto sigue el mouse sin saltos y las 40 celdas entran con stagger fluido. El medidor de FPS (ver abajo) se mantiene estable cerca de 60. Sin errores en consola.
 
 ## ScrollTrigger and Performance
 
@@ -141,19 +221,29 @@ Same rule applies to `force3D`: let GSAP handle it, do not force it globally "ju
 - ❌ Create hundreds of overlapping tweens or ScrollTriggers without testing on low-end devices.
 - ❌ Ignore cleanup; stray tweens and ScrollTriggers keep running and can hurt performance and correctness.
 
+## References
+
+- **gsap-basico** — transforms, autoAlpha, stagger.
+- **gsap-linea-tiempo** — reutilizar timelines en vez de crear uno por frame.
+- **gsap-animacion-scroll** — pin, scrub y refresh con debounce.
+- Documentacion oficial: https://gsap.com/docs/v3/
+- ScrollTrigger: https://gsap.com/docs/v3/Plugins/ScrollTrigger
+
 ---
 
 ## Anexo 2026 - Referencias oficiales y checklist
 
 Fuentes oficiales:
 
-- GSAP docs: https://www.gsap.com/docs/v3/
+- GSAP docs v3: https://gsap.com/docs/v3/
+- GSAP docs home: https://www.gsap.com/docs/v3/
 - ScrollTrigger: https://gsap.com/docs/v3/Plugins/ScrollTrigger
 - GSAP React: https://gsap.com/resources/React
 - GSAP skills: https://github.com/greensock/gsap-skills
 
 Repos famosos:
 
+- https://github.com/greensock/gsap
 - https://github.com/greensock/gsap-skills
 - https://github.com/facebook/react
 - https://github.com/vercel/next.js

@@ -382,3 +382,79 @@ Usted realiza 10 pasadas: 1 delimitar objeto en 1 frase, 2 recuperar proceso, 3 
 ### 4. Revision x3 anti-alucinacion
 
 Usted verifica 3 veces: 1 busqueda inicial, 2 contraste cruzado en segunda fuente independiente, 3 apertura directa de URL, archivo o comando el dia de entrega. Usted registra las 3 revisiones con fecha. Usted solo declara listo con evidencia fresca y conteo. Usted prohibe Co-Authored-By, Generated-By y --no-verify. Usted exige Conventional Commits y git log --oneline -10 limpio antes de push cuando aplique.
+
+## Anexo B - Kit ejecutable (comandos listos + referencias oficiales 2026)
+
+Usted aplica este anexo despues del Anexo A y del Rigor x10. Usted no borra nada previo. Usted ejecuta cada bloque tal cual, registra salida con exit 0 y detiene el cambio si un bloque falla. Fecha de verificacion de referencias: 2026-10-15.
+
+### B.1 Referencias oficiales que usted cita
+
+| Fuente | URL | Cuando usted la abre |
+|---|---|---|
+| kernel.org | https://www.kernel.org/doc/html/latest/ | Sintaxis de cgroups v2, namespaces, eBPF y filesystems antes de afirmar limites |
+| kernel.org eBPF | https://docs.kernel.org/bpf/ | Solo lectura con bpftrace y bpftool, sin cargar programas propios en produccion |
+| Microsoft Learn WSL | https://learn.microsoft.com/windows/wsl/ | Interoperabilidad con WSL2, rutas /mnt/c y traduccion de permisos |
+| Microsoft Learn PowerShell | https://learn.microsoft.com/powershell/ | Cuando el ticket mezcla servidor Linux con estacion Windows |
+| web.dev cache HTTP | https://web.dev/articles/http-cache/ | Encabezados Cache-Control cuando sirve web tras Caddy o nginx |
+| web.dev vitals | https://web.dev/articles/vitals | LCP, INP y CLS si la lentitud reportada es del navegador y no del servidor |
+
+Usted prefiere estas fuentes sobre blogs. Usted verifica con `man <comando>` en el servidor el dia de entrega.
+
+### B.2 Diagnostico de 60 segundos (solo lectura, copiar y pegar)
+
+```bash
+lsb_release -a; uname -r; whoami; pwd
+systemctl --failed --no-pager
+df -h; free -h; uptime
+ss -tulpn | grep LISTEN
+journalctl -p err -n 30 --no-pager
+```
+
+Exito: cada comando con exit 0 y salida guardada en el ticket. Si `systemctl --failed` lista un servicio, usted pasa a B.5 antes de tocar red o firewall.
+
+### B.3 SSH endurecido sin perder acceso (ejecutable)
+
+```bash
+cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak.$(date +%F-%H%M)
+ls -l /etc/ssh/sshd_config.bak.*
+grep -E "^PermitRootLogin|^PasswordAuthentication|^MaxAuthTries|^PubkeyAuthentication" /etc/ssh/sshd_config
+sshd -t; echo $?
+stat -c "%a %U:%G %n" ~/.ssh ~/.ssh/authorized_keys
+```
+
+Usted edita solo estas tres lineas a `PermitRootLogin no`, `PasswordAuthentication no` y `PubkeyAuthentication yes`, luego ejecuta `sshd -t`, `systemctl reload sshd` y `systemctl is-active sshd`. Usted prueba el acceso en una segunda sesion antes de cerrar la actual. Rollback: `cp /etc/ssh/sshd_config.bak.<fecha> /etc/ssh/sshd_config && sshd -t && systemctl reload sshd`.
+
+### B.4 Firewall nftables verificado (ejecutable)
+
+```bash
+nft --version; nft list ruleset
+nft -c -f /etc/nftables.conf; echo $?
+nft list ruleset > /etc/nftables.conf.bak.$(date +%F)
+ss -tulpn | grep -E ":22|:80|:443"
+```
+
+Usted aplica solo con segunda sesion SSH abierta: `nft -f /etc/nftables.conf` y luego `systemctl enable --now nftables`. Rollback: `nft flush ruleset; nft -f /etc/nftables.conf.bak.<fecha>`.
+
+### B.5 Servicio endurecido con systemd (ejecutable)
+
+```bash
+systemd-analyze security miapp.service | head -n 30
+systemctl show miapp.service -p MemoryMax,CPUQuota,TasksMax,NoNewPrivileges,ProtectSystem
+systemctl daemon-reload; systemctl restart miapp.service
+systemctl is-active miapp.service; journalctl -u miapp.service -n 20 --no-pager
+```
+
+Usted exige nota mayor o igual a 5 en `systemd-analyze security`. Si el servicio no levanta, usted revierte la unidad desde la copia `.bak` y repite `daemon-reload`.
+
+### B.6 Disco y snapshots (ejecutable)
+
+```bash
+df -h; lsblk -f
+vgs; lvs 2>/dev/null || true
+zpool status 2>/dev/null || true
+journalctl --disk-usage
+journalctl --vacuum-size=500M
+df -h
+```
+
+Usted exige mas de 15 por ciento libre tras limpiar el journal. Snapshot previo a cambio riesgoso: `lvcreate -L 5G -s -n snap_pre_$(date +%F) /dev/vg0/lv_data` o `zfs snapshot rpool/data@pre_$(date +%F)`.

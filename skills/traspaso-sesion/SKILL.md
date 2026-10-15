@@ -1,31 +1,66 @@
 ---
 name: traspaso-sesion
 description: Generar archivo HANDOFF.md con estado del proyecto para traspaso limpio entre sesiones, ideal antes de hacer clear o si la sesión se alarga. (HANDOFF, session, context, handover)
+metadata:
+  version: "1.1.0"
 ---
 
 # Handoff — Traspaso limpio entre sesiones
 
-Genera un archivo `HANDOFF.md` en la raíz del proyecto con TODO el contexto necesario para que una sesión nueva continúe sin arrastrar basura.
+Genera un archivo `HANDOFF.md` en la raiz del proyecto con todo el contexto necesario para que una sesion nueva continue sin arrastrar informacion innecesaria.
 
-## Cuándo usar
+## Cuando usar
 
-- Sesión larga (>30 min) y el modelo empieza a repetir patrones
-- 3+ intentos fallidos con la misma solución
-- Antes de hacer `/clear` o cerrar la sesión
-- Cuando el usuario dice "traspaso-sesion", "handoff", "traspaso", o "crea handoff"
+- Sesion larga (mas de 30 minutos) y el modelo empieza a repetir patrones
+- Tres o mas intentos fallidos con la misma solucion
+- Antes de hacer `/clear` o cerrar la sesion
+- Cuando la persona usuaria dice "traspaso-sesion", "handoff", "traspaso" o "crea handoff"
+
+## Ejemplo minimo
+
+Ejemplo minimo de `HANDOFF.md` valido. Los campos entre corchetes se reemplazan con informacion real y verificada:
+
+```markdown
+# Handoff — 2026-10-15 12:00 UTC
+
+## Objetivo
+Corregir el error de autenticacion en `login.ts` sin romper la sesion existente.
+
+## Estado Actual
+Funciona: validacion de formulario y redireccion basica.
+No funciona: renovacion de token (error 401 no verificado en local).
+
+## Archivos Clave
+- `C:/proyecto/src/auth/login.ts` — logica de login y renovacion de token
+- `C:/proyecto/src/api/client.ts` — cliente HTTP con interceptores
+
+## Cambios Hechos
+- Ajuste de timeout en `client.ts` — evita cancelacion prematura
+
+## Intentos Fallidos
+- Reintento automatico con backoff — falló por 401 persistente. No repetir sin revisar el refresh token.
+
+## Próximos Pasos
+1. Reproducir el 401 en local con logs
+2. Revisar `refreshToken` en `login.ts`
+3. Agregar test para renovacion expirada
+
+## Notas
+Rama `fix/auth-refresh`. `git status` limpio salvo `login.ts`. Sin secretos en este archivo.
+```
 
 ## Estructura del HANDOFF.md
 
-Generar el archivo con ESTE formato exacto:
+Generar el archivo con este formato exacto:
 
 ```markdown
 # Handoff — [fecha/hora]
 
 ## Objetivo
-[Qué estamos tratando de lograr. Una frase clara. Sin ambigüedad.]
+[Qué se intenta lograr. Una frase clara. Sin ambigüedad.]
 
 ## Estado Actual
-[Dónde estamos. Qué funciona. Qué NO funciona. Sé honesto — esto es lo más importante.]
+[Dónde está el trabajo. Qué funciona. Qué NO funciona. Ser honesto — esto es lo más importante.]
 
 ## Archivos Clave
 - `ruta/absoluta/archivo.ts` — qué es y por qué importa
@@ -36,8 +71,8 @@ Generar el archivo con ESTE formato exacto:
 - [Cambio 2] — por qué se hizo
 
 ## Intentos Fallidos
-- [Intento 1] — por qué falló. NO repetir este approach.
-- [Intento 2] — por qué falló. NO repetir este approach.
+- [Intento 1] — por qué falló. NO repetir este enfoque.
+- [Intento 2] — por qué falló. NO repetir este enfoque.
 
 ## Próximos Pasos
 1. [Paso concreto 1]
@@ -50,54 +85,36 @@ Generar el archivo con ESTE formato exacto:
 
 ## Reglas
 
-- **Sin ficción.** Si algo no se probó, decir "no verificado".
-- **Fallos > éxitos.** Documentar lo que NO funcionó es más valioso que lo que sí.
+- **Sin ficcion.** Si algo no se probo, indicar "no verificado".
+- **Los fallos valen mas que los exitos.** Documentar lo que NO funciono es mas valioso que lo que si funciono.
 - **Rutas absolutas.** Nada de `./` o `../`.
-- **Sobrescribir sin miedo.** Si ya existe HANDOFF.md, pisarlo (es más fresco).
-- **No hagas commit de HANDOFF.md.** Es temporal. Está en .gitignore o debería estarlo.
+- **Sobrescribir sin miedo.** Si ya existe HANDOFF.md, reemplazarlo con la version mas reciente.
+- **No hacer commit de HANDOFF.md.** Es temporal. Debe estar en .gitignore o quedar fuera del repo.
+- **Sin secretos.** Nunca incluir tokens, claves, contrasenas ni credenciales.
 
-## Post-generación
+## Post-generacion
 
-1. Decir explícitamente: "HANDOFF.md creado. Cierra esta sesión y abre una nueva. Leerá el handoff automáticamente."
-2. No seguir trabajando después de generar el handoff. El punto es CERRAR la sesión.
+1. Decir explicitamente: "HANDOFF.md creado. Cierra esta sesion y abre una nueva. La sesion nueva leera el handoff automaticamente."
+2. No seguir trabajando despues de generar el handoff. El objetivo es cerrar la sesion.
 
-## Referencias oficiales y repositorios famosos
+## Referencias oficiales
 
-Esta sección amplía sin modificar el formato HANDOFF existente. Úsela para traspasos consistentes y auditables.
+- Markdown en GitHub (formato de `HANDOFF.md`): https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github
+- Conventional Commits (mensajes citados en Cambios Hechos): https://www.conventionalcommits.org/
+- Git Log (historial para documentar cambios con precision): https://git-scm.com/docs/git-log
+- Git Status (estado limpio antes de cerrar sesion): https://git-scm.com/docs/git-status
+- Gitignore (mantener `HANDOFF.md` como temporal fuera del repo): https://git-scm.com/docs/gitignore
+- GitHub Flow (rama, cambios y proximos pasos): https://docs.github.com/get-started/using-github/github-flow
+- OpenCode Docs (sesiones, `/clear` y continuidad de contexto): https://opencode.ai/docs/
+- OWASP, exposicion por archivos temporales (no incluir secretos): https://owasp.org/www-community/vulnerabilities/Information_exposure_through_temporary_files
 
-### Documentación oficial
+## Checklist de verificacion
 
-- GitHub Docs Markdown: https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github — formato `HANDOFF.md`.
-- Conventional Commits: https://www.conventionalcommits.org/ — mensajes citados en Cambios Hechos.
-- Git Log: https://git-scm.com/docs/git-log — historial para documentar cambios con precisión.
-- Git Status: https://git-scm.com/docs/git-status — estado limpio antes de cerrar sesión.
-- Gitignore: https://git-scm.com/docs/gitignore — mantener `HANDOFF.md` como temporal fuera del repo.
-- GitHub Flow: https://docs.github.com/get-started/using-github/github-flow — rama, cambios y próximos pasos.
-- OWASP Secrets: https://owasp.org/www-community/vulnerabilities/Information_exposure_through_temporary_files — no incluir secretos en handoff.
-
-### Repositorios famosos y listas curadas
-
-- Awesome Handoffs: https://github.com/sindresorhus/awesome — curaduría general aplicable a plantillas.
-- OpenCode Docs: https://opencode.ai/docs/ — sesiones, `/clear` y continuidad de contexto.
-- Claude Code Best Practices: https://github.com/anthropics/claude-code — handoffs y compactación de contexto.
-- Conventional Commits: https://github.com/conventional-changelog/commitlint — validación de mensajes citados.
-- gitignore Templates: https://github.com/github/gitignore — patrones para excluir `HANDOFF.md`.
-
-### Guías de profundización sugeridas
-
-- Revise `git log --oneline -10` y `git status` antes de redactar Estado Actual.
-- Consulte `.gitignore` para confirmar que `HANDOFF.md` permanece temporal.
-- Valide rutas absolutas en Archivos Clave con `pwd` o explorador antes de escribir.
-- Verifique Intentos Fallidos con comandos y salidas reales, sin reconstruir de memoria.
-- Mida frescura: si el handoff supera una sesión larga, regenere en lugar de editar parcial.
-
-### Checklist de verificación
-
-- [ ] Se incluye fecha y hora en el título del handoff.
+- [ ] Se incluye fecha y hora en el titulo del handoff.
 - [ ] El Objetivo describe una sola meta clara sin ambigüedad.
-- [ ] El Estado Actual distingue verificado de no verificado con honestidad.
-- [ ] Todos los Archivos Clave utilizan rutas absolutas con propósito descrito.
-- [ ] Los Intentos Fallidos explican causa y prohíben repetir el enfoque.
-- [ ] Los Próximos Pasos son concretos, ordenados y ejecutables en sesión nueva.
+- [ ] El Estado Actual distingue lo verificado de lo no verificado con honestidad.
+- [ ] Todos los Archivos Clave usan rutas absolutas con proposito descrito.
+- [ ] Los Intentos Fallidos explican la causa y prohiben repetir el enfoque.
+- [ ] Los Proximos Pasos son concretos, ordenados y ejecutables en sesion nueva.
 - [ ] No se incluyen secretos, tokens ni credenciales en el archivo.
-- [ ] `HANDOFF.md` no se commitea y la sesión se cierra tras generarlo.
+- [ ] `HANDOFF.md` no se commitea y la sesion se cierra tras generarlo.

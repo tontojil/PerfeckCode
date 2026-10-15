@@ -41,15 +41,81 @@ Before any completion claim:
 Si el proyecto tiene otro comando en `package.json` / `README` / `CLAUDE.md`, ese manda.
 Warnings cuentan como fail si el proyecto usa `--strict` / `--deny-warnings`. Si no, reportalos igual.
 
-## Output Format
+## Formato de salida
 
 Use:
 
-- **Claim**
-- **Command run**
-- **Result summary**
-- **Evidence snippet**
-- **Final status**: pass / fail / partial
+- **Reclamo**
+- **Comando ejecutado**
+- **Resumen del resultado**
+- **Fragmento de evidencia**
+- **Estado final**: pass / fail / partial
+
+## Ejemplo de evidencia real pass / fail con exit 0
+
+No declare listo sin este bloque completo. La salida debe ser de una corrida fresca, no de memoria ni de una corrida anterior.
+
+Ejemplo pass:
+
+```text
+Reclamo: Tests pasan en API de facturación.
+Comando ejecutado: npm test -- --run (2026-10-15, commit a3f9c1d)
+Resumen: 48 passed, 0 failed, duración 12,4 s.
+Evidencia:
+  Test Files  6 passed (6)
+       Tests  48 passed (48)
+    Exit code: 0
+Estado final: pass
+```
+
+Ejemplo fail:
+
+```text
+Reclamo: Build listo para PR.
+Comando ejecutado: npm run build (2026-10-15, commit a3f9c1d)
+Resumen: 1 error en TypeScript, build detenido.
+Evidencia:
+  src/invoice.ts(42,7): error TS2322: Type 'string' is not assignable to type 'number'.
+    Exit code: 1
+Estado final: fail - corregir tipo en invoice.ts, reejecutar build, responsable: quien implementa.
+```
+
+Reglas de este ejemplo:
+
+- Incluya siempre comando exacto, fecha o commit y exit code verificado con `echo $?`.
+- En caso de pass, muestre conteo de pruebas y duración.
+- En caso de fail, copie el mensaje exacto de error y la línea que falla.
+- Nunca resuma sin fragmento de evidencia.
+
+## Umbrales de coverage
+
+- Si el proyecto define umbral en `package.json`, `pyproject.toml`, `coveragerc` o `CLAUDE.md`, ese valor es obligatorio.
+- Si no hay umbral definido, use como referencia mínima: líneas 80 %, ramas 70 %. Registre que es referencia, no regla del proyecto.
+- Comando típico por stack:
+  - JS/TS: `npx vitest run --coverage` o `npm test -- --coverage`
+  - Python: `pytest -q --cov=src --cov-report=term --cov-fail-under=80`
+- Si el coverage queda bajo el umbral, el estado es fail aunque los tests pasen. Reporte archivo y porcentaje que falla.
+- Adjunte tabla de coverage en la evidencia, no solo el porcentaje global.
+
+## Manejo de flaky tests
+
+- Un test que falla de forma intermitente nunca se marca como pass directo.
+- Procedimiento:
+  1. Registre el fallo con log o trace completo.
+  2. Reejecute el test aislado 3 veces: `pytest -q tests/test_invoice.py -k test_caso --count=3` o `npx vitest run test_caso -t "nombre" --retry=3`.
+  3. Si pasa 3/3, marque como partial y abra tarea de seguimiento con causa probable (tiempo, red, orden de ejecución).
+  4. Si falla 1/3 o más, marque como fail y bloquee el PR.
+- Para E2E use retries configurados en el proyecto (por ejemplo Playwright `retries: 2` en CI) y adjunte reporte HTML o trace.
+- Nunca use `--retry` para ocultar un fallo real sin registrarlo.
+
+## Repos faltantes y qué verificar antes de afirmar
+
+Antes de declarar listo, confirme que revisó estos repos o fuentes del proyecto:
+
+- [ ] Comando oficial en `package.json`, `README` o `CLAUDE.md`. Si no existe, indíquelo como faltante.
+- [ ] Configuración de CI en `.github/workflows/`. Si no hay CI, la verificación local es la única evidencia.
+- [ ] Configuración de coverage y lint (`eslint.config.js`, `pyproject.toml`, `.coveragerc`).
+- [ ] Si falta alguno, reporte `partial` con la lista de faltantes y no afirme cobertura completa.
 
 ## Referencias oficiales y repositorios famosos
 

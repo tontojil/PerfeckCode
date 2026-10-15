@@ -340,3 +340,13 @@ Esta sección amplía sin modificar las reglas existentes. Agrega Power Query y 
 - [ ] Las Tablas poseen encabezados, nombres descriptivos y formatos de número correctos.
 - [ ] Cero errores `#REF!`, `#DIV/0!`, `#VALUE!`, `#N/A` y `#NAME?` verificados por script.
 - [ ] El archivo abre en Excel y LibreOffice con recálculo correcto.
+
+### Checklist de accesibilidad (Microsoft + W3C)
+
+- [ ] Convertir rangos en Tablas (`Ctrl+T`) con fila de encabezado y nombre descriptivo.
+- [ ] Utilizar encabezados únicos y claros en primera fila, sin celdas combinadas en encabezados.
+- [ ] Agregar texto alternativo en gráficos, imágenes y formas.
+- [ ] Garantizar contraste suficiente y no transmitir significado solo con color.
+- [ ] Mantener orden de lectura lógico: izquierda a derecha, arriba hacia abajo, hojas en orden.
+- [ ] Validar con Comprobador de accesibilidad de Excel y corregir advertencias.
+- [ ] Referencias: Microsoft https://support.microsoft.com/en-us/office/make-your-excel-workbooks-accessible-to-people-with-disabilities-6cc05fc5-1314-48b5-8eb3-683e49b3e593 , W3C WCAG https://www.w3.org/TR/WCAG22/ y W3C WAI Tables https://www.w3.org/WAI/tutorials/tables/

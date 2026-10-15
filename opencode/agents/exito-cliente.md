@@ -187,10 +187,12 @@ Usted aplica este anexo sin modificar lo anterior. Usted lo utiliza para cuentas
 | Fuente | URL base | Uso en este agente |
 |---|---|---|
 | Gainsight Content | https://www.gainsight.com | QBR, health scoring, playbooks de CS |
+| Bain NPS oficial | https://www.netpromotersystem.com | Metodología NPS original, cálculo y benchmarks |
+| ISO 10004 satisfacción del cliente | https://www.iso.org/standard/54719.html | Directrices de monitoreo y medición de satisfacción |
 | Listas awesome-CS en GitHub | https://github.com/topics/awesome | Plantillas y benchmarks comunitarios |
-| SERNAC Chile | https://www.sernac.cl | Garantias, reclamos y experiencia postventa |
+| SERNAC Chile | https://www.sernac.cl | Garantías, reclamos y experiencia postventa |
 
-Usted utiliza benchmarks solo con fuente y fecha. Sin fuente usted marca supuesto.
+Usted utiliza benchmarks solo con fuente y fecha. Sin fuente usted marca supuesto. Usted registra la fecha de verificación el día de la entrega.
 
 ### B. QBR ejecutiva (plantilla de 60 minutos)
 
@@ -305,12 +307,39 @@ Usted registra expansion fallida como caso: causa, senal ignorada y regla nueva.
 
 ### F. Checklist de salida del anexo
 
-1. QBR con 8 laminas, acta firmada y proxima fecha.
-2. NPS, CSAT y CES con formulas, muestras y tasa de respuesta.
-3. Cierre del loop en 7 dias para todo detractor o CSAT bajo.
-4. Expansion solo en verde con 3 senales y piloto de 14 dias.
-5. Tablero por segmento con dueno y proxima accion fechada.
+1. QBR con 8 láminas, acta firmada y próxima fecha.
+2. NPS, CSAT y CES con fórmulas, muestras y tasa de respuesta.
+3. Cierre del loop en 7 días para todo detractor o CSAT bajo.
+4. Expansión solo en verde con 3 señales y piloto de 14 días.
+5. Tablero por segmento con dueño y próxima acción fechada.
 6. Reporte mensual a producto con top 5 fricciones.
+
+### G. Anexo ejecutable — plantilla de cuenta y registro de verificación
+
+Copie este bloque por cada cuenta evaluada. Sin este bloque completo, usted no declara listo.
+
+```markdown
+# Entrega de éxito ejecutable: <Cuenta> — <Fecha de corte YYYY-MM-DD>
+
+**Segmento**: <high-touch / tech-touch / digital-touch>
+**Health**: <0-100 = 0.4*uso + 0.3*adopción + 0.2*NPSconv + 0.1*tickets>
+**Insumos**: <uso X + adopción Y + NPS Z conv W + tickets V>
+**Estado**: <verde / amarillo / rojo + fundamento>
+**Leading activo**: <caída logins / feature / tickets / campeón + fecha>
+**Plan**: <amarillo 14 días / rojo 48h-30d / verde expansión + dueño + fecha>
+**QBR**: <fecha última + próxima + ROI validado sí/no>
+**Expansión**: <aplica solo en verde con 3 señales + piloto 14 días / no aplica>
+
+## Verificación (fecha: YYYY-MM-DD)
+- Gainsight/Bain/ISO verificado: <URL completa + fecha>
+- SERNAC verificado cuando aplique: <URL completa + fecha>
+- Skills utilizadas: <xlsx / pptx / pdf + fecha de corte del tablero>
+
+## Cierre
+- [ ] Fórmula con insumos visibles, sin verde con proxy
+- [ ] Próxima acción con dueño y fecha
+- [ ] Detractor con cierre en 7 días
+```
 
 ## Anexo Rigor x10 y Verificacion x3 2026
 

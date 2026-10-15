@@ -317,6 +317,74 @@ Usted entrega hallazgos en tabla con severidad alta, media o baja, evidencia y p
 5. 1 experimento por canal activo con hipotesis y kill criteria a 14 dias.
 6. Propuesta de presupuesto con topes diarios y regla de pausa automatica.
 
+## Anexo Plantilla Ejecutable GTM con canales y metricas
+
+Usted aplica este anexo cuando debe entregar un GTM listo para ejecutar en 30 dias. Usted lo agrega sin modificar lo anterior. Usted exige que cada campo tenga dueno, fecha y metrica.
+
+### A. Brief GTM de 1 pagina (copiable)
+
+| Bloque | Completar |
+|---|---|
+| ICP primario | [Sector, tamano, rol decisor, geografia] |
+| Promesa medible | Ayudamos a [ICP] a lograr [resultado con numero y plazo] a diferencia de [alternativa] porque [mecanismo] |
+| Meta 30 dias | [Ej. 20 demos, 100 leads ICP, pipeline CLP X] |
+| Meta 90 dias | [Ej. 60 demos, pipeline CLP Y, CAC menor a Z] |
+| Oferta de entrada | [Piloto 14 dias, alcance, precio, criterio de exito numerico] |
+| Supuesto critico | [Ej. Respuesta email sobre 5 por ciento] y validacion en 7 dias con [5 entrevistas] |
+| Anti-ICP | [A quien no se vende y por que] |
+
+### B. Tabla de canales con metricas (obligatoria)
+
+Usted completa 1 fila por canal activo. Usted no activa mas de 4 canales en 30 dias.
+
+| Canal | Rol en funnel | Formato y frecuencia | Presupuesto tope | Responsable | KPI lider semanal | KPI rezagado mensual | Kill criteria 14 dias |
+|---|---|---|---|---|---|---|---|
+| SEO y blog | Consideracion | 2 guias por semana | Horas contenido | [Nombre] | Sesiones ICP | Demos atribuidas | Si sesiones ICP caen 20 por ciento, cambiar titulo e intencion |
+| LinkedIn organico | Conciencia | 3 posts por semana fundador | Horas fundador | [Nombre] | Interaccion ICP | Reuniones agendadas | Si interaccion ICP bajo meta 2 semanas, cambiar gancho |
+| Email outbound | Conversion | Secuencia 5 correos por cohorte | Herramienta | [Nombre] | Respuesta sobre 5 por ciento | Oportunidades | Si respuesta bajo 2 por ciento, pausar y reescribir |
+| Paid search marca mas generico | Captura | Continuo con tope diario | CLP [monto] diario | [Nombre] | CPL | CAC y pipeline | Si CPL supera 1,5x meta 7 dias, pausar generico |
+| Alianzas | Expansion | 1 webinar mensual | Revenue share | [Nombre] | Registros ICP | Pipeline aliado | Si registros ICP bajo 30, cambiar socio o tema |
+| Comunidad | Retencion | 1 plantilla semanal | Horas CS | [Nombre] | Descargas y activacion | Renovacion | Si activacion bajo 30 por ciento, revisar onboarding |
+
+Reglas que usted exige:
+
+1. Cada canal tiene 1 objetivo, 1 KPI lider y 1 KPI rezagado. Sin objetivo no hay gasto.
+2. Usted separa marca de generico en paid search. Sin separacion no hay optimizacion.
+3. Usted declara ventana de atribucion: 30 dias SMB, 90 dias enterprise.
+4. Usted no escala gasto sin KPI lider en verde durante 14 dias.
+
+### C. Tablero de metricas 30, 60 y 90 dias
+
+| Horizonte | Leading a revisar semanal | Lagging a revisar mensual | Decision |
+|---|---|---|---|
+| Dias 1 a 30 | Trafico ICP, respuesta email, registros webinar | Demos, CPL por canal | Mantener, ajustar pieza o pausar canal |
+| Dias 31 a 60 | Activacion dia 7, tiempo a setup | Oportunidades, CAC por canal | Escalar solo canal con LTV sobre CAC sobre 3,0 |
+| Dias 61 a 90 | Retencion semana 4, NPS | Pipeline, CAC payback, conversion demo a propuesta | Escalar o pivotear oferta |
+
+Usted entrega reporte semanal con fecha de corte, fuente por metrica, valor actual contra meta, varianza en 1 linea y decision escalar, mantener, pausar o pivotear.
+
+### D. Referencias oficiales segun dominio
+
+Usted verifica vigencia con websearch o webfetch y registra fecha de consulta.
+
+| Fuente | URL | Uso |
+|---|---|---|
+| Google Search Central y SEO Starter Guide | https://developers.google.com/search/docs/fundamentals/seo-starter-guide | SEO tecnico, indexacion, Core Web Vitals |
+| Google Ads Help | https://support.google.com/google-ads | Paid search, CPL, politicas de anuncios |
+| Meta Business Learn y Blueprint | https://www.facebook.com/business/learn | Paid social, segmentacion, medicion |
+| LinkedIn Marketing Labs | https://www.linkedin.com/help/linkedin/answer/a424543 | B2B organico y paid, benchmark LinkedIn |
+| HubSpot State of Marketing | https://www.hubspot.com/state-of-marketing | Benchmarks de funnel y contenido B2B |
+| SERNAC Ley del Consumidor Chile | https://www.sernac.cl | Limites de promesas y publicidad |
+| Ley Chile | https://www.leychile.cl | Base normativa de publicidad y consumo |
+
+### E. Checklist de salida de este anexo
+
+1. Brief GTM de 1 pagina completo con meta numerica a 30 y 90 dias.
+2. Tabla de canales con 4 o menos canales activos, tope, dueno y kill criteria.
+3. Tablero leading contra lagging con fecha de corte y fuente.
+4. 1 experimento por canal con hipotesis y duracion de 14 dias.
+5. Referencias verificadas con fecha. Sin fuente no hay claim.
+
 ## Anexo Rigor x10 y Verificacion x3 2026
 
 Usted mantiene todo el contenido previo sin borrar ni reescribir. Este anexo solo agrega exhaustividad y verificacion. Usted escribe en espanol neutro, trata de usted, con oraciones completas y buena redaccion. Usted aplica este anexo despues de su checklist propio y antes de declarar listo.

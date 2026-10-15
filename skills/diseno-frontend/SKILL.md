@@ -78,29 +78,144 @@ Mantenga el tono conversacional: verbos simples, sentence case, sin relleno, con
 
 ---
 
-## Anexo 2026 - Referencias oficiales y checklist
+## Tokens base con CSS
 
-Fuentes oficiales:
+Defina estos tokens antes de escribir componentes. Use escala 4/8pt para espaciado y tipografia fluida con `clamp()`.
 
-- Material 3 Design: https://m3.material.io/
-- Apple HIG: https://developer.apple.com/design/human-interface-guidelines
-- Stitch Docs prompting: https://stitch.withgoogle.com/docs/learn/prompting
-- Stitch DESIGN.md: https://stitch.withgoogle.com/docs/design-md/overview
-- WCAG 2.2: https://www.w3.org/TR/WCAG22/
+```css
+:root {
+  /* Color: fondo claro con texto oscuro para contraste mayor a 7:1 */
+  --color-fondo: #ffffff;
+  --color-superficie: #f4f4f5;
+  --color-texto: #1a1a1a;
+  --color-texto-secundario: #404040;
+  --color-primario: #1849a9;
+  --color-primario-texto: #ffffff;
+  --color-borde: #d4d4d4;
+  --color-foco: #1a73e8;
 
-Repos famosos:
+  /* Tipografia: una familia para titulares y una para cuerpo */
+  --fuente-titular: "Sora", system-ui, sans-serif;
+  --fuente-cuerpo: "Inter", system-ui, sans-serif;
 
-- https://github.com/alexpate/awesome-design-systems
-- https://github.com/enaqx/awesome-react
-- https://github.com/jbranchaud/awesome-react-design-systems
+  /* Escala fluida: minimo legible de 16px en cuerpo */
+  --texto-display: clamp(2.5rem, 1.8rem + 4vw, 4rem);
+  --texto-h1: clamp(2rem, 1.5rem + 2.5vw, 3rem);
+  --texto-h2: clamp(1.5rem, 1.25rem + 1.5vw, 2rem);
+  --texto-cuerpo: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+  --texto-pequeno: 0.875rem;
 
-Checklist:
+  /* Espaciado en escala 4/8pt, sin valores arbitrarios */
+  --espacio-1: 4px;
+  --espacio-2: 8px;
+  --espacio-3: 12px;
+  --espacio-4: 16px;
+  --espacio-6: 24px;
+  --espacio-8: 32px;
+  --espacio-12: 48px;
+  --espacio-16: 64px;
+
+  --radio-sm: 8px;
+  --radio-md: 12px;
+  --radio-lg: 16px;
+}
+```
+
+Reglas de uso:
+
+- Limite la paleta a 4 o 6 valores hex con nombre y rol definido.
+- Verifique contraste 4.5:1 en texto normal y 3:1 en texto grande e interfaz.
+- Mantenga el cuerpo en 16px o mas y lineas de menos de 80 caracteres.
+- Use solo multiplos de 4px para margenes, rellenos y separaciones.
+
+## Ejemplo HTML/CSS accesible
+
+Este ejemplo cumple contraste 4.5:1, incluye foco visible y respeta `prefers-reduced-motion`.
+
+```html
+<main class="hero">
+  <p class="hero-etiqueta">Guia de uso del producto</p>
+  <h1 class="hero-titulo">Un titular claro para este brief especifico</h1>
+  <p class="hero-texto">Texto de apoyo con una sola idea y una accion siguiente.</p>
+  <a class="boton" href="#empezar">Empezar ahora</a>
+</main>
+```
+
+```css
+.hero {
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  padding: var(--espacio-16) var(--espacio-8);
+  max-width: 72ch;
+}
+
+.hero-titulo {
+  font-family: var(--fuente-titular);
+  font-size: var(--texto-h1);
+  line-height: 1.1;
+  margin: 0 0 var(--espacio-4) 0;
+}
+
+.hero-texto {
+  font-family: var(--fuente-cuerpo);
+  font-size: var(--texto-cuerpo);
+  line-height: 1.6;
+  color: var(--color-texto);
+  margin: 0 0 var(--espacio-6) 0;
+}
+
+/* Contraste: blanco #ffffff sobre azul #1849a9, relacion 8.6:1 */
+.boton {
+  display: inline-block;
+  background: var(--color-primario);
+  color: var(--color-primario-texto);
+  padding: var(--espacio-3) var(--espacio-6);
+  border-radius: var(--radio-md);
+  font-size: var(--texto-cuerpo);
+  text-decoration: none;
+  transition: transform 200ms ease, background 200ms ease;
+}
+
+.boton:hover {
+  transform: translateY(-1px);
+}
+
+/* Foco visible con anillo de 3px y desplazamiento */
+.boton:focus-visible,
+a:focus-visible,
+button:focus-visible {
+  outline: 3px solid var(--color-foco);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Movimiento reducido: desactiva transiciones y animaciones */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+```
+
+## Referencias oficiales
+
+- Material 3: https://m3.material.io/
+- Apple HIG: https://developer.apple.com/design/
+- WCAG: https://www.w3.org/WAI/
+- Sistemas de diseno curados: https://github.com/alexpate/awesome-design-systems — lista curada de sistemas de diseno para referencia.
+
+## Checklist de verificacion
 
 - [ ] Plan de tokens con 4 a 6 hex, tipos y layout antes de codificar.
-- [ ] Tipografia fluida con clamp(). Cuerpo minimo 16px.
-- [ ] Spacing en escala 4/8pt. Sin valores arbitrarios.
-- [ ] Contraste 4.5:1 texto, 3:1 grande y UI verificado.
-- [ ] Foco visible y motion 150-300ms con reduced-motion.
+- [ ] Tipografia fluida con `clamp()`. Cuerpo minimo 16px.
+- [ ] Espaciado en escala 4/8pt. Sin valores arbitrarios.
+- [ ] Contraste 4.5:1 en texto y 3:1 en texto grande e interfaz, verificado.
+- [ ] Foco visible con `:focus-visible` en enlaces, botones e inputs.
+- [ ] `prefers-reduced-motion` implementado para animaciones y transiciones.
 - [ ] Un elemento memorable. Resto disciplinado y sin decoracion extra.
-- [ ] Copy especifico: errores con solucion, vacios con accion.
-- [ ] Responsive movil sin scroll horizontal y dark mode cubierto.
+- [ ] Copy especifico: errores con solucion, estados vacios con accion.
+- [ ] Responsive en movil sin desplazamiento horizontal.

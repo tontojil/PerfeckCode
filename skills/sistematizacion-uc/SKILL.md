@@ -107,6 +107,8 @@ Usar skill `xlsx` para generar. Usar skill `pptx` solo para devolucion a mayores
 
 ## Workflow DOCX
 
+Herramienta principal: `python-docx`. Repositorio oficial: https://github.com/python-openxml/python-docx
+
 ```bash
 pip install python-docx
 ```
@@ -132,6 +134,29 @@ save(doc, "/ruta/output.docx")
 ```
 
 API: `create_doc`, `heading`, `body`, `section`, `bullet`, `bullets`, `table`, `page_break`, `cite_apa`, `reference_*`, `save` (igual que inacap, con colores UC).
+
+## Ejemplo mínimo
+
+Documento UC mínimo con portada, sección y tabla:
+
+```python
+from template_uc import create_doc, section, table, save
+
+doc = create_doc(
+    universidad="Pontificia Universidad Catolica de Chile",
+    escuela="Escuela de Trabajo Social",
+    titulo="Sistematizacion Centro Diurno Comunitario",
+    autora="Nombre Autora",
+    docente_guia="Nombre Docente",
+    centro="Centro / Comuna",
+    fecha="Septiembre 2026",
+)
+section(doc, "Introduccion", ["Este documento presenta el objeto, el eje y los objetivos."], level=1)
+table(doc, ["Categoria", "Evidencia"], [["Participacion", "DC-01"]])
+save(doc, "/ruta/output.docx")
+```
+
+Verifique portada UC, margenes 2.54 cm, interlineado 1.5 y citas APA 7 antes de entregar.
 
 ## Gate calidad (bloqueante)
 

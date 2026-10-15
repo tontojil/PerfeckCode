@@ -1,65 +1,75 @@
 ---
 name: diseno-api
-description: Diseña APIs REST con códigos de estado correctos, paginación, errores, versionado y HATEOAS. Usalo cuando creai endpoints, revisai una API o refactorizai rutas. (RESTful APIs, pagination, versioning, HATEOAS)
+description: Disena APIs REST con codigos de estado correctos, paginacion por cursor, errores con envelope, versionado y ejemplo OpenAPI 3.1. Utilizar al crear endpoints, revisar una API o refactorizar rutas. (RESTful APIs, pagination, versioning, HATEOAS)
 ---
 
 # API Design
 
-RESTful API design focused on consistency, scalability, and developer experience.
+Diseno de APIs REST con enfasis en consistencia, escalabilidad y experiencia de desarrollo. Contrato primero con OpenAPI 3.1.
 
 ## Cuando usar
 
-- Creating new endpoints or resources.
-- Reviewing existing API design.
-- Defining API contracts for microservices.
-- User asks about versioning, pagination, or response structure.
+- Crear endpoints o recursos nuevos.
+- Revisar el diseno de una API existente.
+- Definir contratos de API para microservicios.
+- Definir versionado, paginacion o estructura de respuesta y errores.
 
-## Principles
+## Principios
 
 ### URLs
-- Plural nouns: `/users`, `/users/:id/orders`.
-- No verbs in the URL. The action is defined by the HTTP method.
-- Max 3 nesting levels. More → evaluate a root resource.
 
-### HTTP Methods
+- Sustantivos en plural: `/users`, `/users/:id/orders`.
+- Sin verbos en la URL. La accion la define el metodo HTTP.
+- Maximo 3 niveles de anidamiento. Si se supera, evaluar un recurso raiz.
+- Nombres en minusculas, con guiones: `/order-items`, no `/orderItems`.
 
-| Method | Route | Description |
+### Metodos HTTP
+
+| Metodo | Ruta | Descripcion |
 |---|---|---|
-| `GET` | `/users` | List with filters and pagination |
-| `GET` | `/users/:id` | Get one |
-| `POST` | `/users` | Create |
-| `PUT` | `/users/:id` | Full replace |
-| `PATCH` | `/users/:id` | Partial update |
-| `DELETE` | `/users/:id` | Delete (soft delete) |
+| `GET` | `/users` | Listar con filtros y paginacion |
+| `GET` | `/users/:id` | Obtener uno |
+| `POST` | `/users` | Crear |
+| `PUT` | `/users/:id` | Reemplazo completo |
+| `PATCH` | `/users/:id` | Actualizacion parcial |
+| `DELETE` | `/users/:id` | Eliminar (borrado logico) |
 
-### Status Codes
+`PUT` exige el recurso completo. `PATCH` acepta campos parciales. `POST` criticos deben soportar `Idempotency-Key`.
 
-| Codes | Use |
+### Codigos de estado
+
+| Codigo | Uso |
 |---|---|
-| `200` | Successful GET/PUT/PATCH |
-| `201` | Successful POST (with Location header) |
-| `204` | Successful DELETE (no body) |
-| `400` | Client validation error |
-| `401` | Not authenticated |
-| `403` | Authenticated but no permissions |
-| `404` | Resource not found |
-| `409` | Conflict (duplicate, invalid state) |
-| `422` | Unprocessable entity (validation errors) |
-| `429` | Rate limit exceeded |
-| `500` | Internal error (never expose details) |
+| `200` | GET, PUT, PATCH exitoso |
+| `201` | POST exitoso (con header `Location`) |
+| `202` | Aceptado para proceso asincrono |
+| `204` | DELETE exitoso (sin cuerpo) |
+| `304` | No modificado (con `ETag` / `If-None-Match`) |
+| `400` | Error de validacion del cliente |
+| `401` | No autenticado |
+| `403` | Autenticado sin permisos |
+| `404` | Recurso no encontrado |
+| `409` | Conflicto (duplicado, estado invalido) |
+| `422` | Entidad no procesable (errores de validacion por campo) |
+| `429` | Limite de peticiones excedido (con `Retry-After`) |
+| `500` | Error interno (nunca exponer detalles) |
 
-### Response Envelope
+Reglas: un solo codigo por situacion, documentar cada codigo en OpenAPI, no usar `200` con error dentro del cuerpo.
 
-Every response follows this structure:
+### Envelope de respuesta y errores
 
+Toda respuesta exitosa usa `data` + `meta`. Todo error usa `error` con codigo legible por maquina y `request_id` para trazabilidad.
+
+Exito con lista:
 ```json
 {
-  "data": {},
+  "data": [{ "id": "usr_123", "email": "ana@example.com" }],
   "error": null,
   "meta": {
-    "page": 1,
-    "per_page": 20,
-    "total": 150
+    "next_cursor": "eyJpZCI6InVzcl8xMjMifQ==",
+    "prev_cursor": null,
+    "limit": 20,
+    "request_id": "req_abc123"
   }
 }
 ```
@@ -70,58 +80,250 @@ Error:
   "data": null,
   "error": {
     "code": "VALIDATION_ERROR",
-    "message": "The email field is required",
-    "details": [{"field": "email", "reason": "required"}]
+    "message": "El campo email es obligatorio",
+    "details": [{ "field": "email", "reason": "required" }],
+    "request_id": "req_abc123"
   },
   "meta": null
 }
 ```
 
-### Pagination
+Campos obligatorios del error: `code` (ENUM en MAYUSCULAS), `message` (humano, sin datos sensibles), `details` (arreglo por campo), `request_id`.
 
-- Always paginate collections. No exceptions.
-- Parameters: `?page=1&per_page=20`. Max `per_page=100`.
-- Response includes `meta` with `page`, `per_page`, `total`, `total_pages`.
-- Cursor-based for large datasets or real-time.
+### Paginacion por cursor
 
-### Versioning
+- Paginar siempre las colecciones. Sin excepciones.
+- Cursor para colecciones grandes o en tiempo real. Offset solo si el producto exige ir a la pagina N.
+- Parametros: `?cursor=<opaco>&limit=20`. `limit` por defecto 20, maximo 100.
+- El cursor es opaco (base64), nunca expone `OFFSET` ni IDs internos.
+- Respuesta incluye `meta.next_cursor` y `meta.prev_cursor`. Si `next_cursor` es `null`, fin de la lista.
+- Orden estable obligatorio: `ORDER BY created_at, id`.
 
-- In the header: `Accept: application/vnd.api.v2+json`.
-- Fallback to URL: `/v2/users` if header isn't viable.
-- Deprecation: warning in `Sunset` header + migration path documentation.
-
-### Filtering, Sorting, Search
-
+Ejemplo:
 ```http
-GET /users?status=active&role=admin     → exact filters
-GET /users?q=juan                        → text search
-GET /users?sort=-created_at,name         → sorting (- for desc)
-GET /users?include=orders,profile        → related resources
+GET /v1/users?limit=20 HTTP/1.1
+GET /v1/users?cursor=eyJpZCI6InVzcl8xMjMifQ==&limit=20 HTTP/1.1
 ```
 
-### Rate Limiting
+Respuesta:
+```json
+{
+  "data": [{ "id": "usr_124", "email": "luis@example.com" }],
+  "error": null,
+  "meta": { "next_cursor": "eyJpZCI6InVzcl8xMjQifQ==", "prev_cursor": "eyJpZCI6InVzcl8xMjMifQ==", "limit": 20, "request_id": "req_xyz789" }
+}
+```
 
-Mandatory headers on every response:
+### Versionado
+
+- En la URL: `/v1/users`. Simple y visible para la mayoria de APIs.
+- Alternativa en header si el cliente lo exige: `Accept: application/vnd.api.v2+json`.
+- Politica N y N-1 durante 6 meses. Anunciar deprecacion con header `Sunset` y documentar ruta de migracion.
+- Cambio rompiente (breaking change) siempre implica version nueva. Cambio compatible se mantiene en la misma version.
+
+```http
+Sunset: Sat, 01 Aug 2026 00:00:00 GMT
+Deprecation: true
+Link: <https://docs.example.com/migracion-v1-v2>; rel="successor-version"
+```
+
+### Filtrado, orden y busqueda
+
+```http
+GET /v1/users?status=active&role=admin     → filtros exactos
+GET /v1/users?q=ana                       → busqueda de texto
+GET /v1/users?sort=-created_at,name       → orden (- para descendente)
+GET /v1/users?include=orders,profile      → recursos relacionados
+GET /v1/users?fields=id,email,created_at  → proyeccion parcial
+```
+
+Validar con lista blanca los campos de `sort`, `fields` e `include`. Rechazar valores desconocidos con `400`.
+
+### Rate limiting
+
+Headers obligatorios en cada respuesta:
 ```http
 X-RateLimit-Limit: 1000
 X-RateLimit-Remaining: 987
 X-RateLimit-Reset: 1623456789
+Retry-After: 60
 ```
 
-## Referencias oficiales y repositorios famosos
+Documentar el limite por plan, el comportamiento ante `429` y la estrategia de reintento con backoff.
 
-1. OpenAPI 3.1 Specification (contratos, schemas, versionado): https://spec.openapis.org/oas/v3.1.2.html
-2. HTTP Semantics RFC 9110 httpwg (metodos, status, cache, content negotiation): https://httpwg.org/specs/rfc9110.html
-3. Twelve-Factor App (config por entorno, disposicion, logs): https://12factor.net/
-4. Awesome REST curaduria (patrones y ejemplos): https://github.com/marmelab/awesome-rest
+### Ejemplo OpenAPI 3.1 completo
+
+Contrato minimo valido para una coleccion con paginacion por cursor y envelope de error:
+
+```yaml
+openapi: 3.1.0
+info:
+  title: Users API
+  version: 1.0.0
+  description: API de usuarios con paginacion por cursor y envelope uniforme.
+servers:
+  - url: https://api.example.com/v1
+paths:
+  /users:
+    get:
+      summary: Listar usuarios
+      operationId: listUsers
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - name: status
+          in: query
+          schema: { type: string, enum: [active, inactive] }
+      responses:
+        '200':
+          description: Lista paginada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserListResponse'
+              example:
+                data:
+                  - { id: usr_123, email: ana@example.com, created_at: '2026-01-10T12:00:00Z' }
+                error: null
+                meta: { next_cursor: eyJpZCI6InVzcl8xMjMifQ==, prev_cursor: null, limit: 20, request_id: req_abc123 }
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+    post:
+      summary: Crear usuario
+      operationId: createUser
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreate'
+      responses:
+        '201':
+          description: Usuario creado
+          headers:
+            Location:
+              schema: { type: string }
+              description: URL del recurso creado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+components:
+  parameters:
+    Cursor:
+      name: cursor
+      in: query
+      schema: { type: string }
+      description: Cursor opaco devuelto en meta.next_cursor.
+    Limit:
+      name: limit
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: false
+      schema: { type: string, format: uuid }
+  schemas:
+    User:
+      type: object
+      required: [id, email, created_at]
+      properties:
+        id: { type: string, example: usr_123 }
+        email: { type: string, format: email }
+        created_at: { type: string, format: date-time }
+    UserListResponse:
+      type: object
+      required: [data, meta]
+      properties:
+        data: { type: array, items: { $ref: '#/components/schemas/User' } }
+        error: { type: 'null' }
+        meta:
+          type: object
+          required: [limit, request_id]
+          properties:
+            next_cursor: { type: [string, 'null'] }
+            prev_cursor: { type: [string, 'null'] }
+            limit: { type: integer }
+            request_id: { type: string }
+    UserResponse:
+      type: object
+      required: [data]
+      properties:
+        data: { $ref: '#/components/schemas/User' }
+        error: { type: 'null' }
+        meta: { type: object, additionalProperties: true }
+    ErrorEnvelope:
+      type: object
+      required: [data, error]
+      properties:
+        data: { type: 'null' }
+        error:
+          type: object
+          required: [code, message, request_id]
+          properties:
+            code: { type: string, example: VALIDATION_ERROR }
+            message: { type: string }
+            request_id: { type: string }
+            details:
+              type: array
+              items:
+                type: object
+                properties:
+                  field: { type: string }
+                  reason: { type: string }
+        meta: { type: 'null' }
+    UserCreate:
+      type: object
+      required: [email]
+      properties:
+        email: { type: string, format: email }
+  responses:
+    BadRequest:
+      description: Solicitud invalida
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    Unauthorized:
+      description: No autenticado
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    UnprocessableEntity:
+      description: Error de validacion por campo
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    RateLimited:
+      description: Limite excedido
+      headers:
+        Retry-After: { schema: { type: integer } }
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+```
+
+## Referencias oficiales
+
+1. Especificacion OpenAPI (contratos, schemas, versionado): https://spec.openapis.org/
+2. Guia oficial Learn OpenAPI (tutoriales y ejemplos): https://learn.openapis.org/
+3. Repositorio OpenAPI Specification (fuente, propuestas y changelog): https://github.com/OAI/OpenAPI-Specification
 
 La documentacion oficial prevalece sobre esta skill si existe diferencia.
 
 ### Checklist aplicable antes de publicar un endpoint
 
 - [ ] OpenAPI 3.1 valido con ejemplo real de request y response por codigo (200, 400, 401, 404, 429).
-- [ ] Sobre `data/error/meta` uniforme con `code` maquina-legible y `request_id`.
-- [ ] Paginacion definida (cursor para colecciones grandes, offset solo si producto exige pagina N).
+- [ ] Envelope uniforme `data/error/meta` con `code` legible por maquina y `request_id`.
+- [ ] Paginacion por cursor definida (`cursor` + `limit<=100`, `next_cursor`/`prev_cursor`); offset solo si el producto exige pagina N.
 - [ ] Versionado `/v1/` o header `Accept`, politica N y N-1 por 6 meses con header `Sunset` en deprecacion.
-- [ ] `Idempotency-Key` en POST criticos, `ETag` en GET pesados, limite `per_page<=100`.
-- [ ] Rate limit documentado con `429` y `Retry-After`, validacion con lista blanca en el borde.
+- [ ] `Idempotency-Key` en POST criticos, `ETag` en GET pesados, validacion con lista blanca en el borde.
+- [ ] Rate limit documentado con `429` y `Retry-After`.

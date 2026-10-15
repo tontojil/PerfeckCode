@@ -3,6 +3,61 @@ name: android-interfaz-compose
 description: Desarrollo Android con Jetpack Compose, manejo de estado, navegación, Material 3, side effects y patrones de arquitectura. Úsela cuando cree pantallas en Compose. (Jetpack Compose, state management, navigation, Material 3)
 ---
 
+## Versiones mínimas
+
+- Kotlin 2.0 o superior (desde Kotlin 2.0 el compilador de Compose se gestiona con el plugin oficial `org.jetbrains.kotlin.plugin.compose`).
+- Compose BOM `2026.08.00` o superior (núcleo Compose `1.12.1`, Material3 `1.4.0`).
+- `compileSdk` 37 y AGP `9.1.2` o superior (requisito de Compose 1.12 en adelante).
+- `minSdk` 21 o superior; dynamic color de Material You requiere Android 12 (API 31).
+- Navigation Compose `2.8` o superior para navegación type-safe con `@Serializable`.
+- `lifecycle-runtime-compose` para `collectAsStateWithLifecycle()`.
+
+## Ejemplo mínimo probado
+
+Dependencias mínimas (`build.gradle.kts` del módulo):
+
+```kotlin
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
+}
+
+android {
+    compileSdk = 37
+    defaultConfig { minSdk = 23 }
+}
+
+dependencies {
+    val composeBom = platform("androidx.compose:compose-bom:2026.08.00")
+    implementation(composeBom)
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.activity:activity-compose")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose")
+}
+```
+
+Pantalla mínima que compila y muestra preview:
+
+```kotlin
+@Composable
+fun Saludo(nombre: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hola, $nombre",
+        style = MaterialTheme.typography.headlineSmall,
+        modifier = modifier.padding(16.dp),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SaludoPreview() {
+    MaterialTheme {
+        Saludo(nombre = "Mundo")
+    }
+}
+```
+
 ## Compose State
 
 ### State Hoisting

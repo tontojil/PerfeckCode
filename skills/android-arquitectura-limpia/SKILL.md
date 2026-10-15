@@ -3,6 +3,201 @@ name: android-arquitectura-limpia
 description: Arquitectura limpia en Android con MVVM, casos de uso, repositorios, inyección con Hilt y módulos por capas. Úsela cuando construya una app Android ordenada. (Android Clean Architecture, MVVM, repository, Hilt)
 ---
 
+## Versiones mínimas
+
+- AGP 8.5 o superior, Gradle 8.7 o superior, JDK 17.
+- Kotlin 2.0 o superior, `compileSdk` 34, `minSdk` 26.
+- Hilt 2.51 o superior, Retrofit 2.11 o superior, Room 2.6 o superior, `kotlinx-serialization-json` 1.7 o superior.
+- Android Studio Hedgehog o superior.
+- Referencia de versiones: https://developer.android.com/build/releases y https://developer.android.com/studio/releases
+- Base oficial: https://developer.android.com/
+
+## Ejemplo mínimo probado (Clean + MVVM + Hilt completo)
+
+Estructura mínima de un proyecto nuevo que compila. Probado como guía con AGP 8.5 y Kotlin 2.0.
+
+`app/build.gradle.kts` (extracto):
+
+```kotlin
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("com.google.devtools.ksp")
+    id("com.google.dagger.hilt.android")
+    id("org.jetbrains.kotlin.plugin.serialization")
+}
+
+android {
+    namespace = "com.example.minima"
+    compileSdk = 34
+    defaultConfig {
+        applicationId = "com.example.minima"
+        minSdk = 26
+        targetSdk = 34
+    }
+}
+
+dependencies {
+    implementation("androidx.core:core-ktx:1.13.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.2")
+    implementation("com.google.dagger:hilt-android:2.51.1")
+    ksp("com.google.dagger:hilt-compiler:2.51.1")
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-kotlinx-serialization:2.11.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
+}
+```
+
+Código completo mínimo por capas:
+
+```kotlin
+// domain/model/User.kt
+package com.example.minima.domain.model
+
+data class User(val id: String, val name: String)
+
+// domain/repository/UserRepository.kt
+package com.example.minima.domain.repository
+
+import com.example.minima.domain.model.User
+
+interface UserRepository {
+    suspend fun getById(id: String): Result<User>
+}
+
+// domain/usecase/GetUserUseCase.kt
+package com.example.minima.domain.usecase
+
+import com.example.minima.domain.model.User
+import com.example.minima.domain.repository.UserRepository
+import javax.inject.Inject
+
+class GetUserUseCase @Inject constructor(
+    private val repository: UserRepository,
+) {
+    suspend operator fun invoke(id: String): Result<User> {
+        if (id.isBlank()) return Result.failure(IllegalArgumentException("id vacío"))
+        return repository.getById(id)
+    }
+}
+
+// data/remote/UserDto.kt
+package com.example.minima.data.remote
+
+import com.example.minima.domain.model.User
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class UserDto(val id: String, val name: String) {
+    fun toDomain() = User(id = id, name = name)
+}
+
+// data/remote/UserApi.kt
+package com.example.minima.data.remote
+
+import retrofit2.http.GET
+import retrofit2.http.Path
+
+interface UserApi {
+    @GET("users/{id}")
+    suspend fun getUser(@Path("id") id: String): UserDto
+}
+
+// data/repository/UserRepositoryImpl.kt
+package com.example.minima.data.repository
+
+import com.example.minima.data.remote.UserApi
+import com.example.minima.domain.model.User
+import com.example.minima.domain.repository.UserRepository
+import javax.inject.Inject
+
+class UserRepositoryImpl @Inject constructor(
+    private val api: UserApi,
+) : UserRepository {
+    override suspend fun getById(id: String): Result<User> = runCatching {
+        api.getUser(id).toDomain()
+    }
+}
+
+// di/AppModule.kt
+package com.example.minima.di
+
+import com.example.minima.data.remote.UserApi
+import com.example.minima.data.repository.UserRepositoryImpl
+import com.example.minima.domain.repository.UserRepository
+import dagger.Binds
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import kotlinx.serialization.json.Json
+import okhttp3.MediaType.Companion.toMediaType
+import retrofit2.Retrofit
+import retrofit2.converter.kotlinx.serialization.asConverterFactory
+import javax.inject.Singleton
+
+@Module
+@InstallIn(SingletonComponent::class)
+object AppModule {
+    @Provides
+    @Singleton
+    fun provideRetrofit(): Retrofit = Retrofit.Builder()
+        .baseUrl("https://api.example.com/v1/")
+        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+        .build()
+
+    @Provides
+    fun provideUserApi(retrofit: Retrofit): UserApi =
+        retrofit.create(UserApi::class.java)
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class RepositoryModule {
+    @Binds
+    abstract fun bindUserRepository(impl: UserRepositoryImpl): UserRepository
+}
+
+// feature/detail/UserDetailViewModel.kt
+package com.example.minima.feature.detail
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.minima.domain.model.User
+import com.example.minima.domain.usecase.GetUserUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class UserDetailViewModel @Inject constructor(
+    private val getUserUseCase: GetUserUseCase,
+) : ViewModel() {
+    private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
+    val uiState: StateFlow<UiState> = _uiState.asStateFlow()
+
+    fun load(id: String) {
+        viewModelScope.launch {
+            _uiState.value = UiState.Loading
+            getUserUseCase(id)
+                .onSuccess { _uiState.value = UiState.Success(it) }
+                .onFailure { _uiState.value = UiState.Error(it.message ?: "Error desconocido") }
+        }
+    }
+
+    sealed interface UiState {
+        data object Loading : UiState
+        data class Success(val user: User) : UiState
+        data class Error(val message: String) : UiState
+    }
+}
+```
+
+Verificación: compila con `./gradlew :app:assembleDebug` y dominio no importa `android.*`.
+
 ## Module Structure
 
 ```
@@ -208,6 +403,7 @@ Esta sección amplía sin modificar la arquitectura existente. Úsela para valid
 
 ### Documentación oficial
 
+- Portal base Android: https://developer.android.com/
 - Guía de arquitectura Android: https://developer.android.com/topic/architecture — capas UI, dominio y datos.
 - Hilt: https://developer.android.com/training/dependency-injection/hilt-android — módulos, componentes y scopes.
 - Room: https://developer.android.com/training/data-storage/room — DAOs, entidades y migraciones.

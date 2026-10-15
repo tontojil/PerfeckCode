@@ -14,12 +14,14 @@ Apply when writing or reviewing GSAP code in React (or React-based frameworks li
 
 ## Installation
 
+Version de referencia: **GSAP 3.12** con **@gsap/react 2.x**. Fijar versiones para evitar cambios no esperados:
+
 ```bash
-# Install the GSAP library
-npm install gsap
-# Install the GSAP React package
-npm install @gsap/react
+npm install gsap@3.12.5 @gsap/react@2.1.2
 ```
+
+Documentacion oficial: https://gsap.com/docs/v3/
+Repositorio: https://github.com/greensock/gsap
 
 ## Prefer the useGSAP() Hook
 
@@ -117,6 +119,69 @@ GSAP runs in the browser. Do not call gsap or ScrollTrigger during SSR.
 - Use **useGSAP** (or useEffect) so all GSAP code runs only on the client.
 - If GSAP is imported at top level, ensure the app does not execute gsap.* or ScrollTrigger.* during server render. Dynamic import inside useEffect is an option if tree-shaking or bundle size is a concern.
 
+## StrictMode en React 18+
+
+En desarrollo, `StrictMode` monta, desmonta y vuelve a montar el componente. Esto es normal y ayuda a detectar fugas de limpieza.
+
+Reglas:
+
+- Usar `useGSAP()` con `scope`. La limpieza es automatica y el doble montaje no deja tweens duplicados.
+- No crear tweens fuera del callback de `useGSAP` ni fuera de `gsap.context()`. Para manejadores de eventos usar `contextSafe`.
+- Registrar plugins una sola vez a nivel de aplicacion, fuera del componente (`gsap.registerPlugin(useGSAP)`).
+- No desactivar `StrictMode` para ocultar una limpieza faltante. Si la animacion se duplica en desarrollo, falta `scope` o falta `ctx.revert()`.
+
+`main.jsx` mantiene `StrictMode`:
+
+```jsx
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import App from "./App.jsx";
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);
+```
+
+## Ejemplo minimo completo (GSAP 3.12 + @gsap/react)
+
+Requiere `npm install gsap@3.12.5 @gsap/react@2.1.2`.
+
+`App.jsx`:
+
+```jsx
+import { useRef } from "react";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(useGSAP);
+
+export default function App() {
+  const containerRef = useRef(null);
+
+  useGSAP(() => {
+    gsap.from(".item", {
+      y: 24,
+      autoAlpha: 0,
+      duration: 0.6,
+      ease: "power3.out",
+      stagger: 0.08
+    });
+  }, { scope: containerRef });
+
+  return (
+    <div ref={containerRef}>
+      <div className="item">Uno</div>
+      <div className="item">Dos</div>
+      <div className="item">Tres</div>
+    </div>
+  );
+}
+```
+
+Verificacion: con `StrictMode` activado, en desarrollo se monta dos veces sin duplicar la animacion. Los tres elementos entran con desplazamiento vertical y stagger, sin errores en consola.
+
 ## Best practices
 
 - ✅ Prefer **useGSAP()** from `@gsap/react` rather than `useEffect()`/`useLayoutEffect()`; use **gsap.context()** + **ctx.revert()** in `useEffect` when `useGSAP` is not an option.
@@ -140,6 +205,7 @@ https://gsap.com/resources/React
 
 Fuentes oficiales:
 
+- GSAP docs v3: https://gsap.com/docs/v3/
 - GSAP React: https://gsap.com/resources/React
 - GSAP skill React oficial: https://github.com/greensock/gsap-skills/blob/main/skills/gsap-react/SKILL.md
 - React Suspense: https://react.dev/reference/react/Suspense
@@ -147,6 +213,7 @@ Fuentes oficiales:
 
 Repos famosos:
 
+- https://github.com/greensock/gsap
 - https://github.com/greensock/gsap-skills
 - https://github.com/facebook/react
 - https://github.com/vercel/next.js

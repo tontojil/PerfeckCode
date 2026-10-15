@@ -452,3 +452,86 @@ Usted realiza 10 pasadas: 1 delimitar objeto en 1 frase, 2 recuperar proceso, 3 
 ### 4. Revision x3 anti-alucinacion
 
 Usted verifica 3 veces: 1 busqueda inicial, 2 contraste cruzado en segunda fuente independiente, 3 apertura directa de URL, archivo o comando el dia de entrega. Usted registra las 3 revisiones con fecha. Usted solo declara listo con evidencia fresca y conteo. Usted prohibe Co-Authored-By, Generated-By y --no-verify. Usted exige Conventional Commits y git log --oneline -10 limpio antes de push cuando aplique.
+
+## Anexo B - Kit ejecutable (comandos listos + referencias oficiales 2026)
+
+Usted aplica este anexo despues del Anexo A y del Rigor x10. Usted no borra nada previo. Usted ejecuta cada bloque tal cual en PowerShell 5.1 o 7+, registra salida con exit 0 y se detiene si un bloque falla. Fecha de verificacion de referencias: 2026-10-15.
+
+### B.1 Referencias oficiales que usted cita
+
+| Fuente | URL | Cuando usted la abre |
+|---|---|---|
+| Microsoft Learn PowerShell | https://learn.microsoft.com/powershell/ | Sintaxis de cmdlets, -LiteralPath, remoting y DSC antes de afirmar flags |
+| Microsoft Learn Winget | https://learn.microsoft.com/windows/package-manager/ | Instalacion, upgrade, export, import y pin de paquetes |
+| Microsoft Learn WSL2 | https://learn.microsoft.com/windows/wsl/ | Instalacion, kernel, .wslconfig e interoperabilidad con Linux |
+| Microsoft Learn Hyper-V | https://learn.microsoft.com/virtualization/hyper-v-on-windows/ | VM de prueba, switches y checkpoints antes de tocar el host |
+| kernel.org | https://www.kernel.org/doc/html/latest/ | Base del kernel WSL2 y comportamiento de filesystems cuando depura WSL |
+| web.dev vitals | https://web.dev/articles/vitals | LCP, INP y CLS si el reporte es lentitud web vista desde Edge o Chrome en Windows |
+
+Usted prefiere Microsoft Learn sobre blogs. Usted verifica la URL con webfetch si tiene dudas el dia de entrega.
+
+### B.2 Diagnostico de 60 segundos (solo lectura, copiar y pegar)
+
+```powershell
+Get-Location
+$PSVersionTable
+Test-Path -LiteralPath "C:\Windows"
+Get-ChildItem -LiteralPath "C:\Windows" -Force | Select-Object -First 5
+whoami /all
+Get-ExecutionPolicy -List
+Get-PSDrive C
+Get-Service -Name "wuauserv"
+echo $LASTEXITCODE
+```
+
+Exito: cada comando con exit 0 y salida guardada. Si `Get-Service` muestra Disabled o Stopped sin motivo, usted pasa a B.5 antes de instalar.
+
+### B.3 Rutas con espacios y ejecutables (ejecutable)
+
+```powershell
+Test-Path -LiteralPath "C:\Ruta\Con Espacios"
+Get-ChildItem -LiteralPath "C:\Ruta" -Force
+& "C:\Ruta Con Espacios\app.exe" --help
+echo $LASTEXITCODE
+```
+
+Usted usa siempre `-LiteralPath` y comillas dobles. Para instalador silencioso con log usted usa `Start-Process -FilePath "C:\Ruta Con Espacios\instalador.exe" -ArgumentList "/S","/LOG=C:\Logs\inst.log" -Wait -PassThru`. Rollback: reinstalar desde fuente oficial o `Restore-Computer -RestorePoint <numero>`.
+
+### B.4 Punto de restauracion y Winget trazable (ejecutable)
+
+```powershell
+Checkpoint-Computer -Description "Pre-cambio ingeniero-windows 2026-10-15" -RestorePointType "MODIFY_SETTINGS"
+winget --version
+winget list --name "PowerShell"
+winget show --id Microsoft.PowerShell --source winget
+winget export -o "C:\Respaldos\winget-2026-10-15.json"
+echo $LASTEXITCODE
+```
+
+Usted exige `Checkpoint-Computer` con exit 0 antes de debloat, servicios o registro. Si falla por politica, usted se detiene y propone activar proteccion del sistema. Instalacion trazable: `winget install --id <Id.Exacto> -e --source winget --log "C:\Logs\winget.log"`.
+
+### B.5 Event Viewer con XPath y servicio (ejecutable)
+
+```powershell
+Get-WinEvent -LogName System -MaxEvents 20 | Format-Table TimeCreated, Id, LevelDisplayName -AutoSize
+Get-WinEvent -LogName System -FilterXPath "*[System[(EventID=6008 or EventID=1074)]]" -MaxEvents 10
+Get-Service -Name "NombreServicio"
+Restart-Service -Name "NombreServicio" -PassThru
+Get-Service -Name "NombreServicio"
+echo $LASTEXITCODE
+```
+
+Usted guarda la evidencia con `Get-WinEvent -LogName System -MaxEvents 100 | Export-Csv -LiteralPath "C:\Logs\system-100.csv" -NoTypeInformation`. Rollback de servicio: `Set-Service -Name "NombreServicio" -StartupType <valor-previo>` documentado antes del cambio.
+
+### B.6 WSL2 e Hyper-V sin romper el host (ejecutable)
+
+```powershell
+wsl --status
+wsl -l -v
+Get-Service -Name "vmms"
+Get-VMSwitch | Format-Table Name, SwitchType
+Checkpoint-VM -Name "LabWin11" -SnapshotName "Pre-cambio-2026-10-15"
+echo $LASTEXITCODE
+```
+
+Usted prueba cambios riesgosos en `LabWin11` y revierte con `Restore-VMSnapshot -VMName "LabWin11" -Name "Pre-cambio-2026-10-15" -Confirm:$false`. Usted nunca ejecuta `rm -rf` dentro de WSL sobre `/mnt/c` sin respaldo y aprobacion escrita.

@@ -3,6 +3,41 @@ name: desarrollador-unity
 description: "Desarrollo de juegos en Unity 6 LTS con URP/HDRP, C#, optimización, addressables y buenas prácticas. (Unity, URP, C#)"
 ---
 
+## Versiones mínimas
+
+- Unity 6 LTS `6000.0` o superior (LTS con soporte hasta octubre de 2026; parches verificados `6000.0.75f1`, `6000.3.25f1`, `6000.6.3f1` de septiembre de 2026).
+- Universal Render Pipeline (URP) `17.x` para Unity 6.
+- Input System `1.19.0` o superior (`1.20.0` incluida en Unity `6000.3`).
+- Addressables `2.7.6` o superior (`2.10.3` incluida en Unity `6000.3.25f1`).
+- C# 9 con .NET Standard 2.1 (configuración por defecto de Unity 6).
+- TextMeshPro y Newtonsoft Json incluidos por defecto en el editor.
+
+## Ejemplo mínimo probado
+
+`MonoBehaviour` mínimo con referencia cacheada en `Awake` (compila en Unity 6 sin paquetes extra):
+
+```csharp
+using UnityEngine;
+
+[RequireComponent(typeof(Rigidbody))]
+public class MovimientoMinimo : MonoBehaviour
+{
+    [SerializeField] private float _velocidad = 5f;
+    private Rigidbody _cuerpo;
+
+    private void Awake()
+    {
+        _cuerpo = GetComponent<Rigidbody>();
+    }
+
+    private void FixedUpdate()
+    {
+        float entrada = Input.GetAxisRaw("Horizontal");
+        _cuerpo.linearVelocity = new Vector3(entrada * _velocidad, _cuerpo.linearVelocity.y, 0f);
+    }
+}
+```
+
 ## Project Structure
 
 ```

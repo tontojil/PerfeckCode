@@ -6,6 +6,17 @@ license: MIT
 
 # GSAP Timeline
 
+## Version e instalacion
+
+Version de referencia: **GSAP 3.12**. Instalar con:
+
+```bash
+npm install gsap
+```
+
+Documentacion oficial: https://gsap.com/docs/v3/
+Repositorio: https://github.com/greensock/gsap
+
 ## When to Use This Skill
 
 Apply when building multi-step animations, coordinating several tweens in sequence or parallel, or when the user asks about timelines, sequencing, or keyframe-style animation in GSAP.
@@ -82,6 +93,50 @@ master.add(child, 0);
 master.to(".c", { opacity: 0 }, "+=0.2");
 ```
 
+## Ejemplo minimo completo (GSAP 3.12)
+
+Requiere `npm install gsap`.
+
+`index.html`:
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GSAP 3.12 timeline minimo</title>
+  <style>
+    .a, .b, .c { width: 80px; height: 80px; margin: 8px; border-radius: 12px; }
+    .a { background: #0ea5e9; }
+    .b { background: #22c55e; }
+    .c { background: #f59e0b; }
+  </style>
+</head>
+<body>
+  <div class="a"></div>
+  <div class="b"></div>
+  <div class="c"></div>
+  <script type="module" src="./timeline.js"></script>
+</body>
+</html>
+```
+
+`timeline.js`:
+
+```javascript
+import { gsap } from "gsap";
+
+const tl = gsap.timeline({ defaults: { duration: 0.5, ease: "power2.out" } });
+
+tl.addLabel("inicio", 0);
+tl.to(".a", { x: 200 }, "inicio");
+tl.to(".b", { x: 200 }, "<0.15");
+tl.to(".c", { x: 200 }, "-=0.2");
+```
+
+Verificacion: las tres cajas se desplazan a la derecha en secuencia solapada, con duracion y easing compartidos. Sin errores en consola.
+
 ## Controlling Playback
 
 - **tl.play()** / **tl.pause()**
@@ -112,6 +167,7 @@ master.to(".c", { opacity: 0 }, "+=0.2");
 
 Fuentes oficiales:
 
+- GSAP docs v3: https://gsap.com/docs/v3/
 - GSAP Timeline: https://www.gsap.com/docs/v3/
 - Timeline scrollTrigger: https://gsap.com/docs/v3/GSAP/Timeline/scrollTrigger
 - GSAP skills: https://github.com/greensock/gsap-skills
@@ -119,6 +175,7 @@ Fuentes oficiales:
 
 Repos famosos:
 
+- https://github.com/greensock/gsap
 - https://github.com/greensock/gsap-skills
 - https://github.com/facebook/react
 - https://github.com/vercel/next.js

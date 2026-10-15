@@ -342,3 +342,126 @@ Usted realiza 10 pasadas: 1 delimitar objeto en 1 frase, 2 recuperar proceso, 3 
 
 Usted verifica 3 veces: 1 busqueda inicial, 2 contraste cruzado en segunda fuente independiente, 3 apertura directa de URL, archivo o comando el dia de entrega. Usted registra las 3 revisiones con fecha. Usted solo declara listo con evidencia fresca y conteo. Usted prohibe Co-Authored-By, Generated-By y --no-verify. Usted exige Conventional Commits y git log --oneline -10 limpio antes de push cuando aplique.
 
+---
+
+## Anexo Plantilla PRD ejecutable con historias GWT 2026
+
+Este anexo no reemplaza el contenido previo. Agrega una plantilla copiable y directamente utilizable para PRD con historias de usuario y criterios de aceptacion en formato Given-When-Then (GWT).
+
+### 1. Referencias oficiales
+
+1. Diataxis, marco para organizar documentacion en tutoriales, guias practicas, referencia y explicacion. Sirve para estructurar el PRD como documentacion usable por ingenieria. Referencia: https://diataxis.fr/
+2. OpenAPI Specification, estandar para describir contratos HTTP que el arquitecto produce desde el Technical Brief. Referencia: https://spec.openapis.org/
+
+Usted organiza el PRD segun Diataxis: la seccion de contexto explica el por que, la guia de uso describe el flujo esperado, la referencia lista historias y criterios verificables, y el Technical Brief anticipa el contrato OpenAPI sin definir implementacion.
+
+### 2. Cuando usar esta plantilla
+
+Usted usa esta plantilla cuando el pedido es un feature nuevo, un cambio de alcance o una especificacion para desarrollo. Si el problema no esta validado con las 5 preguntas, usted lo declara y no completa las historias P0.
+
+### 3. Plantilla PRD copiable
+
+```markdown
+# PRD: <Nombre del feature>
+
+## 1. Contexto y problema
+- Problema: <una oracion, quien sufre que problema>.
+- Evidencia: <dato, ticket, metrica o entrevista con fecha>.
+- Costo de no resolver: <churn, tickets, ingreso perdido, cuantificado>.
+
+## 2. Alcance
+- Objetivo: <que cambia para el usuario en este ciclo>.
+- Out of Scope: <lista explicita de lo excluido este ciclo>.
+- Supuestos: <maximo 3, cada uno con dueno y fecha de validacion>.
+
+## 3. Personas y JTBD
+- Persona 1: <nombre, contexto, trabajo por hacer>.
+- Persona 2: <nombre, contexto, trabajo por hacer>.
+
+## 4. Metricas de exito
+| Metrica | Linea base | Meta | Plazo |
+|---|---|---|---|
+| <metrica north-star o de activacion> | <valor actual> | <valor objetivo> | <dias> |
+| <metrica de calidad o soporte> | <valor actual> | <valor objetivo> | <dias> |
+
+## 5. Historias de usuario
+| # | Historia | Prioridad | Criterios |
+|---|---|---|---|
+| US-01 | Como <persona>, quiero <meta> para <beneficio> | P0 | GWT-01 |
+| US-02 | Como <persona>, quiero <meta> para <beneficio> | P0 | GWT-02 |
+| US-03 | Como <persona>, quiero <meta> para <beneficio> | P1 | GWT-03 |
+
+Regla: maximo 3 historias P0. Toda historia sin criterios GWT queda fuera de desarrollo.
+
+## 6. Criterios de aceptacion GWT
+### GWT-01 (cubre US-01)
+- [ ] Given <precondicion> when <accion> then <resultado observable>.
+- [ ] Given <precondicion limite> when <accion> then <comportamiento esperado>.
+- [ ] Edge: <escenario> -> <comportamiento esperado>.
+- [ ] Error: <escenario> -> <mensaje de usuario + codigo interno>.
+
+### GWT-02 (cubre US-02)
+- [ ] Given <precondicion> when <accion> then <resultado observable>.
+- [ ] Edge: <escenario> -> <comportamiento esperado>.
+- [ ] Error: <escenario> -> <mensaje de usuario + codigo interno>.
+
+## 7. Requisitos EARS (trazabilidad)
+- [ ] R1: The <sistema> shall <respuesta>. (cubre US-01)
+- [ ] R2: WHEN <disparador> the <sistema> shall <respuesta>. (cubre US-02)
+- [ ] R3: IF <condicion de error> THEN the <sistema> shall <respuesta>. (cubre GWT-01 error)
+
+## 8. Priorizacion
+- RICE o WSJF segun contexto, con tabla de calculo y fuente de cada numero.
+- Alternativas descartadas: <opcion + motivo en una linea>.
+
+## 9. Technical Brief para arquitecto
+- Entidades tentativas: <lista sin definir esquema>.
+- Integraciones: <sistemas externos y direccion del flujo>.
+- Rendimiento esperado: <ejemplo: p95 < 300 ms en creacion>.
+- Seguridad: <roles, datos sensibles, restriccion clave>.
+- Contrato esperado: <endpoints tentativos que el arquitecto formaliza en OpenAPI segun https://spec.openapis.org/>.
+
+## 10. Riesgos
+| Riesgo | Probabilidad | Impacto | Mitigacion |
+|---|---|---|---|
+| <riesgo> | Alta/Media/Baja | Alto/Medio/Bajo | <accion concreta> |
+```
+
+### 4. Ejemplo minimo completo
+
+```markdown
+# PRD: Invitacion a proyecto por enlace
+
+## 1. Contexto y problema
+- Problema: Administradores pierden 20 minutos por invitado al configurar accesos manuales.
+- Evidencia: 85 tickets en 30 dias, entrevistas 2026-09-10 al 2026-09-12.
+- Costo de no resolver: 28 horas de soporte al mes.
+
+## 5. Historias de usuario
+| # | Historia | Prioridad | Criterios |
+|---|---|---|---|
+| US-01 | Como administradora, quiero generar un enlace de invitacion para incorporar sin configuracion manual | P0 | GWT-01 |
+| US-02 | Como invitada, quiero aceptar la invitacion en un clic para entrar al proyecto | P0 | GWT-02 |
+
+## 6. Criterios de aceptacion GWT
+### GWT-01 (cubre US-01)
+- [ ] Given sesion de administradora en pagina de miembros when genera enlace then el sistema crea enlace unico con expiracion de 7 dias.
+- [ ] Edge: proyecto con 100 miembros activos -> el sistema permite generar igual y registra auditoria.
+- [ ] Error: rol sin permiso genera enlace -> el sistema muestra "No tiene permiso para invitar" y registra intento.
+
+### GWT-02 (cubre US-02)
+- [ ] Given enlace valido no expirado when la invitada abre el enlace then queda agregada con rol indicado y ve confirmacion.
+- [ ] Edge: enlace ya usado -> el sistema muestra estado actual del miembro en vez de error generico.
+- [ ] Error: enlace expirado -> el sistema muestra "El enlace expiro, solicite uno nuevo" con accion de reenvio.
+```
+
+### 5. Lista de verificacion antes de entregar el PRD
+
+- [ ] Cada historia P0 tiene formato Como-Quiero-Para con persona concreta.
+- [ ] Cada historia tiene criterios GWT con precondicion, accion y resultado observable.
+- [ ] Cada criterio incluye al menos un caso feliz, un edge y un error con mensaje de usuario.
+- [ ] Cada requisito EARS traza a una historia y usa un solo patron sin ambiguedad.
+- [ ] Out of Scope explicito y maximo 3 P0.
+- [ ] Metricas con linea base, meta y plazo.
+- [ ] Technical Brief sin solucion impuesta y con referencia a contrato OpenAPI futuro.
+

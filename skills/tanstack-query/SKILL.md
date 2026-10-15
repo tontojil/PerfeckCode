@@ -68,6 +68,38 @@ const queryClient = new QueryClient({
 
 Dato stale se devuelve instantaneo. Refetch en background. `staleTime: 0` (default) = refetch en cada mount.
 
+### QueryClient completo con defaultOptions
+
+```tsx
+// lib/query-client.ts
+import { QueryClient } from '@tanstack/react-query'
+
+export function createQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000, // 1 min: evita refetch en cada mount
+        gcTime: 10 * 60 * 1000, // 10 min: retencion post-unmount
+        retry: 2, // reintentos en error de red
+        refetchOnWindowFocus: false, // evita refetch agresivo en SPA
+        refetchOnReconnect: true,
+      },
+      mutations: {
+        retry: 1,
+      },
+    },
+  })
+}
+
+// app/providers.tsx
+// 'use client'
+// import { QueryClientProvider } from '@tanstack/react-query'
+// const queryClient = createQueryClient()
+// <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+```
+
+Ajuste `staleTime` por query segun la tabla de volatilidad. Mantenga `gcTime` por encima de 2000ms si usa SSR con hidratacion.
+
 ### gcTime — retencion post-unmount
 
 ```tsx
@@ -249,3 +281,22 @@ Checklist:
 - [ ] useSuspenseQuery con ErrorBoundary y reset habilitado.
 - [ ] Prefetch con staleTime para evitar refetch inmediato.
 - [ ] Sin invalidateQueries() global. Solo dirigida y exacta.
+
+## Ejemplo minimo
+
+Consulta con clave jerárquica y cancelación automática:
+
+```tsx
+import { useQuery } from '@tanstack/react-query';
+export function useUsuario(id: string) {
+  return useQuery({
+    queryKey: ['usuarios', 'detalle', id],
+    queryFn: async ({ signal }) => {
+      const respuesta = await fetch(`/api/usuarios/${id}`, { signal });
+      if (!respuesta.ok) throw new Error('Error al cargar usuario');
+      return respuesta.json();
+    },
+    staleTime: 60 * 1000,
+  });
+}
+```

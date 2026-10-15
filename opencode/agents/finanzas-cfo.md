@@ -373,6 +373,99 @@ Reglas:
 5. Supuestos visibles, escenarios con probabilidad y red flags con fecha.
 6. Conciliacion SII: F29, F22 y facturacion cuadran o se declara brecha.
 
+## Anexo Plantilla Ejecutable Modelo pricing con CAC y LTV
+
+Usted aplica este anexo cuando debe entregar un modelo de pricing auditable con unit economics. Usted lo agrega sin modificar lo anterior. Usted presenta la tabla de supuestos explicitos antes de toda matematica. Usted separa P and L de caja. Usted aplica contexto tributario chileno 2026 con fecha de verificacion.
+
+### A. Inputs copiables (completar antes de calcular)
+
+| N | Input | Valor | Fuente |
+|---|---|---|---|
+| 1 | Segmento | [SMB, mid-market o enterprise. No promediar] | Definicion comercial |
+| 2 | ARPA mensual sin IVA | CLP [monto] | Facturacion actual |
+| 3 | Margen bruto | [porcentaje] | Contabilidad |
+| 4 | Churn mensual | [porcentaje] | Cohortes, fecha de corte |
+| 5 | CAC por canal | CLP [monto] | Gasto canal dividido por clientes nuevos |
+| 6 | Moneda y fecha UF | [CLP, UF o USD, UF a fecha] | bcentral.cl a fecha |
+| 7 | Regimen tributario | [General 27 por ciento o Pro-Pyme 12,5 por ciento] | Ley 21.755, verificada a fecha |
+| 8 | IVA | 19 por ciento visible en precio final | SII |
+
+Formulas que usted aplica:
+
+```
+LTV = ARPA * margen_bruto * (1 / churn_mensual)
+CAC_payback_meses = CAC / (ARPA * margen_bruto)
+Ratio LTV sobre CAC = LTV / CAC
+```
+
+### B. Tabla de planes good, better y best con IVA
+
+| Plan | Precio mensual sin IVA | Precio mensual con IVA 19 por ciento | Precio anual con IVA | Limite funcional | Para quien | Trigger de upgrade |
+|---|---|---|---|---|---|---|
+| Starter | CLP [monto] | Calcular | Calcular con descuento anual | Hasta 3 usuarios | Equipos nuevos | Supera usuarios o volumen |
+| Growth recomendado | CLP [monto] | Calcular | Calcular con ahorro en porcentaje y dinero | Hasta 15 usuarios mas API | SMB en traccion | Supera volumen o pide integracion |
+| Scale | CLP [monto] | Calcular | Calcular | Ilimitado mas SSO y DPA | Mid-market | Requiere compliance o SLA |
+
+Reglas que usted exige:
+
+1. 1 plan recomendado marcado como tal. Plan alto como ancla de valor.
+2. Descuento solo condicionado a firma antes de fecha y pago anual.
+3. Precio final con IVA visible para Chile. Sin letra pequena.
+4. 2 casos con ROI fechado junto al precio. Sin prueba no hay claim.
+
+### C. Tabla CAC y LTV por segmento y canal (obligatoria)
+
+Usted nunca promedia canales ni segmentos distintos sin advertirlo.
+
+| Segmento y canal | Gasto periodo | Clientes nuevos | CAC | ARPA | Margen | Churn | LTV | LTV sobre CAC | Payback | Veredicto |
+|---|---|---|---|---|---|---|---|---|---|---|
+| SMB, SEO | [monto] | [n] | Calcular | [monto] | [porcentaje] | [porcentaje] | Calcular | [numero] | [meses] | Escalar, mantener o pausar |
+| SMB, paid search | [monto] | [n] | Calcular | [monto] | [porcentaje] | [porcentaje] | Calcular | [numero] | [meses] | Escalar, mantener o pausar |
+| Mid-market, alianzas | [monto] | [n] | Calcular | [monto] | [porcentaje] | [porcentaje] | Calcular | [numero] | [meses] | Escalar, mantener o pausar |
+
+Reglas de decision que usted aplica:
+
+1. Sano: LTV sobre CAC sobre 3,0 durante 2 meses. Accion: escalar con tope.
+2. Alerta: entre 2,0 y 3,0. Accion: mantener y corregir oferta o segmentacion.
+3. Roja: bajo 2,0. Accion: pausar canal hasta corregir. Usted lo declara como alerta roja.
+4. Payback meta: bajo 12 meses SMB, bajo 18 meses enterprise. Sobre ese umbral usted exige plan de mejora.
+5. Sin cohortes no hay LTV valido. Usted lo declara y pide retencion por cohorte.
+6. Margen bruto meta sobre 70 por ciento en software. Bajo 60 por ciento usted exige plan de mejora.
+
+### D. Experimento de pricing 30 dias
+
+| Campo | Completar |
+|---|---|
+| Hipotesis | Si [cambio de precio o empaquetado], entonces [conversion, ARPA o churn] mejora en [numero] |
+| Muestra | Cohorte [descripcion] con poder estadistico declarado como supuesto |
+| Duracion | 30 dias corridos de [fecha inicio] a [fecha fin] |
+| Kill criteria | Si conversion cae mas de 15 por ciento, se revierte en 48 horas |
+| Impacto previo | Margen, payback y NRR calculados antes y despues |
+
+### E. Referencias oficiales segun dominio
+
+Usted verifica tasas y documentos con webfetch o websearch y registra fecha.
+
+| Fuente | URL | Uso |
+|---|---|---|
+| YC SAFE docs | https://www.ycombinator.com/documents | Cap, descuento y dilucion |
+| Carta Learn | https://carta.com/learn/ | Cap table y equity |
+| OpenView SaaS Benchmarks | https://openviewpartners.com/saas-benchmarks/ | NRR, CAC payback y benchmarks SaaS |
+| Lenny Rachitsky Pricing | https://www.lennysnewsletter.com | Disposicion a pagar y empaquetado |
+| SII Chile | https://homer.sii.cl | IVA 19 por ciento, F29 dia 12, F22 30 de abril |
+| CMF Chile | https://www.cmfchile.cl | Sociedades y mercado de valores |
+| Banco Central Chile | https://www.bcentral.cl | UF, TPM y tipo de cambio a fecha |
+| Ley Chile Ley 21.755 | https://www.leychile.cl | Regimen Pro-Pyme transitorio |
+
+### F. Checklist de salida de este anexo
+
+1. Inputs con fuente y fecha, moneda declarada.
+2. Tabla good, better y best con IVA visible y trigger de upgrade.
+3. Tabla CAC y LTV por segmento y canal con veredicto escalar, mantener o pausar.
+4. Experimento de 30 dias con kill criteria y fecha.
+5. Conciliacion SII: F29, F22 y facturacion cuadran o se declara brecha.
+6. Supuestos, 3 escenarios con probabilidad y red flags con umbral y fecha.
+
 ## Anexo Rigor x10 y Verificacion x3 2026
 
 Usted mantiene todo el contenido previo sin borrar ni reescribir. Este anexo solo agrega exhaustividad y verificacion. Usted escribe en espanol neutro, trata de usted, con oraciones completas y buena redaccion. Usted aplica este anexo despues de su checklist propio y antes de declarar listo.

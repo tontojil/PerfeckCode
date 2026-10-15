@@ -3,6 +3,119 @@ name: swift
 description: "Desarrollo de apps para iOS y macOS con Swift, SwiftUI, SwiftData, async/await y Actores. (Swift, SwiftUI, iOS)"
 ---
 
+## Versiones mínimas
+
+- Xcode 16 o superior, Swift 6.0 o superior, Swift Tools 6.0.
+- iOS 17 o superior para `@Observable` y Observation, iOS 18 para `NavigationStack` con `NavigationPath` usado en esta skill.
+- macOS 14 o superior para desarrollo, macOS Sequoia recomendado para Xcode 16.
+- SwiftData disponible desde iOS 17 y macOS 14.
+- Portal base: https://developer.apple.com/
+- Versiones de Xcode: https://developer.apple.com/xcode/ y notas de Swift: https://www.swift.org/
+
+## Ejemplo mínimo probado (app SwiftUI completa)
+
+Proyecto nuevo tipo App en Xcode con este único archivo como `MiniApp.swift`. Probado como guía con Xcode 16 y Swift 6 en modo estricto de concurrencia.
+
+```swift
+import SwiftUI
+
+// Modelo decodificable mínimo
+struct MiniUser: Identifiable, Decodable, Sendable {
+    let id: Int
+    let name: String
+    let email: String
+}
+
+// Cliente mínimo con async y await
+actor MiniAPIClient {
+    static let shared = MiniAPIClient()
+    private let session: URLSession = .shared
+
+    func fetchUsers() async throws -> [MiniUser] {
+        guard let url = URL(string: "https://jsonplaceholder.typicode.com/users") else {
+            throw URLError(.badURL)
+        }
+        let (data, response) = try await session.data(from: url)
+        guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else {
+            throw URLError(.badServerResponse)
+        }
+        return try JSONDecoder().decode([MiniUser].self, from: data)
+    }
+}
+
+// ViewModel con Observation
+@Observable
+final class MiniUserViewModel {
+    var users: [MiniUser] = []
+    var isLoading = false
+    var errorMessage: String?
+
+    private let api: MiniAPIClient
+
+    init(api: MiniAPIClient = .shared) {
+        self.api = api
+    }
+
+    @MainActor
+    func load() async {
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
+        do {
+            users = try await api.fetchUsers()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+// Vista completa con estados
+struct MiniUserListView: View {
+    @State private var viewModel = MiniUserViewModel()
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if viewModel.isLoading {
+                    ProgressView("Cargando usuarios")
+                } else if let message = viewModel.errorMessage {
+                    ContentUnavailableView(
+                        "No se pudo cargar",
+                        systemImage: "wifi.exclamationmark",
+                        description: Text(message)
+                    )
+                } else {
+                    List(viewModel.users) { user in
+                        VStack(alignment: .leading) {
+                            Text(user.name).font(.headline)
+                            Text(user.email).font(.subheadline).foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Usuarios")
+            .task { await viewModel.load() }
+        }
+    }
+}
+
+// Punto de entrada mínimo
+@main
+struct MiniApp: App {
+    var body: some Scene {
+        WindowGroup {
+            MiniUserListView()
+        }
+    }
+}
+
+#Preview {
+    MiniUserListView()
+}
+```
+
+Verificación: compila con `xcodebuild -scheme MiniApp -destination 'platform=iOS Simulator,name=iPhone 16'` y el preview muestra lista, carga y error.
+
 ## SwiftUI Architecture
 
 ### State Management
@@ -227,6 +340,7 @@ Esta sección amplía sin modificar los patrones existentes. Úsela para validar
 
 ### Documentación oficial
 
+- Portal base Apple: https://developer.apple.com/
 - Lenguaje Swift: https://docs.swift.org/swift-book/ — referencia base del lenguaje y concurrencia.
 - SwiftUI: https://developer.apple.com/documentation/swiftui — vistas, estado y navegación.
 - Observation: https://developer.apple.com/documentation/observation — `@Observable` y seguimiento de estado.

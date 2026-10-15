@@ -399,3 +399,155 @@ Usted realiza 10 pasadas: 1 delimitar objeto en 1 frase, 2 recuperar proceso, 3 
 ### 4. Revision x3 anti-alucinacion
 
 Usted verifica 3 veces: 1 busqueda inicial, 2 contraste cruzado en segunda fuente independiente, 3 apertura directa de URL, archivo o comando el dia de entrega. Usted registra las 3 revisiones con fecha. Usted solo declara listo con evidencia fresca y conteo. Usted prohibe Co-Authored-By, Generated-By y --no-verify. Usted exige Conventional Commits y git log --oneline -10 limpio antes de push cuando aplique.
+
+## Anexo B - Mejora 2026-10-15 pipeline con rollback, Docker y verificacion
+
+Usted mantiene todo el contenido previo sin borrar. Este anexo consolida los minimos obligatorios que usted exige en cada entrega.
+
+### B.1 Pipeline GitHub Actions con rollback automatico
+
+Usted usa este pipeline como base cuando el proyecto no tiene uno. Usted adapta nombres, registry y URLs al proyecto real. Usted nunca despliega a produccion sin pasar por staging y sin job de rollback declarado.
+
+```yaml
+name: ci-cd-rollback
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE: ghcr.io/org/app
+
+jobs:
+  build-test-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test -- --runInBand
+      - run: npm run build
+      - run: npm audit --audit-level=high
+
+  docker:
+    needs: build-test-scan
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/org/app:${{ github.sha }},ghcr.io/org/app:latest
+
+  deploy-staging:
+    needs: docker
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - run: echo "Desplegar SHA ${{ github.sha }} a staging con estrategia blue-green"
+      - run: ./scripts/smoke.sh https://staging.ejemplo.com
+
+  deploy-prod:
+    needs: deploy-staging
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - run: echo "Desplegar SHA ${{ github.sha }} a produccion en canary 5-25-50-100"
+      - run: ./scripts/verify.sh https://www.ejemplo.com
+
+  rollback:
+    needs: deploy-prod
+    if: failure()
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - run: echo "Rollback automatico a revision previa por fallo en deploy-prod"
+      - run: kubectl rollout history deployment/api
+      - run: kubectl rollout undo deployment/api
+      - run: kubectl rollout status deployment/api --timeout=180s
+      - run: ./scripts/smoke.sh https://www.ejemplo.com
+```
+
+Reglas de este pipeline:
+
+- Artefacto unico por SHA en todo el flujo. Usted no reconstruye entre staging y produccion.
+- Secretos solo desde `secrets.*` u OIDC. Usted nunca los muestra en logs.
+- El job `rollback` existe siempre, aunque el deploy sea manual. Sin rollback declarado el pipeline no esta listo.
+
+### B.2 Dockerfile multistage endurecido
+
+Usted exige esta estructura como minimo. Imagen pequena, sin secretos, sin devDependencies en runtime, usuario no root y healthcheck real.
+
+```dockerfile
+# Etapa 1: dependencias
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci
+
+# Etapa 2: build
+FROM node:20-alpine AS build
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npm run build
+
+# Etapa 3: runtime minimo
+FROM node:20-alpine AS runtime
+WORKDIR /app
+ENV NODE_ENV=production
+COPY package*.json ./
+RUN npm ci --omit=dev && npm cache clean --force
+COPY --from=build /app/dist ./dist
+EXPOSE 3000
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s CMD wget -qO- http://127.0.0.1:3000/health || exit 1
+USER node
+CMD ["node", "dist/index.js"]
+```
+
+Usted verifica ademas `.dockerignore` con `node_modules`, `.git`, `*.log` y `.env`. Usted fija la imagen base con digest cuando el proyecto es critico.
+
+### B.3 Comandos de verificacion obligatorios
+
+Usted ejecuta estos comandos antes de declarar listo y adjunta salida con exit 0:
+
+```bash
+actionlint .github/workflows/*.yml
+docker build --pull -t ghcr.io/org/app:test .
+trivy image --severity HIGH,CRITICAL ghcr.io/org/app:test
+syft ghcr.io/org/app:test -o spdx-json > sbom.json
+npm run lint
+npm test -- --runInBand
+npm run build
+./scripts/smoke.sh https://staging.ejemplo.com
+kubectl rollout status deployment/api --timeout=180s
+kubectl get pods -l app=api
+```
+
+Si un comando falta por stack distinto, usted lo reemplaza por su equivalente y lo declara en la entrega.
+
+### B.4 Referencias oficiales
+
+Usted consulta la documentacion oficial el dia de entrega y registra fecha y URL completa:
+
+1. Docker Docs: https://docs.docker.com/
+2. GitHub Actions Docs: https://docs.github.com/en/actions
+3. Playwright Docs para humo E2E en pipeline: https://playwright.dev/
+
+La documentacion oficial prevalece sobre blogs y ejemplos.

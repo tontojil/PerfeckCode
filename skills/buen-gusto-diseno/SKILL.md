@@ -168,6 +168,67 @@ no neon glows, no 3-column equal grids, no AI copywriting clichés,
 no generic placeholder names, no broken image links.)
 ```
 
+## Ejemplo minimo real (copiable para Stitch)
+
+Use este ejemplo como base. Contiene valores reales, no placeholders.
+Adapta solo el acento y la atmosfera al proyecto. Respeta las
+referencias a Material 3 (roles de color y elevacion) y a Apple HIG
+(tamano tactil minimo y jerarquia tipografica).
+
+```markdown
+# Design System: Reserva de horas — Clinica dental
+
+## 1. Visual Theme & Atmosphere
+Interfaz equilibrada de app diaria (densidad 5/10), asimetrica moderada
+(varianza 6/10) y movimiento fluido contenido (motion 5/10). Atmósfera
+clinica y cálida: fondo claro aireado, una sola columna de accion y
+detalles redondeados que transmiten confianza.
+
+## 2. Color Palette & Roles
+Basada en roles de Material 3 Expressive: un color primario, superficies
+neutras y texto sobre superficie con contraste AA.
+- ** Niebla Clinica** (#F6F7F9) — fondo general (surface container-low).
+- **Superficie Pura** (#FFFFFF) — tarjetas y cabecera (surface).
+- **Tinta Carbon** (#18181B) — texto principal (on-surface). Contraste 14.5:1 sobre blanco.
+- **Acero Suave** (#71717A) — texto secundario y metadatos (on-surface-variant).
+- **Linea Susurro** (#E2E8F0) — bordes de 1px y divisores (outline-variant).
+- **Verde Profundo** (#0F766E) — unico acento para CTA primario, foco y estado activo (primary). Saturacion 67%, sin neon.
+Prohibido: negro puro #000000, morado/azul neon, segundo acento.
+
+## 3. Typography Rules
+Jerarquia por peso y color, no solo por tamano (criterio Apple HIG).
+- **Display:** Cabinet Grotesk 600 — titular `clamp(2rem, 4vw, 3rem)`, tracking -0.02em.
+- **Body:** Satoshi 400/500 — `1rem/1.6`, maximo 65 caracteres por linea, color Acero Suave en descripciones.
+- **Mono:** JetBrains Mono 400 — horarios, precios y codigos de reserva. Obligatorio para numeros en vistas densas.
+Prohibido: Inter en titulares, serif genericas (Times, Georgia, Garamond).
+
+## 4. Component Stylings
+- **Boton primario:** relleno Verde Profundo, texto blanco, radio 12px, altura minima 44px segun Apple HIG. Sin brillo exterior. Al presionar traslada -1px.
+- **Boton secundario:** fantasma con borde Linea Susurro, misma altura 44px.
+- **Tarjeta de hora:** fondo blanco, borde 1px Linea Susurro, radio 16px, sombra difusa tintada `0 8px 24px rgba(24,24,27,0.06)`.
+- **Input:** etiqueta arriba, ayuda opcional debajo, error en rojo #B42318 debajo del campo. Anillo de foco de 2px en Verde Profundo.
+- **Cargando:** esqueleto con brillo que replica la fila de horarios. Sin spinner circular generico.
+
+## 5. Layout Principles
+Estructura de grilla, sin superposiciones (criterio Material 3 y Apple HIG).
+- Contenedor maximo 1200px centrado, padding lateral 24px (16px en movil).
+- Hero asimetrico: texto a la izquierda (7 columnas), tarjeta de reserva a la derecha (5 columnas). En movil colapsa a una columna.
+- Grilla de horarios: 4 columnas en escritorio, 2 en tablet, 1 en movil. Secciones full-height con `min-h-[100dvh]`, nunca `h-screen`.
+- Espaciado vertical entre secciones `clamp(3rem, 8vw, 6rem)`.
+
+## 6. Motion & Interaction
+- Fisica de resorte `stiffness: 100, damping: 20` en apertura de tarjeta y dialogo de confirmacion.
+- Revelado en cascada de la lista de horarios con retardo de 40ms por fila.
+- Solo animar `transform` y `opacity`. Sin animar `top`, `left`, `width` ni `height`.
+
+## 7. Anti-Patterns (Banned)
+Sin emojis, sin negro puro, sin 3 tarjetas iguales en fila, sin texto "Scroll to explore", sin nombres genericos tipo "John Doe", sin metricas inventadas tipo "99.99% satisfaccion". Si no hay dato real, usar `[dato pendiente]`.
+```
+
+Referencias aplicadas en el ejemplo:
+- Material 3 Expressive para roles `surface / on-surface / primary` y elevacion contenida: https://m3.material.io/
+- Apple HIG Foundations para objetivo tactil minimo de 44px y jerarquia legible: https://developer.apple.com/design/human-interface-guidelines
+
 ## Best Practices
 - **Be Descriptive:** "Deep Charcoal Ink (#18181B)" — not just "dark text"
 - **Be Functional:** Explain what each element is used for
@@ -202,11 +263,10 @@ Fuentes oficiales:
 - Apple HIG Foundations: https://developer.apple.com/design/human-interface-guidelines
 - GSAP docs: https://gsap.com/docs/v3/
 
-Repos famosos:
+Repos famosos (solo sistemas de diseño verificables):
 
 - https://github.com/alexpate/awesome-design-systems
 - https://github.com/klaufel/awesome-design-systems
-- https://github.com/greensock/gsap-skills
 
 Checklist:
 

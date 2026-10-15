@@ -34,7 +34,7 @@ Create a skill when:
 
 ## Skill Structure
 
-```
+```text
 skills/{skill-name}/
 ├── SKILL.md              # Required - main skill file
 ├── assets/               # Optional - templates, schemas, examples
@@ -99,7 +99,7 @@ metadata:
 
 ## Decision: assets/ vs references/
 
-```
+```text
 
 Need code templates?        → assets/
 Need JSON schemas?          → assets/
@@ -115,7 +115,7 @@ Link to external guides?    → references/ (with local path)
 
 ## Decision: Project-Specific vs Generic
 
-```
+```text
 
 Patterns apply to ANY project?     → Generic skill (e.g., pytest, typescript)
 Patterns are project-specific?     → {project}-{name} skill
@@ -197,6 +197,77 @@ visualizacion o reportes, aunque no pida un dashboard explicito".
 ## Resources
 
 - **Templates**: See [assets/](assets/) for SKILL.md template
+
+## Ejemplo mínimo
+
+Skill mínima válida y copiable para validar el formato antes de crear la real.
+
+Estructura:
+
+```text
+skills/revision-changelog/
+├── SKILL.md
+└── assets/
+    └── template.md
+```
+
+`skills/revision-changelog/SKILL.md`:
+
+```markdown
+---
+name: revision-changelog
+description: >
+  Revisa CHANGELOG con formato Keep a Changelog.
+  Usala cuando el usuario mencione changelog, release o notas de versión.
+license: Apache-2.0
+metadata:
+  version: "1.0"
+---
+
+## When to Use
+
+- El usuario pide crear o revisar un CHANGELOG.
+- El usuario menciona release, versión o notas de cambio.
+
+## Critical Patterns
+
+- Exija formato Keep a Changelog: Added, Changed, Fixed.
+- No invente entradas sin commit o diff que las respalde.
+
+## Code Examples
+
+```markdown
+## [1.2.0] - 2026-10-15
+### Added
+- Soporte para exportación CSV.
+```
+
+## Commands
+
+```bash
+git log --oneline -20
+npm run build
+```
+
+## Resources
+
+- **Templates**: See [assets/](assets/) for plantilla de entrada.
+```
+
+Comandos de verificación mínima:
+
+```bash
+ls skills/revision-changelog/SKILL.md
+npx skills check
+```
+
+Prueba A/B mínima:
+
+```text
+Prompt 1: "Crea el CHANGELOG 1.2.0 con estos 5 commits".
+Prompt 2: "Revisa este CHANGELOG y marca lo que rompe Keep a Changelog".
+Criterio: con skill gana en formato válido y sin entradas inventadas.
+```
 
 ## Referencias oficiales y repositorios famosos
 

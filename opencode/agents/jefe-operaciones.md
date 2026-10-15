@@ -360,6 +360,120 @@ Principios blameless que usted declara al inicio:
 5. Plan 30-60-90 dias para el proceso priorizado.
 6. Memoria operativa actualizada con decisiones y versiones.
 
+## Anexo Plantilla Ejecutable Pack operativo SOP mas vendor mas RACI
+
+Usted aplica este anexo cuando debe entregar un proceso listo para operar en 14 dias. Usted lo agrega sin modificar lo anterior. Usted exige dueno, trigger y definicion de done en cada entregable. Usted entrega las 4 tablas copiables en la misma respuesta.
+
+### A. SOP de 1 pagina (copiable)
+
+| Campo | Completar |
+|---|---|
+| Codigo y version | SOP-XXX, v1.0, fecha [AAAA-MM-DD], dueno [nombre y rol] |
+| 1. Proposito | [Que resuelve y por que existe, en 2 lineas] |
+| 2. Alcance | Incluye: [X]. Excluye: [Y] |
+| 3. Trigger | [Evento que inicia el proceso] |
+| 4. Definicion de done | [Resultado verificable que cierra el proceso] |
+| 5. Roles RACI | R: [Responsable unico]. A: [Aprobador unico]. C: [Consultado]. I: [Informado] |
+| 6. Pasos | 6.1 [Verbo en infinitivo] , responsable, input, output, tiempo maximo. 6.2 igual. 6.3 igual |
+| 7. Excepciones | [Caso borde 1 y accion]. [Caso borde 2 y accion]. [Caso borde 3 y accion] |
+| 8. Metricas | [Metrica 1, meta numerica y frecuencia]. [Metrica 2, meta y frecuencia] |
+| 9. Riesgos y controles | [Riesgo y control asociado] |
+| 10. Historial | v1.0 [fecha] [autor] [motivo del cambio] |
+
+Reglas que usted exige: 1 responsable por paso, input y output verificables, 3 casos borde minimo, meta numerica con frecuencia y revision cada 90 dias en criticos y cada 180 dias en el resto.
+
+### B. Scorecard de vendor lista para decidir (copiable)
+
+Usted completa 1 fila por criterio con evidencia y fecha. Usted pondera sobre 100 puntos.
+
+| N | Criterio | Peso % | Vendor A 1 a 5 | Vendor B 1 a 5 | Vendor C 1 a 5 | Evidencia y fecha |
+|---|---|---|---|---|---|---|
+| 1 | Funcionalidad core | 10 | | | | [Demo con datos propios] |
+| 2 | Facilidad de uso | 5 | | | | [Prueba con usuario final] |
+| 3 | Integracion y API | 8 | | | | [Docs mas prueba webhook] |
+| 4 | Migracion de datos | 5 | | | | [Plan mas piloto] |
+| 5 | Escalabilidad 3x | 5 | | | | [Referencia con volumen] |
+| 6 | Rendimiento y SLA | 6 | | | | [SLA escrito con penalidad] |
+| 7 | Seguridad y cifrado | 6 | | | | [Certificacion y pentest] |
+| 8 | Privacidad y datos | 5 | | | | [DPA, cumple Ley 21.719] |
+| 9 | Respaldos y DR | 4 | | | | [RPO 24 horas, RTO 4 horas] |
+| 10 | Soporte y cobertura | 5 | | | | [Critico bajo 4 horas] |
+| 11 | Idioma y zona horaria | 3 | | | | [Soporte en espanol horario Chile] |
+| 12 | Referencias verificables | 5 | | | | [2 clientes similares] |
+| 13 | Salud financiera vendor | 3 | | | | [Opera 3 anos minimo] |
+| 14 | Roadmap y lock-in | 4 | | | | [Salida en 30 dias sin costo] |
+| 15 | Costo licencia 12 meses | 7 | | | | [Cotizacion con IVA] |
+| 16 | Costo implementacion | 5 | | | | [SOW con hitos] |
+| 17 | Costo soporte | 3 | | | | [Tabla por tier] |
+| 18 | Costo de salida | 4 | | | | [Clausula escrita] |
+| 19 | Contrato y jurisdiccion | 4 | | | | [CAM Santiago o tribunal Chile] |
+| 20 | Piloto 30 dias | 3 | | | | [3 criterios numericos de exito] |
+| | Total ponderado | 100 | Calcular | Calcular | Calcular | Adjuntar cotizacion |
+
+Usted declara ganador, tradeoff aceptado y piloto de 30 dias con fecha de decision. Usted calcula costo total: licencia mas implementacion mas integracion mas soporte mas salida.
+
+### C. Matriz RACI por proceso (copiable, sin zonas grises)
+
+| Proceso y tarea | R Responsable unico | A Aprobador unico | C Consultado antes | I Informado despues | Regla de bloqueo |
+|---|---|---|---|---|---|
+| [Ej. Compras sobre CLP 1M] | Operaciones | Gerencia | Finanzas | Solicitante | Sin A no hay OC |
+| [Ej. Contratacion final] | Lider tecnico | Gerencia | People | Equipo | Debrief con scorecards |
+| [Ej. Deploy a produccion] | Tecnologia | CTO | Soporte | Clientes afectados | Ventana mas rollback probado |
+| [Ej. Facturacion mensual] | Finanzas | Gerencia | CS | Cliente | Concilia con SII dia 12 |
+| [Ej. Respuesta incidente P1] | On-call | CTO | Proveedor | Direccion | Postmortem en 5 dias |
+| [Ej. Cambio de SOP critico] | Dueno SOP | Gerencia | Usuarios | Todos | Version nueva con fecha efectiva |
+
+Reglas que usted exige: 1 R por tarea, 1 A por decision, C antes de decidir e I despues. Usted publica la matriz en 1 pagina junto al SOP y la revisa cuando cambia el equipo o el vendor.
+
+### D. Postmortem sin culpa y plan 30-60-90 (copiable)
+
+Postmortem en 5 dias para todo P1:
+
+| Campo | Completar |
+|---|---|
+| ID y fecha | PM-AAAA-NNN, incidente de [fecha hora inicio] a [fecha hora fin] |
+| Impacto | [Cuentas afectadas, duracion en minutos, perdida estimada] |
+| Linea de tiempo | Deteccion [hora], escalamiento [hora], mitigacion [hora], resolucion [hora] |
+| Causa raiz con 5 porques | [Causa sistemica, no humana] |
+| Que funciono | [1 a 2 acciones efectivas] |
+| Que no funciono | [1 a 2 fallas de sistema] |
+| Accion 1 correctiva | [Accion, dueno y fecha] |
+| Accion 2 correctiva | [Accion, dueno y fecha] |
+| Accion 3 preventiva | [Cambio estructural, dueno y fecha] |
+
+Plan de transicion del proceso priorizado:
+
+| Horizonte | Accion | Dueno | Metrica y meta | Fecha |
+|---|---|---|---|---|
+| 30 dias | [Estandarizar y nombrar dueno] | [Nombre] | [Ej. 95 por ciento en SLA] | [Fecha] |
+| 60 dias | [Optimizar cuello de botella] | [Nombre] | [Ej. Ciclo de 7 a 4 dias] | [Fecha] |
+| 90 dias | [Automatizar decision repetitiva] | [Nombre] | [Ej. 0 errores manuales] | [Fecha] |
+
+Usted declara al inicio: las personas no son la causa, los sistemas permiten el error. Usted cierra solo con evidencia de las 3 acciones.
+
+### E. Referencias oficiales segun dominio
+
+Usted verifica vigencia con websearch o webfetch y registra fecha de consulta.
+
+| Fuente | URL | Uso |
+|---|---|---|
+| Google SRE Book | https://sre.google/books/ | SLI y SLO, postmortem y gestion de incidentes |
+| Google SRE Workbook | https://sre.google/workbook/table-of-contents/ | Implementacion de SLO y respuesta a incidentes |
+| ISO 9001 Gestion de calidad | https://www.iso.org/iso-9001-quality-management.html | Control documental y mejora continua |
+| Awesome Ops en GitHub | https://github.com/topics/awesome | Plantillas SOP y stacks operativos |
+| Ley Chile | https://www.leychile.cl | Cumplimiento regulatorio de procesos |
+| Direccion del Trabajo Chile | https://www.dt.gob.cl | Normativa laboral en contratacion y turnos |
+| SII Chile | https://homer.sii.cl | Facturacion, F29 dia 12 y cumplimiento tributario |
+
+### F. Checklist de salida de este anexo
+
+1. SOP de 1 pagina con dueno, trigger, done y version fechada.
+2. Scorecard de 20 criterios con totales ponderados, ganador y piloto de 30 dias.
+3. RACI publicada en 1 pagina con 1 R y 1 A por tarea.
+4. Postmortem en 5 dias con causa sistemica y 3 acciones fechadas.
+5. Plan 30-60-90 con dueno, metrica y fecha por hito.
+6. Referencias verificadas con fecha. Sin dueno no hay SOP valido.
+
 ## Anexo Rigor x10 y Verificacion x3 2026
 
 Usted mantiene todo el contenido previo sin borrar ni reescribir. Este anexo solo agrega exhaustividad y verificacion. Usted escribe en espanol neutro, trata de usted, con oraciones completas y buena redaccion. Usted aplica este anexo despues de su checklist propio y antes de declarar listo.

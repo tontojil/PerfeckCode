@@ -262,12 +262,12 @@ save(doc, "/ruta/output.docx")
 
 ### Tabla de Contenido
 
-Llamar `insert_toc(doc)` justo despues de `create_doc()`. Inserta un campo TOC de Word. Al abrir el documento, seleccionar todo (Ctrl+A) y presionar F9 para generar la tabla.
+Llamar `insert_toc(doc)` justo despues de `create_doc()`. Inserta UNICAMENTE el campo automatico de Word con `TOC \o "1-3" \h \z \u`. Usa Heading 1, Heading 2 y Heading 3 reales en el cuerpo. Al abrir vaya a Referencias > Actualizar tabla y el indice se rellena solo. No se genera lista manual.
 
 ```python
 doc = create_doc(...)
-insert_toc(doc)         # ← antes de las secciones
-section(doc, "1. Introduccion", [...])
+insert_toc(doc)  # solo campo automatico
+section(doc, "1. Introduccion", [...])  # Heading 1 real
 ```
 
 ### Imagenes
@@ -414,3 +414,68 @@ Esta skill es un **asistente de formato**, no un generador de contenido. La inve
 ```
 
 **Compatibilidad:** la ruta canónica es `~/.claude/skills/inacap` y no debe cambiarse. En OpenCode esta skill se descubre y resuelve de forma nativa, sin copiarla; el proyecto la refleja en `skills/inacap/` solo como espejo idéntico.
+
+---
+
+## Anexo 7.0 INACAP — Sistema especializado para maxima calificacion (v2 definitiva)
+
+Sintesis de 7 informes INACAP con nota maxima. Usted aplica este anexo en todo trabajo INACAP sin excepcion.
+
+### A. Portada y datos exactos que el docente revisa primero
+
+Orden: titulo, subtitulo si hay, profesor nombre completo, integrantes completos, fecha dia de mes de ano, sede. Sin labels. Usted verifica letra por letra: codigo asignatura (FGIE03, TIHI84, ATEP01, TIHI43), seccion (IEI(1)-N8-C2), nombre docente (Mabel Del Carmen Zepeda Zuniga, Juan Jose Mir, Rory Walter Alveal Lira, Manuel Sanchez Carcamo, Roberto Alveal Ortega). Un codigo o tilde mal puestos bajan la nota.
+
+### B. Densidad 7.0 INACAP
+
+1 tabla cada 1.5 a 2 paginas con formato "Tabla N. Titulo. Fuente: Elaboracion propia." Mas Nota cuando aplica. Figuras con "Figura N. Titulo. Nota. Elaboracion propia." Indices de tablas y figuras al inicio cuando hay mas de 5. Minimo 5 referencias APA 7 con fecha de recuperacion en trabajo corto, 10 en medio, 20 en titulo. Guia base obligatoria: INACAP (s.f.). Guia para citas y referencias bibliograficas segun Norma APA, 7.a edicion. https://digital.inacap.cl/documentos/biblioteca/Norma_APA_7ma_ed_v2.pdf
+
+### C. Trazabilidad INACAP con codigos
+
+D1-Dn evidencias del equipo, F1-Fn fuentes oficiales, CU/RF/CA/KPI segun carrera, S01 supuestos, R01 riesgos. Mas 3 tablas: objetivos vs capitulos, trazabilidad completa, correspondencia informe vs rubrica del docente (criterio, seccion, evidencia). Esta ultima es la que el docente usa para calificar.
+
+### D. Contenido por carrera (plantillas verificadas)
+
+- Informatica software: historias HU, cronograma Scrum, arquitectura 4+1, interfaces por rol, BD con diccionario campo por campo, OWASP, plan pruebas CP01-CPn, UML 8 tipos.
+- Informatica datos o BI: diagnostico fragmentacion, gobierno DAMA (politicas, estandares, procesos, personas, tecnologias), ciclo de vida 6 etapas, comparativa ponderada PowerBI vs Tableau, plan 12 semanas, KPI con dueno.
+- Evaluacion proyectos: descripcion, inversion (fijos + puesta en marcha + capital trabajo), CAPM con 4 parametros justificados, WACC, depreciacion SII, flujos 5 anos, VAN/TIR/PRI con interpretacion, sensibilidad 4 escenarios, factibilidad realista.
+- Innovacion FGIE03: lienzo exploratorio, 2 entrevistas (usuario + experto) con 6 objetivos cada una, PESTAL 6 factores, vaciado con codigos T1/T2, categorizacion con citas, priorizacion, 4 antecedentes con ficha resuelto/por resolver, 40 ideas AT/VC/AS/GA, metricas SMART, co-creacion 45 min, plan T-7 a T-1 con horas-persona.
+
+### E. Honestidad y limites que suben la nota
+
+Incluya siempre supuestos S01, riesgos R01 con probabilidad/impacto/mitigacion, y subseccion Limites declarados (N entrevistas no generalizan, metas por validar, instrumento disenado no aplicado, precios y licencias por verificar). Frases modelo: "supuesto de dimensionamiento que debera validarse", "objetivos por validar, no resultados", "planificados; no se presentan como ejecutados".
+
+### F. Ortografia chilena perfecta
+
+Tildes (Evaluacion, Introduccion, Araucania), mayusculas (INACAP, Ley 21.719, SII, CORFO), numeros ($3.800.000, 14,6%), fechas (13 de octubre de 2026). Verifique nombres propios contra enunciado. Prohibido TODO, TBD, lorem ipsum.
+
+### G. Entrega 7.0
+
+Usted entrega: ruta completa + paginas estimadas (palabras / 450) + tablas + figuras + palabras + referencias + puntaje rubrica 100 (menos de 80 corrige) + pendientes del estudiante (datos personales, fechas, docente, plazo). Usted aplica verificacion-final antes de declarar listo. Para metodologia de contenido vea `informe-maestro`.
+
+### H. Checklist pre-generacion INACAP (obligatorio, evita el demo sin formato)
+
+Antes de correr el script usted verifica: 1. Usa `inacap/template.py`, nunca el template neutro, con `create_doc(carrera, asignatura, titulo, profesor, integrantes, fecha, sede, subtitulo)`. 2. Llama `insert_toc(doc)` inmediatamente despues de `create_doc`, antes de las secciones, Y ADEMAS escribe el indice estatico visible con cada titulo de capitulo y seccion palabra por palabra, porque el campo TOC solo muestra numeros tras F9. 3. Usa jerarquia real H1 para capitulos, H2 para secciones y H3 para subsecciones; el conteo final debe mostrar los tres niveles. 4. Cada tabla se crea con `table(doc, headers, rows)` precedida de un parrafo "Tabla N. Titulo." y seguida de "Fuente: Elaboracion propia." 5. Verifica assets con `_verificar_assets()` o la lista de candidatos; si falta un PNG, lo informa y no genera un DOCX sin banner ni logo. 6. Estima paginas SOLO con minimos reales: cada body 90 palabras minimo y cada tabla 6 filas minimo mas titulo y fuente. Si incumple, la estimacion miente y Word muestra menos. 7. Verifica paginas REALES en Word o PDF antes de declarar listo. Si piden 80 y Word muestra 51, expande con contenido genuino hasta 82 reales.
+
+### I. Prohibiciones que separan 7.0 de 4.0 (causa raiz de demos flojos)
+
+1. PROHIBIDO `doc.add_table` en crudo con `Table Grid`: deja tablas sin cabecera #231f20 ni alternancia. Use siempre `table(doc, headers, rows)` del template. QA exigido: tablas con header #231f20 = total de tablas.
+2. PROHIBIDO `doc.add_heading` en crudo sin linea: deja H1 sin borde rojo. Use siempre `heading(doc, text, level)`. QA exigido: H1 con linea #ed1c24 = total de H1.
+3. PROHIBIDO lista manual de indice: el indice es UNICAMENTE el campo automatico `TOC \o "1-3" \h \z \u` con Heading 1, 2 y 3 reales. Al abrir vaya a Referencias > Actualizar tabla. No se escribe estatico ni suplemento tipeado.
+4. PROHIBIDO Read en PDF de 30 a 124 paginas: falla con `PDF parser FaaS call failed`. Use `pypdf` en local para patron oro (Diente Feliz 124p, 59 tablas, 35 figuras, 26058 palabras, 14 cierres, 25 refs).
+
+---
+
+## Repositorios
+
+- Generacion DOCX: https://github.com/python-openxml/python-docx - crear y modificar documentos Word con Python, base de `template.py` en esta skill.
+
+## Ejemplo minimo
+
+```python
+from docx import Document
+doc = Document()
+doc.add_heading("Informe INACAP", level=1)
+doc.add_paragraph("Introduccion con evidencia y analisis.")
+doc.add_table(rows=2, cols=2)
+doc.save("informe_inacap.docx")
+```

@@ -386,6 +386,127 @@ Solo cuando el usuario lo pide. Ambos formatos entregan solo el diagrama (nodo `
 
 ---
 
+# 10. Cuatro tipos esenciales con ejemplo minimo HTML+SVG
+
+Use esta seccion como atajo operativo. Para la tabla completa de 41 tipos, vea la seccion 2. Cada ejemplo es un `.html` autocontenido minimo: CSS embebido, SVG en linea, sin JavaScript, listo para abrir en el navegador y escalar al layout real.
+
+Reglas comunes a los cuatro ejemplos: fondo `paper` (`#f5f5f5`), texto `ink` (`#2d3142`), conectores `muted` (`#4f5d75`), un solo foco `accent` (`#eb6c36`), radio 6px, grilla de 4px, etiquetas de flecha con mascara opaca y `role="img"` con `title` y `desc`.
+
+## 10.1 Architecture (componentes y conexiones)
+
+Cuando: explicar como se conectan 3 a 9 componentes de un sistema. Limite: 9 nodos, 12 flechas. Layout: izquierda a derecha, externo con borde suave, store con relleno tenue, foco en el servicio que recibe el trafico principal.
+
+```html
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Arquitectura minima</title>
+<style>body{margin:0;background:#f5f5f5;font-family:'Geist',sans-serif}h1{font-family:'Instrument Serif',serif;font-weight:400}</style></head>
+<body><h1>Web -&gt; API -&gt; DB</h1>
+<svg width="480" height="180" viewBox="0 0 480 180" role="img" aria-labelledby="arch-title arch-desc">
+<title id="arch-title">Arquitectura minima web API base de datos</title>
+<desc id="arch-desc">Cliente web envia peticiones a la API, que lee y escribe en la base de datos.</desc>
+<defs><marker id="a1" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#4f5d75"/></marker></defs>
+<rect x="24" y="60" width="120" height="60" rx="6" fill="#f5f5f5" stroke="#7a8399"/>
+<text x="84" y="95" text-anchor="middle" font-size="12" font-weight="600" fill="#2d3142">Web</text>
+<rect x="180" y="60" width="120" height="60" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36"/>
+<text x="240" y="95" text-anchor="middle" font-size="12" font-weight="600" fill="#2d3142">API</text>
+<rect x="336" y="60" width="120" height="60" rx="6" fill="#ffffff" stroke="#2d3142"/>
+<text x="396" y="95" text-anchor="middle" font-size="12" font-weight="600" fill="#2d3142">Postgres</text>
+<path d="M144 90 H180" stroke="#4f5d75" marker-end="url(#a1)"/>
+<path d="M300 90 H336" stroke="#4f5d75" marker-end="url(#a1)"/>
+</svg></body></html>
+```
+
+## 10.2 Flowchart (logica de decision con ramas)
+
+Cuando: decidir entre dos caminos con una pregunta. Limite: 9 nodos, 12 flechas. Layout: de arriba hacia abajo, rombo solo para la decision, codos ortogonales, etiquetas SI y NO con mascara.
+
+```html
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Flujo minimo</title></head>
+<body style="margin:0;background:#f5f5f5;font-family:sans-serif">
+<svg width="320" height="300" viewBox="0 0 320 300" role="img" aria-labelledby="flow-title flow-desc">
+<title id="flow-title">Flujo minimo de validacion de token</title>
+<desc id="flow-desc">Si el token es valido se permite el acceso, si no se redirige al inicio de sesion.</desc>
+<defs><marker id="a2" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#4f5d75"/></marker></defs>
+<rect x="100" y="16" width="120" height="40" rx="6" fill="#ffffff" stroke="#2d3142"/>
+<text x="160" y="41" text-anchor="middle" font-size="12" font-weight="600" fill="#2d3142">Request</text>
+<polygon points="160,76 240,126 160,176 80,126" fill="rgba(235,108,54,0.08)" stroke="#eb6c36"/>
+<text x="160" y="130" text-anchor="middle" font-size="12" font-weight="600" fill="#2d3142">Token valido?</text>
+<rect x="20" y="210" width="120" height="40" rx="6" fill="#ffffff" stroke="#2d3142"/>
+<text x="80" y="235" text-anchor="middle" font-size="12" fill="#2d3142">Login</text>
+<rect x="180" y="210" width="120" height="40" rx="6" fill="#ffffff" stroke="#2d3142"/>
+<text x="240" y="235" text-anchor="middle" font-size="12" fill="#2d3142">Dashboard</text>
+<path d="M160 76 V56" stroke="#4f5d75" marker-end="url(#a2)"/>
+<path d="M110 150 H60 V210" stroke="#4f5d75" fill="none" marker-end="url(#a2)"/>
+<path d="M210 150 H260 V210" stroke="#4f5d75" fill="none" marker-end="url(#a2)"/>
+</svg></body></html>
+```
+
+## 10.3 Sequence (mensajes ordenados en el tiempo)
+
+Cuando: mostrar orden de llamadas entre 2 a 5 actores. Limite: 5 lifelines, 1 fragmento combinado. Layout: actores arriba, tiempo hacia abajo, linea de vida en dashed, flecha solida para llamada y dashed para retorno.
+
+```html
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Secuencia minima</title></head>
+<body style="margin:0;background:#f5f5f5;font-family:sans-serif">
+<svg width="440" height="220" viewBox="0 0 440 220" role="img" aria-labelledby="seq-title seq-desc">
+<title id="seq-title">Secuencia minima de inicio de sesion</title>
+<desc id="seq-desc">Usuario pide login al frontend, el frontend valida con Auth y devuelve la sesion.</desc>
+<defs><marker id="a3" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0,8 3,0 6" fill="#4f5d75"/></marker></defs>
+<rect x="32" y="16" width="112" height="36" rx="6" fill="#ffffff" stroke="#2d3142"/>
+<text x="88" y="39" text-anchor="middle" font-size="12" font-weight="600" fill="#2d3142">Usuario</text>
+<rect x="296" y="16" width="112" height="36" rx="6" fill="#ffffff" stroke="#2d3142"/>
+<text x="352" y="39" text-anchor="middle" font-size="12" font-weight="600" fill="#2d3142">Auth</text>
+<line x1="88" y1="52" x2="88" y2="200" stroke="#4f5d75" stroke-dasharray="4,3"/>
+<line x1="352" y1="52" x2="352" y2="200" stroke="#4f5d75" stroke-dasharray="4,3"/>
+<path d="M88 90 H352" stroke="#4f5d75" marker-end="url(#a3)"/>
+<rect x="192" y="78" width="52" height="12" fill="#f5f5f5"/>
+<text x="218" y="87" text-anchor="middle" font-size="8" font-family="monospace" fill="#7a8399">LOGIN</text>
+<path d="M352 130 H88" stroke="#4f5d75" stroke-dasharray="5,4" marker-end="url(#a3)"/>
+<rect x="188" y="118" width="60" height="12" fill="#f5f5f5"/>
+<text x="218" y="127" text-anchor="middle" font-size="8" font-family="monospace" fill="#7a8399">SESSION</text>
+</svg></body></html>
+```
+
+## 10.4 ER (entidades, campos y relaciones)
+
+Cuando: modelar 2 a 8 entidades con claves y cardinalidad. Limite: 8 entidades. Layout: tablas como rectangulos con header `ink`, filas de campos en mono 9px, llave primaria marcada con `PK` y foranea con `FK`, relacion con linea y etiqueta `1:N`.
+
+```html
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>ER minimo</title></head>
+<body style="margin:0;background:#f5f5f5;font-family:sans-serif">
+<svg width="440" height="200" viewBox="0 0 440 200" role="img" aria-labelledby="er-title er-desc">
+<title id="er-title">Modelo ER minimo de usuario y pedido</title>
+<desc id="er-desc">Un usuario tiene muchos pedidos mediante la llave foranea user_id.</desc>
+<g><rect x="24" y="40" width="160" height="112" rx="6" fill="#ffffff" stroke="#2d3142"/>
+<rect x="24" y="40" width="160" height="28" rx="6" fill="#2d3142"/>
+<text x="104" y="59" text-anchor="middle" font-size="12" font-weight="600" fill="#f5f5f5">users</text>
+<text x="36" y="90" font-size="9" font-family="monospace" fill="#2d3142">id PK</text>
+<text x="36" y="108" font-size="9" font-family="monospace" fill="#4f5d75">email</text>
+<text x="36" y="126" font-size="9" font-family="monospace" fill="#4f5d75">created_at</text></g>
+<g><rect x="256" y="40" width="160" height="112" rx="6" fill="#ffffff" stroke="#2d3142"/>
+<rect x="256" y="40" width="160" height="28" rx="6" fill="#2d3142"/>
+<text x="336" y="59" text-anchor="middle" font-size="12" font-weight="600" fill="#f5f5f5">orders</text>
+<text x="268" y="90" font-size="9" font-family="monospace" fill="#2d3142">id PK</text>
+<text x="268" y="108" font-size="9" font-family="monospace" fill="#2d3142">user_id FK</text>
+<text x="268" y="126" font-size="9" font-family="monospace" fill="#4f5d75">total</text></g>
+<path d="M184 96 H256" stroke="#4f5d75" marker-end="url(#a2)"/>
+<rect x="200" y="84" width="40" height="12" fill="#f5f5f5"/>
+<text x="220" y="93" text-anchor="middle" font-size="8" font-family="monospace" fill="#7a8399">1:N</text>
+</svg></body></html>
+```
+
+## 10.5 Referencias de diseno M3 y Apple (cuando aplicar)
+
+No copie temas completos. Use estas guias solo para validar contraste, Jerarquia y espaciado cuando la puerta de marca pida personalizar.
+
+| Guia | Que tomar | Que evitar |
+|---|---|---|
+| Material 3 (M3 Expressive) | Roles de color (primary, surface, outline), escala de forma 4 a 12px, escala tipografica, estados hover y focus, contraste AA | Elevar todo con sombras, copiar componentes tal cual |
+| Apple HIG | Claridad y legibilidad, espaciado generoso, soporte claro y oscuro, texto dinamico, toque minimo de 44pt si el diagrama va en app | Tipografia SF fuera de ecosistema Apple, blur excesivo |
+
+Fuentes: M3 en https://m3.material.io/ y Apple HIG en https://developer.apple.com/design/human-interface-guidelines/ . Verifique contraste con https://www.w3.org/TR/WCAG22/ antes de fijar `ink` sobre `paper`.
+
+---
+
 ## Checklist pre-salida (puerta de gusto)
 
 Ejecute antes de entregar cualquier diagrama.
@@ -432,6 +553,8 @@ Fuentes oficiales:
 
 - Repo original y galeria: https://github.com/cathrynlavery/diagram-design
 - Galeria viva: https://cathrynlavery.github.io/diagram-design/
+- Material 3 (M3 Expressive, color, tipo y forma): https://m3.material.io/
+- Apple HIG (claridad, legibilidad, modo claro y oscuro): https://developer.apple.com/design/human-interface-guidelines/
 - Google Fonts (Geist, Instrument Serif, Noto): https://fonts.google.com/
 - WCAG 2.2 contraste y nombres accesibles: https://www.w3.org/TR/WCAG22/
 - SVG accessible (role img, title, desc): https://www.w3.org/TR/SVG-a11y/

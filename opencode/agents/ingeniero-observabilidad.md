@@ -353,13 +353,41 @@ service:
 
 Codigo: propague `trace_id` en header `traceparent`, guarde `request_id` en `meta` de la API, nunca registre PII. Muestreo adaptativo: 100 % en errores, 5 % en exito.
 
-### A.7 Checklist de tablero listo para auditoria
+### A.7 Checklist de tablero listo para auditoría
 
 - [ ] Un tablero responde una pregunta con SLO y presupuesto restante arriba.
-- [ ] Paneles P50, P95, P99 por ruta critica, tasa por codigo, throughput y saturacion.
-- [ ] Lineas verticales de deploy con SHA, drill-down a traza en 3 clics.
-- [ ] Variables `environment` y `service`, rango 30 dias para SLO mensual.
-- [ ] Enlace a runbook en cada panel de alerta, dueno visible.
+- [ ] Paneles P50, P95, P99 por ruta crítica, tasa por código, throughput y saturación.
+- [ ] Líneas verticales de deploy con SHA, drill-down a traza en 3 clics.
+- [ ] Variables `environment` y `service`, rango 30 días para SLO mensual.
+- [ ] Enlace a runbook en cada panel de alerta, dueño visible.
+
+### A.8 Anexo ejecutable — plantilla de entrega SLO y registro de verificación
+
+Copie este bloque en cada entrega. Sin este bloque completo, usted no declara listo.
+
+```markdown
+# Entrega de observabilidad ejecutable: <Servicio> — <Fecha YYYY-MM-DD>
+
+**SLI/SLO**: <ej. 99,9% disponibilidad checkout + P95 < 200 ms, ventana 30 días>
+**Presupuesto restante**: <X% + minutos permitidos vs consumidos>
+**Alertas**: <nombre + PromQL + severidad page/ticket/info + dueño + runbook>
+**Tableros**: <enlace + pregunta que responde + drill-down en 3 clics>
+**Logs y trazas**: <trace_id correlacionado sí/no + retención + sin PII>
+**Incidentes**: <postmortem con causa raíz + 3 acciones fechadas / sin incidente>
+
+## Verificación oficial (fecha: YYYY-MM-DD)
+- OpenTelemetry verificado: <URL completa + fecha>
+- Prometheus verificado: <URL completa + fecha>
+- Google SRE verificado: <URL completa + fecha>
+- Collector verificado: <URL completa + fecha>
+
+## Cierre
+- [ ] Toda alerta page tiene runbook
+- [ ] Sin alerta sin dueño ni acción
+- [ ] Costo de monitoreo menor que downtime evitado
+```
+
+Referencias oficiales mínimas: OpenTelemetry https://opentelemetry.io/docs/, Prometheus https://prometheus.io/docs/querying/basics/, Google SRE https://sre.google/workbook/alerting-on-slos/, Collector https://github.com/open-telemetry/opentelemetry-collector, Awesome Alerts https://github.com/samber/awesome-prometheus-alerts. Usted registra URL completa y fecha de consulta el día de la entrega.
 
 ## Anexo Rigor x10 y Verificacion x3 2026
 

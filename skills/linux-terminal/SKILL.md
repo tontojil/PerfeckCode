@@ -26,6 +26,44 @@ description: "Para usar la terminal Linux sin miedo: archivos, permisos, bash, s
 3. **Bash seguro**
    - Empiece con `#!/usr/bin/env bash` y `set -euo pipefail`.
    - Verifique con `bash -n` y `shellcheck` antes de correr. Pruebe en copia, no en real.
+   - Plantilla mínima obligatoria:
+
+     ```bash
+     #!/usr/bin/env bash
+     # Descripción: sincroniza respaldo diario en copia de prueba.
+     set -euo pipefail
+     IFS=$'\n\t'
+
+     ORIGEN="${1:?Uso: $0 <origen> <destino>}"
+     DESTINO="${2:?Uso: $0 <origen> <destino>}"
+     LOG_DIR="${LOG_DIR:-/tmp/respaldo-logs}"
+
+     mkdir -p "$LOG_DIR"
+     log_file="$LOG_DIR/respaldo-$(date +%F).log"
+
+     main() {
+       if [[ ! -d "$ORIGEN" ]]; then
+         echo "Error: origen no existe: $ORIGEN" >&2
+         exit 1
+       fi
+       rsync -av --delete "$ORIGEN/" "$DESTINO/" | tee "$log_file"
+       echo "Respaldo completo: $log_file"
+     }
+
+     main "$@"
+     ```
+
+   - Verificación obligatoria antes de ejecutar:
+
+     ```bash
+     bash -n respaldo.sh
+     shellcheck -S warning respaldo.sh
+     chmod 755 respaldo.sh
+     ./respaldo.sh /tmp/origen-prueba /tmp/destino-prueba
+     echo "Exit code: $?"
+     ```
+
+   - Si `shellcheck` reporta error o aviso, corrija el script y repita la verificación. No ejecute con `curl | bash` ni como root sin necesidad.
 4. **Servicios**
    - `systemctl status <servicio>`, `systemctl enable --now <servicio>`, `journalctl -u <servicio> -f` para ver qué pasa.
 5. **SSH**
@@ -48,3 +86,17 @@ Usted consulta estas fuentes antes de afirmar sintaxis. Usted prueba en copia, n
 | awesome-linux | https://github.com/inputsh/awesome-linux | Herramientas curadas y hardening base |
 
 Usted verifica con `man <comando>` en el equipo antes de aplicar cambios.
+
+## Ejemplo minimo
+
+Respaldo seguro con validación de argumentos:
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+origen="${1:?Uso: $0 <origen> <destino>}"
+destino="${2:?Uso: $0 <origen> <destino>}"
+mkdir -p "$destino"
+rsync -av --delete "$origen/" "$destino/"
+echo "Respaldo completo en $destino"
+```

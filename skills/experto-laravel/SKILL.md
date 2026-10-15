@@ -259,6 +259,27 @@ describe('User Registration', function () {
 });
 ```
 
+## Verificación: tests y análisis estático
+
+```bash
+php artisan test --parallel
+
+   PASS  Tests\Feature\UserTest
+  ✓ creates user with valid data
+  ✓ rejects duplicate email
+
+  Tests:    2 passed (2 assertions)
+  Duration: 1.24s
+```
+
+```bash
+vendor/bin/phpstan analyse --memory-limit=1G
+
+ [OK] No errors
+```
+
+Use `php artisan test` para la suite Pest y `phpstan analyse` antes de cada commit. Si phpstan reporta errores en modelos, verifique casts y tipos de relaciones primero.
+
 ## Rules
 
 - Thin controllers. Logic in Actions or Services.
@@ -310,3 +331,17 @@ Esta sección amplía sin modificar los patrones existentes. Úsela para validar
 - [ ] Las tareas superiores a 100 ms se envían a colas con reintentos definidos.
 - [ ] La autorización se implementa con Policies y `tokenCan` cuando aplica.
 - [ ] Los tests Pest cubren creación y validación, y `phpstan analyse` finaliza sin errores.
+
+## Ejemplo minimo
+
+Creación de usuario con validación, acción y recurso API:
+
+```php
+public function store(StoreUserRequest $request, CreateUserAction $accion)
+{
+    $usuario = $accion->execute($request->validated());
+    ProcessPayment::dispatch($usuario->id)->onQueue('payments');
+    return (new UserResource($usuario))
+        ->response()->setStatusCode(201);
+}
+```

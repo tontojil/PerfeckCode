@@ -187,6 +187,77 @@ async def test_full_import():
 pytest --cov=app --cov-report=term-missing --cov-fail-under=80
 ```
 
+## Ejemplo completo con fixtures, mock, parametrize y salida
+
+```python
+# test_descuento.py
+import pytest
+from unittest.mock import Mock
+
+def calcular_descuento(precio: float, porcentaje: float) -> float:
+    if precio < 0:
+        raise ValueError("El precio no puede ser negativo")
+    return precio * (1 - porcentaje)
+
+class Notificador:
+    def enviar(self, destino: str, mensaje: str) -> None:
+        ...
+
+def comprar(precio: float, porcentaje: float, notificador: Notificador) -> float:
+    total = calcular_descuento(precio, porcentaje)
+    notificador.enviar("cliente@example.com", f"Total: {total}")
+    return total
+
+@pytest.fixture
+def notificador_mock() -> Mock:
+    return Mock(spec=Notificador)
+
+@pytest.mark.parametrize("precio,porcentaje,esperado", [
+    (100, 0.0, 100),
+    (100, 0.1, 90),
+    (200, 0.5, 100),
+    (0, 0.2, 0),
+])
+def test_calcular_descuento(precio: float, porcentaje: float, esperado: float):
+    assert calcular_descuento(precio, porcentaje) == esperado
+
+def test_comprar_notifica_al_cliente(notificador_mock: Mock):
+    total = comprar(100, 0.1, notificador_mock)
+    assert total == 90
+    notificador_mock.enviar.assert_called_once_with(
+        "cliente@example.com", "Total: 90"
+    )
+
+def test_precio_negativo_lanza_error():
+    with pytest.raises(ValueError, match="no puede ser negativo"):
+        calcular_descuento(-10, 0.1)
+```
+
+Salida esperada al ejecutar `pytest test_descuento.py -v`:
+
+```text
+============================= test session starts ==============================
+collected 6 items
+
+test_descuento.py::test_calcular_descuento[100-0.0-100] PASSED            [ 16%]
+test_descuento.py::test_calcular_descuento[100-0.1-90] PASSED             [ 33%]
+test_descuento.py::test_calcular_descuento[200-0.5-100] PASSED            [ 50%]
+test_descuento.py::test_calcular_descuento[0-0.2-0] PASSED                [ 66%]
+test_descuento.py::test_comprar_notifica_al_cliente PASSED                [ 83%]
+test_descuento.py::test_precio_negativo_lanza_error PASSED                [100%]
+
+============================== 6 passed in 0.12s ===============================
+```
+
+## Referencias oficiales y repositorios famosos
+
+- Documentación de pytest: https://docs.pytest.org/ — referencia base de fixtures, marcas, parametrize y configuración.
+- Cómo usar fixtures: https://docs.pytest.org/en/stable/how-to/fixtures.html — alcance, `conftest.py` y `autouse`.
+- `parametrize`: https://docs.pytest.org/en/stable/how-to/parametrize.html — pruebas basadas en datos.
+- `unittest.mock`: https://docs.python.org/3/library/unittest.mock.html — `Mock`, `patch` y aserciones.
+- Repositorio de pytest: https://github.com/pytest-dev/pytest — código fuente y registro de cambios.
+- Plugin `pytest-mock`: https://github.com/pytest-dev/pytest-mock — fixture `mocker` para parches.
+
 ## Rules
 
 - One assertion per test concept. Group related assertions in same test.

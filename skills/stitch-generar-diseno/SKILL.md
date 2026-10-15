@@ -148,6 +148,85 @@ to the `.stitch/designs` directory.
 
 ---
 
+### Generate with Tokens Flow (Generar pantalla con tokens aplicados)
+
+Use este flujo cuando el proyecto ya tiene un design system y necesita generar
+una pantalla nueva con colores, fuentes y roundness aplicados desde el inicio.
+Es el flujo preferido sobre generar sin sistema y corregir despues.
+
+#### 1. Verificar proyecto y design system
+
+- Llame a `list_projects` para obtener el `projectId` correcto.
+- Llame a `list_design_systems` para obtener el ID del sistema activo.
+- Si no existe un design system, pause este flujo y use primero
+  stitch-sistema-diseno para crearlo. No intente suplirlo con hex en el prompt.
+
+#### 2. Extraer tokens sin copiarlos al prompt
+
+- Revise los tokens del sistema: colores por rol (primary, surface, outline),
+  fuentes por rol (titulo, cuerpo, codigo) y roundness (radio de bordes).
+- Anote los valores solo como referencia interna para la verificacion del paso 5.
+- No incluya hex, nombres de fuentes ni valores de roundness en el prompt de
+  generacion. El sistema los aplica a nivel de proyecto.
+
+#### 3. Mejorar el prompt solo con estructura y contenido
+
+Aplique el Prompt Enhancement Pipeline con enfoque exclusivo en layout,
+contenido y estructura:
+
+```markdown
+[Proposito general y tarea del usuario en esta pantalla]
+
+**PLATFORM:** [Web/Mobile], [Desktop/Mobile]-first
+
+**PAGE STRUCTURE:**
+1. **Header:** [Navegacion y marca, sin colores ni fuentes]
+2. **Hero Section:** [Titular, subtitulo y CTA principal]
+3. **Primary Content Area:** [Componentes por seccion: tabla, cards, formulario]
+4. **Footer:** [Enlaces y datos legales]
+
+**BEHAVIOR:** [Estados hover, focus, vacio y error que debe incluir]
+```
+
+Anti-patron: "header azul #004080 con Inter y bordes de 12px" -> el color,
+la fuente y el radio los define el design system, no el prompt.
+
+#### 4. Generar la pantalla con el ID del sistema
+
+Llame a `generate_screen_from_text` pasando siempre el `designSystem`:
+
+```json
+{
+  "projectId": "...",
+  "prompt": "[Prompt mejorado solo con estructura y contenido]",
+  "designSystem": "assets/...",
+  "deviceType": "DESKTOP"
+}
+```
+
+- `deviceType`: MOBILE, DESKTOP o TABLET segun la plataforma declarada.
+- Si omite `designSystem` por error, descarte el resultado y regenere con el
+  ID. No lo corrija con edits de color.
+
+#### 5. Verificar que los tokens se aplicaron
+
+- Compare la captura con los tokens del paso 2: fondo, primario en CTA,
+  tipografia de titulo y cuerpo, radio de cards y botones.
+- Si detecta estilos por defecto (violeta generico, fuente distinta, radios
+  inconsistentes), verifique que el `designSystem` enviado sea el correcto
+  antes de editar.
+- Presente al usuario el `outputComponents` (descripcion y sugerencias).
+
+#### 6. Descargar assets y actualizar metadata
+
+- Descargue HTML y screenshot a `.stitch/designs` con nombre por `screenId`.
+- Actualice `.stitch/metadata.json` con el nuevo screen y el `designSystem`
+  usado (ver formato en stitch-sistema-diseno).
+- Para ajustes puntuales continue con el flujo **Edit**. Solo regenere desde
+  cero si la estructura base es incorrecta.
+
+---
+
 ### Generate from Image Flow (Image/Mockup → Design)
 
 Use this flow when the user provides an image, screenshot, or design mockup to

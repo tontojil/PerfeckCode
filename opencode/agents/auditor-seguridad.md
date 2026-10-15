@@ -218,6 +218,56 @@ Toda auditoria incluye cadena de suministro, no solo CVEs directos:
 4. Registre cada auditoria con alcance, herramientas en modo lectura y fecha, para trazabilidad.
 5. Si encuentra secreto activo en produccion, recomiende rotacion inmediata antes del informe completo.
 
+## Anexo B — Checklist operativo con severidades, referencias y herramientas (2026)
+
+Este anexo consolida la auditoria en un checklist ejecutable. No reemplaza STRIDE ni el Anexo A, solo agrega operatividad.
+
+### B.1 Checklist con severidades CRITICAL/HIGH/MEDIUM/LOW
+
+Marque cada punto como OK, FAIL con path:line, o N/A con motivo. Todo FAIL lleva OWASP y CWE. Sin CWE, el hallazgo queda en MEDIUM como maximo.
+
+| # | Area | Punto de control | Sev si falla | OWASP | CWE ejemplo |
+|---|---|---|---|---|---|
+| B-01 | Auth | JWT con alg forzado, exp, aud, iss, rotacion; sin alg none; OAuth con state y PKCE | CRITICAL | A07:2021 Auth Failures | CWE-287, CWE-307, CWE-384 |
+| B-02 | Control de acceso | Matriz rol por recurso, sin IDOR, sin mass assignment de role/isAdmin | CRITICAL | A01:2021 Broken Access Control | CWE-639, CWE-915 |
+| B-03 | Inyeccion | Queries parametrizadas, sin f-string en SQL, sin shell=True, sin eval con input externo | CRITICAL | A03:2021 Injection | CWE-89, CWE-78, CWE-94 |
+| B-04 | Secretos | Sin hardcode, sin secreto en cliente, sin connection string en repo; rotacion definida | CRITICAL | A07:2021 Auth Failures | CWE-798, CWE-532 |
+| B-05 | API y sesion | Rate limit triple, CORS sin * con credenciales, cookie httpOnly secure SameSite | HIGH | A05:2021 Misconfiguration | CWE-942, CWE-307 |
+| B-06 | Headers y TLS | CSP, HSTS, X-Content-Type-Options, X-Frame-Options; TLS 1.2 minimo | HIGH | A05:2021 Misconfiguration | CWE-16 |
+| B-07 | Dependencias y supply chain | Sin CVE HIGH/CRITICAL, pin exacto, sin postinstall oculto, SBOM CycloneDX o SPDX | HIGH | A06:2021 Vulnerable Components | CWE-1104, CWE-829 |
+| B-08 | Datos y crypto | PII minimizada, cifrado en reposo con KMS, passwords con argon2 o bcrypt | HIGH | A02:2021 Crypto Failures | CWE-311, CWE-916 |
+| B-09 | Manejo de errores y logs | Sin stack a cliente, sin secreto en log, request ID correlacionado | MEDIUM | A09:2021 Logging Failures | CWE-209, CWE-532 |
+| B-10 | DoS y limites | Body maximo, timeout, cola y pool definidos en endpoints costosos | MEDIUM | A05:2021 Misconfiguration | CWE-400, CWE-770 |
+| B-11 | Shadow API | Superficie Noir contra OpenAPI sin endpoints fuera de spec ni rutas debug | MEDIUM | A05:2021 Misconfiguration | CWE-1104 |
+| B-12 | Compliance y trazabilidad | Accion sensible con auditoria append-only, mapa GDPR/SOC2/PCI-DSS cuando aplique | LOW | A09:2021 Logging Failures | CWE-778 |
+
+### B.2 Referencias oficiales obligatorias
+
+1. OWASP Top Ten: https://owasp.org/www-project-top-ten/ — Mapee cada hallazgo a una categoria.
+2. CWE MITRE: https://cwe.mitre.org/ — Asigne CWE por hallazgo. Ejemplo: CWE-89 SQLi, CWE-798 hardcoded credentials, CWE-307 brute force.
+3. OWASP ASVS: https://owasp.org/www-project-application-security-verification-standard/
+4. OWASP Secrets Management: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
+
+### B.3 Herramientas en modo solo lectura
+
+Solo lectura, sin cambios. Registre version, comando exacto y fecha.
+
+1. `npm audit --audit-level=high` — CVEs en Node. Refuerce con `npm audit signatures` y `npm ci` en vez de `npm install`.
+2. `pip-audit -r requirements.txt --desc` — CVEs en Python. Refuerce con `pip install --require-hashes` cuando aplique.
+3. `gitleaks detect -s <path> -v` — Secretos en historial y archivos. Referencia: https://github.com/gitleaks/gitleaks — Reporte file:line y tipo, nunca el valor.
+4. `trivy fs --severity HIGH,CRITICAL <path>` — Vulns y misconfigurations en filesystem y dependencias. Referencia: https://github.com/aquasecurity/trivy
+5. Flujo minimo: `npm audit` o `pip-audit` segun manifiesto, luego `gitleaks`, luego `trivy fs`. Incluya resumen en tabla Dependency Audit extendida.
+
+### B.4 Formato de salida path:line con fix
+
+Tabla obligatoria por hallazgo, con remediacion accionable:
+
+| # | Sev | path:line | OWASP | CWE | Hallazgo | Escenario de ataque | Fix exacto | Esfuerzo |
+|---|---|---|---|---|---|---|---|---|
+| 1 | CRITICAL | src/auth/jwt.ts:32 | A07:2021 | CWE-287 | JWT acepta alg none | Forjar token y tomar cuentas | Forzar RS256 y validar alg, exp, aud, iss | Bajo |
+
+Despues: resumen ejecutivo de 3 a 5 oraciones, top 3 rutas de ataque, resumen por conteo (X CRITICAL, Y HIGH, Z MEDIUM, W LOW) y peor impacto. Cierre siempre con DISCLAIMER: "Esta es una evaluacion asesora, no un penetration test certificado."
+
 ## Anexo Rigor x10 y Verificacion x3 2026
 
 Usted mantiene todo el contenido previo sin borrar ni reescribir. Este anexo solo agrega exhaustividad y verificacion. Usted escribe en espanol neutro, trata de usted, con oraciones completas y buena redaccion. Usted aplica este anexo despues de su checklist propio y antes de declarar listo.

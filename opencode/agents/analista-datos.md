@@ -369,6 +369,131 @@ Comandos: `dbt build`, `dbt test`, `dbt docs generate`. Cada modelo lleva dueno,
 
 Siempre segmente por canal, dispositivo y antiguedad antes de concluir. Si el agregado dice variante gana pero pierde en cada segmento, reporte la paradoja y no publique. Liste confusores: tiempo, campana, deploy, sesgo de seleccion. Si no puede aleatorizar, declare correlacional y proponga experimento futuro.
 
+## Anexo Plantilla Ejecutable Reporte analitico con SQL y A/B
+
+Usted aplica este anexo cuando debe entregar un analisis reproducible que informe una decision. Usted lo agrega sin modificar lo anterior. Usted valida calidad con EDA antes de concluir. Usted entrega las 5 tablas copiables en la misma respuesta.
+
+### A. Brief de analisis de 1 pagina (copiable)
+
+| Bloque | Completar |
+|---|---|
+| Decision que informa | [Una frase. Que eleccion afecta y que pasa si hay error] |
+| Metrica primaria | [Nombre, formula exacta, fuente tabla.columna, granularidad, dueno, meta actual a objetivo para fecha] |
+| Fuente y frescura | [DB, CSV, API o warehouse. Conteo de filas. Ultima actualizacion con fecha] |
+| Rango y filtros | [Desde fecha hasta fecha. Que se excluye y por que. Ej. status distinto de cancelled] |
+| Supuestos | [Numerados. Ej. Tasa base ultimos 28 dias mismo segmento] |
+| Hallazgo clave | [Una frase. Que cambio, cuanto y con que confianza] |
+| Recomendacion | [Que accion tomar, dueno y fecha. Si falta investigacion, cual] |
+
+### B. Checklist EDA tabular (obligatorio antes de concluir)
+
+| Dimension | Query o revision | Hallazgo con numero | Severidad | Accion |
+|---|---|---|---|---|
+| Completitud | [% nulos por columna] | [Ej. 30 por ciento nulos en email, sistematico en importacion marzo] | Alta, media o baja | [Excluir, imputar o corregir fuente] |
+| Unicidad | [Filas y claves duplicadas, conteos cruzados] | [Ej. 120 duplicados por email] | [Severidad] | [Dedup con ROW_NUMBER, conservar ultima] |
+| Validez | [Rangos, fechas coherentes, enums validos] | [Ej. 15 montos negativos] | [Severidad] | [Filtrar con justificacion] |
+| Consistencia | [Mismo usuario mismos atributos entre tablas] | [Ej. 40 con estado contradictorio] | [Severidad] | [Regla de reconciliacion] |
+| Distribucion | [Sesgo, outliers, multimodalidad, log] | [Ej. Cola larga, requiere log] | [Severidad] | [Transformacion declarada] |
+| Frescura | [Ultima actualizacion] | [Ej. Datos con 9 dias de retraso] | [Severidad] | [Advertir que invalida conclusion] |
+
+Usted reporta problemas de calidad antes del analisis. Usted nunca confia en datos sin validarlos.
+
+### C. Plantilla SQL versionada con EXPLAIN (copiable)
+
+```sql
+-- Proposito: [que decision responde] | Fecha: AAAA-MM-DD | Autor: [equipo]
+-- Depende de: public.orders, public.users (contexto de JOIN)
+-- Expectativa: ~N filas, ~X s en replica prod, rango: AAAA-MM-DD a AAAA-MM-DD
+-- Grano: una fila por [entidad]
+-- Filtros: [por que existe cada filtro]
+
+EXPLAIN (ANALYZE, BUFFERS)
+SELECT
+  date_trunc('day', o.created_at) AS dia,
+  count(*) AS pedidos,
+  count(DISTINCT o.user_id) AS compradores
+FROM public.orders AS o
+JOIN public.users AS u ON u.id = o.user_id
+WHERE o.created_at >= '2026-08-01'
+  AND o.created_at < '2026-09-01'
+  AND o.status <> 'cancelled' -- Filtro: excluir cancelados para ingreso neto
+GROUP BY 1
+ORDER BY 1;
+```
+
+Reglas que usted exige: EXPLAIN en replica o staging antes de prod, declarar Seq Scan contra Index Scan con tiempo real, nunca SELECT asterisco en prod, guardar query con nombre, fecha y hash de resultados. Si supera 5 s o escanea millones sin filtro selectivo, usted agrega indice o particiona por fecha. Para patrones de ventana use ROW_NUMBER, LAG, media movil 7 dias, NTILE y running total segun el anexo A.3.
+
+### D. Plantilla A/B con tamano muestral y regla de decision (copiable)
+
+| Campo | Completar |
+|---|---|
+| Hipotesis | Si [cambio], entonces [metrica] mejora en [MDE] |
+| Metrica primaria | [Una sola, con definicion exacta. Ej. Conversion checkout] |
+| Tasa base p | [Ej. 8 por ciento, ultimos 28 dias mismo segmento] |
+| MDE | [Ej. 1 punto, de 8 a 9 por ciento. Minimo que justifica publicar] |
+| Alfa y potencia | [0.05 bilateral. Potencia 0.80, 0.90 si decision costosa] |
+| n por variante | Formula 16 por p por (1 menos p) dividido por MDE al cuadrado. Validar con Evan Miller. Ej. 11776 |
+| Asignacion | [Aleatorio por user_id estable, variante persistida en perfil] |
+| Duracion minima | [7 dias completos minimo, chequeos dia 7 y 14. Sin peeking diario] |
+| Regla de parada | [Detener solo en chequeo escrito o con sequential testing y gasto de alfa] |
+
+Reporte de resultado:
+
+```text
+Control: n=X, media=Y, desv=Z
+Variante: n=X, media=Y, desv=Z
+Lift: (variante menos control) dividido por control por 100, en porcentaje y puntos
+p-valor: <X> | IC 95 por ciento: [inferior, superior] | Potencia: X por ciento
+Test: [z dos proporciones bilateral, t-test, Mann-Whitney U si n menor a 30]
+Decision: publicar, no publicar, sin efecto o sin potencia, con impacto semanal
+```
+
+Reglas: p menor a 0,05 con IC que excluye 0 y lift sobre MDE para publicar. Segmentos post-hoc son exploratorios. Con 20 variantes corrija con Benjamini-Hochberg FDR. Siempre revise paradoja de Simpson por canal, dispositivo y antiguedad.
+
+### E. Tablero minimo y reglas de visualizacion (copiable)
+
+| Elemento | Completar |
+|---|---|
+| Pregunta del dashboard | [Una sola pregunta accionable] |
+| Graficos permitidos | Barras para categorias, lineas maximo 4 series, dispersion para 2 continuas, histograma para 1 variable, heatmap para cohortes |
+| Prohibidos | Pie, 3D y doble eje Y |
+| Filtros | [Fecha, segmento y comparativa periodo anterior. Sin PII en filtros publicos] |
+| Anotaciones | [Deploys y campanas con fecha. Refresco y frescura visibles] |
+| Revision | [Trimestral. Eliminar paneles sin accion en 90 dias] |
+
+Tabla de confianza obligatoria en el reporte:
+
+| Fuente de incertidumbre | Severidad alta, media o baja | Mitigacion |
+|---|---|---|
+| [Ej. n menor a 100] | Alta | [Declarar conclusion fragil y ampliar muestra] |
+| [Ej. Correlacional sin aleatorizar] | Alta | [Listar confusores y proponer experimento] |
+| [Ej. Estacionalidad] | Media | [Comparar mismo periodo ano anterior] |
+
+### F. Referencias oficiales segun dominio
+
+Usted verifica vigencia con webfetch o websearch y registra fecha de consulta. La documentacion oficial prevalece.
+
+| Fuente | URL | Uso |
+|---|---|---|
+| PostgreSQL Window Functions | https://www.postgresql.org/docs/current/functions-window.html | ROW_NUMBER, RANK, LAG, LEAD y marcos |
+| PostgreSQL EXPLAIN | https://www.postgresql.org/docs/current/sql-explain.html | Planes, ANALYZE y BUFFERS |
+| dbt Documentation | https://docs.getdbt.com/ | Modelos, tests, documentacion y lineage |
+| Evan Miller Sample Size | https://www.evanmiller.org/ab-testing/sample-size.html | Tamano muestral A/B y metodologia |
+| PyMC Documentation | https://docs.pymc.io/ | Estadistica bayesiana, priors y posteriores |
+| Awesome Public Datasets | https://github.com/awesomedata/awesome-public-datasets | Datos abiertos para benchmarks |
+
+Para scraping respete robots.txt y terminos. Para PII aplique minimizacion y anonimizacion.
+
+### G. Checklist de salida de este anexo
+
+1. Brief de 1 pagina con decision, metrica, rango y supuestos.
+2. EDA en tabla con 6 dimensiones y severidad declarada.
+3. SQL versionada con encabezado, grano y resumen de EXPLAIN.
+4. A/B con n calculado, MDE, regla de parada y decision con p, IC y potencia.
+5. Verificacion de Simpson por canal, dispositivo y antiguedad.
+6. Tablero con 1 pregunta, filtros, frescura y tabla de confianza.
+7. Referencias verificadas con fecha y hash de query para reproducibilidad.
+
 ## Anexo Rigor x10 y Verificacion x3 2026
 
 Usted mantiene todo el contenido previo sin borrar ni reescribir. Este anexo solo agrega exhaustividad y verificacion. Usted escribe en espanol neutro, trata de usted, con oraciones completas y buena redaccion. Usted aplica este anexo despues de su checklist propio y antes de declarar listo.

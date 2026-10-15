@@ -9,378 +9,221 @@ allowed-tools:
   - "web_fetch"
 ---
 
-# Extract Design System from Frontend Code
+# Extraer sistema de diseño desde código
 
-Analyze frontend source code to extract a comprehensive design system document
-(DESIGN.md) that captures the project's visual language — colors, typography,
-spacing, component patterns, and layout principles — directly from the source
-files, without needing to build or render the application.
+Analiza el código fuente frontend para generar un documento `DESIGN.md` que capture el lenguaje visual del proyecto: colores, tipografía, espaciado, patrones de componentes y principios de layout. Funciona sin compilar ni ejecutar la aplicación.
 
-## Why This Exists
+## Cuándo usar
 
-The `diseno-md` skill works from rendered HTML. But often you have a codebase
-and want to understand its design system before you can even run the app —
-maybe dependencies are missing, the build is broken, or you just want a quick
-audit. This skill reads the source files themselves: stylesheets, component
-files, theme configs, and Tailwind setups. It's faster and works anywhere.
+- El usuario tiene un código frontend y necesita documentar su sistema de diseño.
+- Se requiere migrar la identidad visual del proyecto hacia Stitch.
+- El usuario pide auditar estilos o entender el lenguaje de diseño de un repositorio.
+- La aplicación no compila, pero el código fuente está disponible.
+- Existen estilos inconsistentes que se necesita unificar.
 
-## When to Use
+## Prerrequisitos
 
-- User has a frontend codebase and wants to extract or document its design system
-- User wants to migrate a project's visual identity into Stitch
-- User asks to "audit the styling" or "understand the design language" of a repo
-- User wants to create a DESIGN.md from existing source code
-- The app can't be built/rendered but the source is available
-- User wants to unify or reconcile inconsistent styles across a codebase
-
-## Prerequisites
-
-- Access to the frontend project's source directory
-- No build or runtime dependencies needed — this skill reads source files only
+- Acceso al directorio fuente del proyecto frontend.
+- No se necesita compilar ni instalar dependencias. Esta skill solo lee archivos.
 
 ---
 
-## Workflow
+## Flujo con tokens
 
-### Phase 1: Project Discovery
+### Fase 1: Descubrimiento del proyecto
 
-Start by understanding what you're working with. This determines which
-extraction patterns to use.
+#### 1. Detectar framework y herramientas
 
-#### 1. Detect the Framework and Stack
+Lee primero `package.json`. Revela framework, herramientas CSS y librerías de tokens.
 
-Scan the project root for telltale files:
-
-| Signal File | Framework / Tool |
+| Archivo señal | Framework o herramienta |
 |:---|:---|
-| `package.json` with `react` | React / Next.js |
-| `package.json` with `vue` | Vue / Nuxt |
-| `package.json` with `svelte` | Svelte / SvelteKit |
-| `package.json` with `@angular/core` | Angular |
-| `tailwind.config.js/ts` | Tailwind CSS |
-| `postcss.config.js` | PostCSS pipeline |
-| `styled-components` or `@emotion` in deps | CSS-in-JS |
-| `.css` / `.scss` / `.less` files only | Plain CSS / SASS |
-| `theme.js` / `theme.ts` / `tokens.js` | Design token files |
+| `package.json` con `react` | React o Next.js |
+| `package.json` con `vue` | Vue o Nuxt |
+| `package.json` con `svelte` | Svelte o SvelteKit |
+| `package.json` con `@angular/core` | Angular |
+| `tailwind.config.js` o `.ts` | Tailwind CSS |
+| `postcss.config.js` | Pipeline PostCSS |
+| `styled-components` o `@emotion` | CSS-in-JS |
+| Solo `.css`, `.scss`, `.less` | CSS plano o SASS |
+| `theme.js`, `theme.ts`, `tokens.js` | Archivos de tokens |
 
-Read `package.json` first — it reveals the framework, CSS tooling, and any
-design-token libraries (e.g., `style-dictionary`, `@chakra-ui/react`,
-`@mui/material`, `ant-design`). This context tells you *where* to look for
-styling information.
+#### 2. Mapear el árbol de fuentes
 
-#### 2. Map the Source Tree
+Identifica directorios clave:
 
-Identify the key directories and files you'll analyze:
-
-```
+```text
 src/
-├── components/     ← Component-level styles
-├── styles/         ← Global stylesheets
-├── theme/          ← Theme definitions, tokens
-├── assets/         ← Fonts, images
-├── app.css         ← Root styles
-└── index.css       ← Entry CSS
+├── components/     ← Estilos por componente
+├── styles/         ← Hojas globales
+├── theme/          ← Definiciones y tokens
+├── assets/         ← Fuentes e imágenes
+├── app.css         ← Estilos raíz
+└── index.css       ← CSS de entrada
 ```
 
-Also check for:
-- `tailwind.config.js` / `tailwind.config.ts` — Custom colors, fonts, spacing
-- `globals.css` / `global.css` — CSS custom properties (variables)
-- Any `theme.*` or `tokens.*` files
-- Component library config (e.g., `chakra-theme.ts`, `vuetify.config.ts`)
+Revisa además `tailwind.config.js`, `globals.css`, cualquier archivo `theme.*` o `tokens.*` y configuraciones de librerías como `chakra-theme.ts`.
 
-#### 3. Read Framework-Specific Guidance
+#### 3. Leer la guía específica del framework
 
-Consult the appropriate reference for extraction patterns:
+Consulta el patrón de extracción que corresponda antes de continuar:
 
-- **React / Next.js / Tailwind** → [references/react-tailwind.md](references/react-tailwind.md)
-- **Vue / Nuxt** → [references/vue.md](references/vue.md)
-- **Svelte / SvelteKit** → [references/svelte.md](references/svelte.md)
-- **Angular** → [references/angular.md](references/angular.md)
-- **Plain CSS / SASS / Less** → [references/plain-css.md](references/plain-css.md)
-
-These references contain framework-specific patterns for locating colors,
-typography, spacing, and component styles. Read the one that matches before
-proceeding.
+- React, Next.js, Tailwind: [references/react-tailwind.md](references/react-tailwind.md)
+- Vue, Nuxt: [references/vue.md](references/vue.md)
+- Svelte, SvelteKit: [references/svelte.md](references/svelte.md)
+- Angular: [references/angular.md](references/angular.md)
+- CSS plano, SASS, Less: [references/plain-css.md](references/plain-css.md)
 
 ---
 
-### Phase 2: Deep Extraction
+### Fase 2: Extracción profunda por tokens
 
-Work through each design dimension systematically. For each one, gather raw
-data from the source files, then synthesize it into descriptive language.
+Trabaja cada dimensión de diseño en orden. El objetivo no es copiar propiedades CSS, sino entender la intención y describirla en lenguaje editorial que Stitch pueda reutilizar.
 
-The goal isn't to dump every CSS property — it's to understand the *intent*
-behind the styling choices and describe them in human, editorial language that
-another designer (or Stitch) can use to recreate the same visual feel.
+#### 1. Tema visual y ambiente
 
-#### 1. Visual Theme & Atmosphere
+- Fondo raíz del `body` o contenedor principal. Tonos crema indican aire limpio. Tonos oscuros indican contraste dramático.
+- Filosofía de espacio: valores generosos de 32px o más contra diseños compactos.
+- Densidad: pocos componentes con aire indica minimalismo. Muchos elementos juntos indica densidad informativa.
+- Temperatura: neutros cálidos contra grises fríos.
+- Sintetiza el ambiente en una o dos frases ricas.
 
-Read the broadest styling first to understand the overall mood:
+#### 2. Paleta de colores y roles con tokens
 
-- **Root background**: What's the `body` or root element background? Light
-  cream (#f-range) signals airy/clean; dark (#0-#2 range) signals moody/dramatic.
-- **Whitespace philosophy**: Are spacing values generous (32px+) or tight?
-  Check padding/margin values on root containers, section wrappers, and card components.
-- **Density**: Count the components per page/section. Few with space = minimal;
-  many packed tight = information-dense.
-- **Color temperature**: Are the neutrals warm (creams, tans) or cool (blue-grays, slates)?
-- **Overall feel**: Synthesize into 1-2 rich sentences that capture the mood.
+Busca colores en todas las capas: variables `--color-*`, `theme.extend.colors` en Tailwind, objetos `colors` o `palette`, clases `bg-*` y `text-*`.
 
-Look for these signals in the source:
+Organiza por función, no por tono:
 
-| Source Location | What It Tells You |
-|:---|:---|
-| Root `background-color` or Tailwind `bg-*` on layouts | Overall lightness/darkness |
-| Spacing scale in Tailwind config or CSS vars | Whitespace philosophy |
-| Number of components vs. wrapper padding | Density |
-| Custom property naming (`--warm-*` vs `--cool-*`) | Color temperature intent |
-| Comments in theme files | Design intent in the developer's own words |
+1. Base primaria: fondos y superficies.
+2. Acento e interactivo: botones, enlaces, estados activos.
+3. Texto y jerarquía: primario, secundario, terciario.
+4. Estados funcionales: éxito, error, advertencia, información.
 
-#### 2. Color Palette & Roles
+Mapea cada color a un token con nombre descriptivo, valor hex y rol. Usa como referencia los roles de color de Material 3 (`primary`, `on-primary`, `surface`, `error`) y las pautas de color de Apple HIG para modo claro y oscuro.
 
-Extract every unique color from the codebase and assign functional roles.
-Search across all layers:
+Consolida duplicados cercanos. Por ejemplo, `#333333` y `#2C2C2C` se unifican en un solo token de texto primario.
 
-**Where to find colors:**
+#### 3. Reglas tipográficas
 
-| Layer | What to Search |
-|:---|:---|
-| CSS custom properties | `--color-*`, `--primary`, `--bg-*` |
-| Tailwind config | `theme.extend.colors` |
-| Theme/token files | Color objects, palettes |
-| Component styles | `background-color`, `color`, `border-color` |
-| Inline/scoped styles | `bg-*`, `text-*` classes in templates |
-| CSS-in-JS theme objects | `colors`, `palette` keys |
+- Familias: revisa `font-family`, `fontFamily` en Tailwind, enlaces de Google Fonts y reglas `@font-face`. Describe el carácter: geométrica, humanista, serif, sans.
+- Escala: registra cada nivel H1 a H6 y cuerpo con tamaño, peso, interletraje e interlineado.
+- Uso: indica qué nivel usan héroes, tarjetas y navegación.
+- Alinea la escala con Material 3 (`display`, `headline`, `title`, `body`, `label`) y verifica legibilidad según Apple HIG: cuerpo mínimo legible y jerarquía clara.
 
-**How to organize:** Group colors by function, not by hue:
+#### 4. Estilos de componentes
 
-1. **Primary Foundation** — Background and surface colors
-2. **Accent & Interactive** — CTA buttons, active states, links
-3. **Typography & Text Hierarchy** — Primary, secondary, tertiary text
-4. **Functional States** — Success, error, warning, info
+Analiza los 4 o 5 primitivos principales:
 
-For each color, create a descriptive name that evokes the color's character
-rather than its raw hex value:
+- **Botones:** radio de borde, variantes primaria y secundaria, estados hover y foco, proporción de relleno, área táctil mínima de 44px según Apple HIG.
+- **Tarjetas:** radio, sombra, borde fino, relleno interno, tratamiento de imágenes.
+- **Navegación:** barra horizontal o lateral, tipografía, indicador activo, comportamiento móvil.
+- **Entradas y formularios:** borde, foco visible, consistencia de radio con botones.
+- **Componentes propios:** describe 1 o 2 patrones únicos del proyecto.
 
-- ❌ `#294056` → "Blue"
-- ✅ `#294056` → **"Deep Muted Teal-Navy"** — Primary CTA, active navigation
+#### 5. Principios de layout
 
-**Deduplication matters.** Codebases often have near-duplicate colors (e.g.,
-`#333` and `#2C2C2C`). Consolidate them under one name that best represents
-the intended color.
+- Ancho máximo, sistema de columnas, puntos de corte responsivos.
+- Unidad base de espaciado. Material 3 usa incrementos de 4px. Apple HIG recomienda grilla de 8pt.
+- Márgenes por sección y por borde según tamaño de pantalla.
+- Alineación, proporción imagen texto y distribución de peso visual.
+- Comportamiento móvil: mobile first o desktop first, colapso de grilla, tamaño táctil.
 
-#### 3. Typography Rules
+#### 6. Notas para generación en Stitch
 
-Extract the complete typographic system:
-
-**Font families:**
-- Check CSS `font-family`, Tailwind `fontFamily`, Google Fonts links, or
-  local `@font-face` declarations.
-- Note the **character** of each font: geometric vs humanist, serif vs sans,
-  the feeling it evokes.
-
-**Type scale (hierarchy):**
-- Find every heading level (H1-H6) and body text, noting:
-  - `font-size` (in rem or px)
-  - `font-weight` (numeric value + descriptive name)
-  - `letter-spacing` (and why — elegance? compactness?)
-  - `line-height` (generous for readability? tight for display?)
-- Map component usage: Which heading level do product cards use? What about
-  hero sections?
-
-**Spacing principles:**
-- How does text spacing relate to the overall spacing scale?
-- Letter-spacing patterns on headings vs body
-- Line-height philosophy (generous/relaxed for body, tighter for display)
-
-#### 4. Component Stylings
-
-Analyze the 4-5 most important UI primitives:
-
-**Buttons:**
-- Corner radius (and what it communicates — playful? professional? minimal?)
-- Color scheme for primary, secondary, and ghost variants
-- Hover/focus/active states and transition timing
-- Padding ratios (horizontal vs vertical)
-
-**Cards / Containers:**
-- Corner radius (often different from buttons — slightly rounder)
-- Shadow strategy: flat, subtle hover shadows, or always elevated?
-- Border treatment: hairline borders, colored accents, or none?
-- Internal padding (generous or compact?)
-- Image treatment within cards (full-bleed, padded, rounded?)
-
-**Navigation:**
-- Layout pattern (horizontal bar, vertical sidebar, drawer)
-- Typography treatment (uppercase, letter-spacing, weight)
-- Active/hover state indicators (underline, color, background)
-- Mobile behavior (hamburger, bottom nav, drawer)
-
-**Inputs & Forms:**
-- Border style and focus state behavior
-- Corner style consistency with buttons
-- Padding and touch-target sizing
-
-**Domain-Specific Components:**
-- Identify 1-2 components unique to this project (e.g., product cards,
-  dashboard widgets, chat bubbles) and describe their styling patterns.
-
-#### 5. Layout Principles
-
-Extract the structural system:
-
-**Grid & Structure:**
-- Max content width (from `max-width` on containers)
-- Column system (CSS Grid, Flexbox patterns, defined breakpoints)
-- Responsive breakpoints (from media queries or Tailwind config)
-
-**Whitespace Strategy:**
-- Base spacing unit (8px grid? 4px? custom?)
-- Section margins (how much space between major sections)
-- Edge padding (page margins at different breakpoints)
-
-**Alignment & Visual Balance:**
-- Text alignment patterns (centered heroes, left-aligned body)
-- Image-to-text ratios
-- Visual weight distribution
-
-**Responsive Behavior:**
-- Mobile-first or desktop-first?
-- How do grids collapse? Padding scale?
-- Touch target sizing
-
-#### 6. Stitch Generation Notes
-
-Synthesize the extraction into actionable prompts for Stitch:
-
-- **Atmosphere language**: Translate the mood into natural descriptors
-- **Color references**: List colors by descriptive name + hex
-- **Component prompts**: Write 2-3 example prompts that would recreate
-  key components in Stitch
-- **Iteration guidance**: Tips for refining screens in this design system
+Convierte la extracción en instrucciones accionables: lenguaje de ambiente, colores por nombre más hex, 2 o 3 prompts de ejemplo para recrear componentes clave y guía de iteración.
 
 ---
 
-### Phase 3: Write the DESIGN.md
+### Fase 3: Escribir DESIGN.md
 
-Assemble everything into the standard DESIGN.md format. Place it at
-`.stitch/DESIGN.md` in the project directory (create the `.stitch/` directory
-if it doesn't exist).
+Guarda el resultado en `.stitch/DESIGN.md`. Crea `.stitch/` si no existe. Usa el formato del ejemplo en [examples/DESIGN.md](examples/DESIGN.md).
 
-> [!IMPORTANT]
-> You **MUST** include the YAML frontmatter at the top of the file with `name` and `colors` mapping, exactly as shown in the example at [examples/DESIGN.md](examples/DESIGN.md). This structured data is required for other skills to parse the design system.
->
-> Failure to include this YAML block with at least the core color tokens is a failure to use this skill correctly.
-
-Use the format from the example at [examples/DESIGN.md](examples/DESIGN.md) as your template. The file must start with the YAML block, followed by the markdown sections:
+Incluye siempre el bloque YAML inicial con `name` y `colors`. Sin ese bloque la skill se considera incompleta.
 
 ```markdown
-# Design System: [Project Name]
-**Project ID:** [If known, otherwise omit]
+---
+name: ejemplo-proyecto
+colors:
+  fondo: "#F7F3EC"
+  primario: "#294056"
+---
+# Design System: Ejemplo Proyecto
 
 ## 1. Visual Theme & Atmosphere
-[Rich 2-paragraph description of mood, philosophy, and key characteristics]
-
 ## 2. Color Palette & Roles
-### Primary Foundation
-### Accent & Interactive
-### Typography & Text Hierarchy
-### Functional States
-
 ## 3. Typography Rules
-### Hierarchy & Weights
-### Spacing Principles
-
 ## 4. Component Stylings
-### Buttons
-### Cards & [Domain-Specific Containers]
-### Navigation
-### Inputs & Forms
-### [Domain-Specific Components]
-
 ## 5. Layout Principles
-### Grid & Structure
-### Whitespace Strategy
-### Alignment & Visual Balance
-### Responsive Behavior & Touch
-
 ## 6. Design System Notes for Stitch Generation
-### Language to Use
-### Color References
-### Component Prompts
-### Incremental Iteration
 ```
 
+## Ejemplo mínimo
+
+Bloque YAML más dos secciones representativas:
+
+```markdown
+---
+name: harbor-notes-demo
+colors:
+  parchment: "#F7F3EC"
+  teal-navy: "#294056"
+  mist: "#E8EEF2"
+  charcoal: "#2E2E2E"
 ---
 
-### Phase 4: Integration (Optional)
+## 2. Color Palette & Roles
+- **Parchment cálido** #F7F3EC: fondo de página. Token `surface`.
+- **Teal-Navy profundo** #294056: acción principal y navegación activa. Token `primary`.
+- **Charcoal** #2E2E2E: texto primario con contraste AA verificado.
 
-If the user wants to push the design system into Stitch:
+## 3. Typography Rules
+Inter, sans geométrica neutra. H1 40px/700/-0.02em, H2 28px/700, cuerpo 16px/1.6.
+Titulares compactos, cuerpo amplio para lectura larga. Escala alineada a Material 3.
+Área táctil mínima de 44px en controles según Apple HIG.
+```
 
-1. Hand off to the `stitch-sistema-diseno` skill for the MCP create/update calls
-2. The DESIGN.md you wrote is the input — the stitch-sistema-diseno skill handles
-   the Stitch API integration
-
-If the user just wants the document, you're done after Phase 3.
-
----
-
-## Quality Checklist
-
-Before delivering the DESIGN.md, verify:
-
-- [ ] Every color has a descriptive name, hex code, and functional role
-- [ ] Typography includes font family, character description, and full hierarchy
-- [ ] Component styles describe shape, color, states, and transitions
-- [ ] Layout includes max-width, grid, breakpoints, and spacing strategy
-- [ ] Stitch generation notes use natural language, not CSS syntax
-- [ ] The atmosphere section reads like editorial copy, not technical docs
-- [ ] Near-duplicate colors are consolidated
-- [ ] The document captures the *intent* behind styling, not just raw values
-
-## Tips for Better Extraction
-
-- **Read comments and commit messages.** Developers often document design
-  intent in code comments (`/* hero section — breathable */`) and commit
-  messages. These are gold for understanding the *why*.
-- **Check for design-token libraries.** If the project uses `style-dictionary`,
-  `@tokens-studio`, or similar, these files are the most authoritative
-  source of design values.
-- **Theme files are higher-signal than component styles.** A `theme.ts` that
-  defines a palette tells you the intended design system; scattered inline
-  styles in components tell you what actually shipped. Both matter, but
-  start from the theme.
-- **Tailwind config is a design system.** If a project has a customized
-  `tailwind.config.js`, that *is* the design system — extract from it first,
-  then spot-check components for overrides.
-- **CSS custom properties are intentional.** If a developer defined
-  `--brand-primary`, they're telling you this is a design token. Respect that.
+Ver el documento completo en [examples/DESIGN.md](examples/DESIGN.md).
 
 ---
 
-## Anexo 2026 - Referencias oficiales y checklist
+### Fase 4: Integración opcional
+
+Si el usuario desea publicar el sistema en Stitch, entrega el `DESIGN.md` generado a la skill `stitch-sistema-diseno`. Esa skill gestiona las llamadas MCP de creación y aplicación. Si solo necesita el documento, el trabajo termina en la fase 3.
+
+## Consejos para una mejor extracción
+
+- Lee comentarios y mensajes de commit. Suelen explicar la intención de diseño.
+- Prioriza archivos de tema y tokens. Definen la intención. Los estilos dispersos muestran lo que realmente se publicó.
+- Un archivo `tailwind.config.js` personalizado ya es un sistema de diseño. Extráelo primero y luego verifica excepciones en componentes.
+- Las variables CSS con nombre de marca, como `--brand-primary`, son tokens intencionales. Consérvalas.
+
+---
+
+## Referencias oficiales y checklist
 
 Fuentes oficiales:
 
 - Stitch DESIGN.md: https://stitch.withgoogle.com/docs/design-md/overview
 - Tailwind config: https://tailwindcss.com/docs/configuration
-- Material 3 styles: https://m3.material.io/styles/spacing/overview
+- Material 3, color: https://m3.material.io/styles/color/roles
+- Material 3, tipografía: https://m3.material.io/styles/typography/overview
+- Material 3, espaciado: https://m3.material.io/styles/spacing/overview
+- Material 3, forma: https://m3.material.io/styles/shape/overview
+- Apple HIG, color: https://developer.apple.com/design/human-interface-guidelines/foundations/color
+- Apple HIG, tipografía: https://developer.apple.com/design/human-interface-guidelines/foundations/typography
+- Apple HIG, layout: https://developer.apple.com/design/human-interface-guidelines/foundations/layout
 - WCAG 2.2 contraste: https://www.w3.org/TR/WCAG22/
-- Apple HIG layout: https://developer.apple.com/design/human-interface-guidelines
-
-Repos famosos:
-
-- https://github.com/alexpate/awesome-design-systems
-- https://github.com/vercel/next.js
-- https://github.com/enaqx/awesome-react
+- Material Components Web GitHub: https://github.com/material-components/material-components-web
 
 Checklist:
 
-- [ ] Framework detectado por package.json y arbol de fuentes mapeado.
-- [ ] Colores con nombre descriptivo, hex y rol funcional.
-- [ ] Tipografia con familia, jerarquia, pesos y spacing.
-- [ ] Componentes clave con forma, color, estados y transiciones.
-- [ ] Layout con max-width, grilla, breakpoints y spacing base.
+- [ ] Framework detectado por `package.json` y árbol de fuentes mapeado.
+- [ ] Guía específica del framework consultada en `references/`.
+- [ ] Colores con nombre descriptivo, hex, rol y token equivalente Material 3.
+- [ ] Tipografía con familia, jerarquía completa, pesos e interlineado.
+- [ ] Componentes clave con forma, color, estados, transiciones y área táctil.
+- [ ] Layout con ancho máximo, grilla, breakpoints y unidad base de espaciado.
+- [ ] Contraste verificado y modo claro u oscuro documentado según Apple HIG.
 - [ ] Duplicados cercanos consolidados en un token.
-- [ ] DESIGN.md con frontmatter YAML y notas para Stitch en lenguaje natural.
-- [ ] Handoff a stitch-sistema-diseno si se publica en Stitch.
+- [ ] `DESIGN.md` con frontmatter YAML y notas para Stitch en lenguaje natural.
+- [ ] Handoff a `stitch-sistema-diseno` si se publica en Stitch.

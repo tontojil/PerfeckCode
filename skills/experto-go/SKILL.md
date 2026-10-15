@@ -33,6 +33,27 @@ service/
 
 ## Concurrency Patterns
 
+### Goroutines y channels (ejemplo minimo)
+
+```go
+func ejemploMinimo() {
+    ch := make(chan string, 1)
+
+    // Goroutine productora: envia un valor y cierra el channel.
+    go func() {
+        defer close(ch)
+        ch <- "hola"
+    }()
+
+    // Consumidor: lee hasta el cierre.
+    for msg := range ch {
+        fmt.Println(msg)
+    }
+}
+```
+
+Reglas del ejemplo: el productor cierra el channel, el consumidor itera con `range`, y el buffer `1` desacopla productor y consumidor en este caso simple.
+
 ### Worker Pool
 
 ```go
@@ -155,6 +176,22 @@ func (s *Service) HandleRequest(ctx context.Context, req *Request) (*Response, e
 ```
 
 ## gRPC
+
+### Servidor minimo
+
+```go
+func main() {
+    lis, err := net.Listen("tcp", ":50051")
+    if err != nil {
+        log.Fatalf("listen: %v", err)
+    }
+    srv := grpc.NewServer()
+    pb.RegisterUserServiceServer(srv, &UserServer{})
+    if err := srv.Serve(lis); err != nil {
+        log.Fatalf("serve: %v", err)
+    }
+}
+```
 
 ### Proto Definition
 
@@ -311,6 +348,7 @@ Esta sección amplía sin modificar los patrones existentes. Úsela para profund
 
 ### Repositorios famosos y listas curadas
 
+- Repositorio principal de Go (fuente, issues, propuestas): https://github.com/golang/go
 - Awesome Go: https://github.com/avelino/awesome-go — catálogo curado de frameworks, librerías y herramientas.
 - Go estándar de proyecto: https://github.com/golang-standards/project-layout — estructura `cmd/`, `internal/`, `pkg/` compatible con esta skill.
 - Ejemplos oficiales: https://github.com/golang/example — ejemplos mantenidos por el equipo de Go.

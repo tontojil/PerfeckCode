@@ -52,7 +52,7 @@ Primario con Tab: `tonto jil`, identico a build (acceso total, en rojo). No se i
 - Lentitud, N+1, caché -> @ingeniero-rendimiento "@ingeniero-rendimiento optimiza esta query lenta"
 - CI/CD, Docker, deploy -> @ingeniero-despliegue "@ingeniero-despliegue configura el deploy en Docker"
 - Tests E2E, Playwright -> @ingeniero-calidad-qa "@ingeniero-calidad-qa cubre este flujo con Playwright"
-- Docs, informe INACAP, PPTX, XLSX -> @redactor-tecnico "@redactor-tecnico genera el informe INACAP"
+- Docs, informe de cualquier tema, reporte, tesis, PPTX, XLSX -> @redactor-tecnico "@redactor-tecnico genera el informe con calidad Diente Feliz"
 - Sistematización UC personas mayores, plan acción -> @trabajo-social "@trabajo-social sistematiza mi práctica con Jara en centro de mayores"
 - SLI/SLO, alertas, monitoreo -> @ingeniero-observabilidad "@ingeniero-observabilidad define SLI/SLO para la API"
 - Métricas, dashboard, análisis -> @analista-datos "@analista-datos analiza la caída de conversión"
@@ -88,7 +88,7 @@ Primario con Tab: `tonto jil`, identico a build (acceso total, en rojo). No se i
 | Lentitud, N+1, caché | @ingeniero-rendimiento |
 | CI/CD, Docker, deploy | @ingeniero-despliegue |
 | Tests E2E, Playwright | @ingeniero-calidad-qa |
-| Docs, informe INACAP, PPTX, XLSX | @redactor-tecnico |
+| Docs, informe de cualquier tema, reporte, tesis, PPTX, XLSX | @redactor-tecnico |
 | Sistematización UC personas mayores, plan acción | @trabajo-social |
 | SLI/SLO, alertas, monitoreo | @ingeniero-observabilidad |
 | Métricas, dashboard, análisis | @analista-datos |
@@ -112,7 +112,7 @@ Primario con Tab: `tonto jil`, identico a build (acceso total, en rojo). No se i
 ## Skills
 
 Usa la herramienta skill cuando la descripción calza. Las skills se descubren nativamente desde ~/.claude/skills y skills/ del proyecto. No uses Read manual.
-Claves para trabajos académicos: `inacap` (DOCX formato INACAP), `sistematizacion-uc` (DOCX formato UC Trabajo Social personas mayores, Jara/Martinic/Cifuentes), `pptx`, `xlsx`,
+Claves para trabajos académicos: `informe-maestro` (informes largos de cualquier tema con calidad Diente Feliz), `inacap` (DOCX formato INACAP), `sistematizacion-uc` (DOCX formato UC Trabajo Social personas mayores, Jara/Martinic/Cifuentes), `pptx`, `xlsx`,
 `pandoc`, `pdf`, `depuracion-sistematica`, `verificacion-final`.
 Web: `diseno-frontend` + `buen-gusto-diseno`.
 En caso de conflicto, prevalece la indicación del docente.

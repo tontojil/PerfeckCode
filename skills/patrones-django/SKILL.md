@@ -1,14 +1,14 @@
 ---
 name: patrones-django
-description: Patrones Django y DRF, optimización ORM, viewsets, serializers, cache, signals, middleware y testing. Usalo cuando trabajai con Django. (Django, DRF, ORM, serializers)
+description: Patrones Django y DRF, optimización ORM, viewsets, serializers, cache, signals, middleware y testing. Utilizar al trabajar con Django. (Django, DRF, ORM, serializers)
 ---
 
 ## Cuando usar
 
-Usa esta skill cuando trabajai con Django o DRF (modelos, ORM, viewsets, serializers).
+Utilizar esta skill al trabajar con Django o DRF (modelos, ORM, viewsets, serializers).
 Cubre optimización ORM, cache, signals, middleware, paginación y testing con pytest-django.
-No uses esta skill fuera del stack Django (para Flask/FastAPI u otro backend usa su skill).
-No cambies recetas existentes; solo aplica los patrones tal cual.
+No utilizar esta skill fuera del stack Django (para Flask, FastAPI u otro backend utilizar su skill correspondiente).
+No modificar recetas existentes; aplicar los patrones tal como se documentan.
 
 ## Project Structure
 
@@ -147,6 +147,26 @@ class UserViewSet(viewsets.ModelViewSet):
         user.is_active = False
         user.save(update_fields=["is_active", "updated_at"])
         return Response({"status": "deactivated"})
+
+### ViewSet con ORM optimizado (select_related)
+
+```python
+from rest_framework import viewsets
+
+class OrderViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        # Optimizado: evita N+1 en ForeignKey user y product.
+        # Referencia: https://docs.djangoproject.com/en/stable/topics/db/optimization/
+        return (
+            Order.objects
+            .select_related("user", "product")
+            .prefetch_related("items")
+            .only("id", "total", "created_at", "user__email", "product__name")
+            .order_by("-created_at")
+        )
+```
 ```
 
 ### Pagination
@@ -285,3 +305,15 @@ Esta sección amplía sin modificar los patrones existentes. Úsela para validar
 - [ ] Los tests utilizan `pytest-django` con marcador `django_db` y `APIClient`.
 - [ ] Los campos se limitan con `only()` o `defer()` cuando la tabla es ancha.
 - [ ] Las signals se limitan a comunicación entre aplicaciones.
+
+## Ejemplo minimo
+
+Listado optimizado que evita consultas N+1:
+
+```python
+from django.http import JsonResponse
+def lista_usuarios(request):
+    usuarios = User.objects.select_related("perfil").only("id", "email", "name")[:20]
+    datos = [{"id": u.id, "email": u.email, "nombre": u.name} for u in usuarios]
+    return JsonResponse({"resultados": datos})
+```

@@ -207,6 +207,58 @@ La confianza ya es obligatoria. Este anexo agrega blast radius para priorizar:
 2. Si el codigo esta genuinamente limpio tras aplicar los 30 puntos, responda `LGTM — no issues found.` con resumen de puntos verificados.
 3. Nunca sugiera dependencias nuevas sin revisar el manifiesto del proyecto.
 
+## Anexo B — Checklist operativo con severidades, referencias y herramientas (2026)
+
+Este anexo consolida lo exigido para revisiones reproducibles. No reemplaza el Review Framework ni el Anexo A, solo agrega operatividad.
+
+### B.1 Checklist con severidades CRITICAL/HIGH/MEDIUM/LOW
+
+Aplique cada punto y marque OK, FAIL con path:line, o N/A con motivo. Todo FAIL lleva severidad, OWASP y CWE.
+
+| # | Area | Punto de control | Sev si falla | OWASP | CWE ejemplo |
+|---|---|---|---|---|---|
+| B-01 | Inyeccion | SQL, NoSQL, LDAP, OS command y SSTI con input no neutralizado | CRITICAL | A03:2021 Injection | CWE-89, CWE-78, CWE-94 |
+| B-02 | Auth | Bypass de autenticacion, JWT sin validar alg/exp/aud/iss, sesion sin rotacion | CRITICAL | A07:2021 Auth Failures | CWE-287, CWE-384, CWE-307 |
+| B-03 | Secretos | Clave, token o connection string en codigo, log o historial git | CRITICAL | A07:2021 Auth Failures | CWE-798, CWE-532 |
+| B-04 | Control de acceso | IDOR, mass assignment con role/isAdmin, path traversal | HIGH | A01:2021 Broken Access Control | CWE-639, CWE-915, CWE-22 |
+| B-05 | XSS | Reflejado, almacenado o DOM sin escape ni CSP | HIGH | A03:2021 Injection | CWE-79 |
+| B-06 | Deserializacion y XXE | pickle.loads, yaml.load inseguro, XML con entidades externas | HIGH | A08:2021 Data Integrity Failures | CWE-502, CWE-611 |
+| B-07 | Dependencias | CVE CRITICAL/HIGH sin parche, version sin pin, postinstall arbitrario | HIGH | A06:2021 Vulnerable Components | CWE-1104, CWE-829 |
+| B-08 | Manejo de errores | Excepcion tragada, stack trace a cliente, null sin guard | MEDIUM | A09:2021 Logging Failures | CWE-209, CWE-476, CWE-248 |
+| B-09 | Performance | Query N+1, indice faltante, I/O en loop, memory leak | MEDIUM | Fuera de Top 10 | CWE-400, CWE-770 |
+| B-10 | Mantenibilidad | Funcion mayor a 50 lineas, duplicacion, tipado debil, test solo happy path | LOW | Fuera de Top 10 | CWE-1126, CWE-1051 |
+| B-11 | Configuracion | Debug en produccion, CORS con * y credenciales, headers de seguridad faltantes | MEDIUM | A05:2021 Misconfiguration | CWE-16, CWE-942 |
+| B-12 | Logging y trazabilidad | Accion sensible sin auditoria, requerimiento sin test que lo verifique | LOW | A09:2021 Logging Failures | CWE-778 |
+
+Regla: si un FAIL no tiene OWASP ni CWE, queda en MEDIUM como maximo hasta completar el mapeo.
+
+### B.2 Referencias oficiales obligatorias
+
+1. OWASP Top Ten: https://owasp.org/www-project-top-ten/ — Mapee cada hallazgo a una categoria. Si ninguna aplica, declare "fuera de Top 10" con motivo.
+2. CWE MITRE: https://cwe.mitre.org/ — Asigne CWE por hallazgo. Ejemplo: CWE-89 SQLi, CWE-79 XSS, CWE-798 credencial hardcodeada.
+3. OWASP Code Review Guide: https://owasp.org/www-project-code-review-guide/
+4. OWASP Cheat Sheet Series: https://cheatsheetseries.owasp.org/
+
+### B.3 Herramientas en modo solo lectura
+
+Ejecute o proponga en reporte, sin modificar codigo. Registre version y fecha.
+
+1. `npm audit --audit-level=high` — Revisa CVEs en dependencias Node. Complemento: `npm audit signatures` para procedencia.
+2. `pip-audit -r requirements.txt --desc` — Revisa CVEs en dependencias Python. Alternativa con hashes: `pip install --require-hashes`.
+3. `gitleaks detect -s <path> -v` — Detecta secretos en historial y archivos. Referencia: https://github.com/gitleaks/gitleaks
+4. `trivy fs --severity HIGH,CRITICAL <path>` — Escanea filesystem, dependencias y misconfigurations. Referencia: https://github.com/aquasecurity/trivy
+5. Flujo minimo: primero `npm audit` o `pip-audit` segun manifiesto, luego `gitleaks`, luego `trivy fs`. Reporte salida resumida en tabla Dependency Audit.
+
+### B.4 Formato de salida path:line con fix
+
+Tabla obligatoria, una fila por hallazgo:
+
+| # | Sev | Conf | path:line | OWASP | CWE | Problema | Impacto | Fix exacto |
+|---|---|---|---|---|---|---|---|---|
+| 1 | HIGH | High | src/auth/login.ts:45 | A07:2021 | CWE-287 | JWT acepta alg none | Forja de token y toma de cuenta | Forzar RS256 y validar alg, exp, aud, iss |
+
+Despues de la tabla: resumen por conteo (X CRITICAL, Y HIGH, Z MEDIUM, W LOW), peor impacto en una frase, y comando de verificacion por cada HIGH o CRITICAL.
+
 ## Anexo Rigor x10 y Verificacion x3 2026
 
 Usted mantiene todo el contenido previo sin borrar ni reescribir. Este anexo solo agrega exhaustividad y verificacion. Usted escribe en espanol neutro, trata de usted, con oraciones completas y buena redaccion. Usted aplica este anexo despues de su checklist propio y antes de declarar listo.

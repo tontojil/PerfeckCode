@@ -317,7 +317,7 @@ Apendice obligatorio: cohortes, detalle financiero, premortem resumido y minutas
 
 Reglas del deck:
 
-1. Cada lamina tiene titulo结论 en una frase accionable, no solo descripcion.
+1. Cada lamina tiene un titulo accionable en una frase, no solo descripcion.
 2. Todo numero lleva fuente o supuesto visible y fecha de corte.
 3. Ningun ask sin contexto de runway ni alternativa explicita.
 4. Usted cierra con la decision que usted tomaria como CEO y por que.
@@ -354,6 +354,106 @@ Usted entrega veredicto por fuerza en alto, medio o bajo, con evidencia fechada.
 5. Porter con 5 veredictos y evidencia fechada.
 6. Kill criteria con metrica, umbral y fecha para cada apuesta.
 7. Memoria episodica actualizada con decision y estado.
+
+## Anexo Plantilla Ejecutable Decision de directorio con OKR y kill criteria
+
+Usted aplica este anexo cuando debe entregar una decision lista para aprobar en directorio. Usted lo agrega sin modificar lo anterior. Usted exige dueno, fecha y metrica en cada apuesta. Usted mantiene el formato de salida obligatorio y entrega este pack como seccion copiable.
+
+### A. Brief de decision de 1 pagina (copiable)
+
+| Bloque | Completar |
+|---|---|
+| Decision a tomar | [En una frase. Ej. Entrar a mid-market Chile en Q1] |
+| Plazo y tipo | [Fecha limite. Tipo: reversible Tipo 2, dificil de revertir o irreversible Tipo 1] |
+| Contexto en 3 lineas | [Cifras: ARR, caja, runway. Restriccion: equipo, capital o regulacion] |
+| Opcion 1 | [Upside, downside y probabilidad en porcentaje] |
+| Opcion 2 | [Upside, downside y probabilidad en porcentaje] |
+| Opcion 3 | [Upside, downside y probabilidad en porcentaje. Costo de oportunidad] |
+| Recomendacion | [Eleccion clara con rationale y clasificacion reversible o irreversible] |
+| Supuesto critico | [Que debe ser cierto. Ej. CAC payback bajo 12 meses] y validacion en 14 dias con [accion] |
+| Ask al directorio | [Decision, monto o introduccion solicitada, con fecha limite] |
+
+### B. Tabla de escenarios con probabilidad (obligatoria)
+
+Usted completa 3 filas. La suma de probabilidad es 100 por ciento.
+
+| Escenario | Probabilidad | Supuestos clave | Resultado 6 a 12 meses | Senales tempranas | Accion correctiva y dueno |
+|---|---|---|---|---|---|
+| Conservador | 25 por ciento | [Crecimiento bajo, churn alto, cobro lento] | [Ej. ARR X, runway Y meses] | [Ej. Conversion bajo 8 por ciento en 30 dias] | [Ej. Pausar expansion, dueno CEO, fecha] |
+| Base | 50 por ciento | [Ejecucion competente con supuestos actuales] | [Ej. ARR X, NRR Y] | [Ej. Pipeline semanal Z] | [Ej. Mantener plan, revision MBR] |
+| Optimista | 25 por ciento | [Ejecucion superior, viento de cola] | [Ej. ARR X, expansion a segmento Y] | [Ej. NRR sobre 110 por ciento 2 meses] | [Ej. Acelerar contratacion, dueno COO] |
+
+### C. OKR trimestral y kill criteria fechados (copiable)
+
+Usted limita a 3 objetivos. Cada KR lleva linea base, meta y fecha.
+
+| Nivel | Objetivo con plazo | KR1 con base y meta | KR2 con base y meta | KR3 con base y meta | Dueno y revision |
+|---|---|---|---|---|---|
+| Empresa Q | [Ej. Traccion repetible en SMB al 31 de marzo] | [Ej. 40 a 80 cuentas activas] | [Ej. NRR 98 a 102 por ciento] | [Ej. CAC payback 14 a 11 meses] | [CEO, semanal lunes] |
+| Producto | [Ej. Activacion en 14 dias] | [Ej. 45 a 60 por ciento activa] | [Ej. Tiempo a valor 10 a 7 dias] | [Ej. 1 a 3 integraciones clave] | [CPO, semanal] |
+| GTM | [Ej. Pipeline predecible] | [Ej. 60 a 120 demos] | [Ej. 20 a 30 por ciento demo a piloto] | [Ej. 8 a 15 cierres] | [CMO, semanal] |
+
+Kill criteria minimos, 2 por recomendacion:
+
+| Criterio | Metrica y umbral | Fecha de revision | Accion si se cumple | Dueno |
+|---|---|---|---|---|
+| KC-1 | [Ej. Trial-to-paid bajo 12 por ciento] | [Ej. 2026-06-30] | [Ej. Detener expansion enterprise, retornar a SMB] | [CEO] |
+| KC-2 | [Ej. CAC payback sobre 12 meses 2 meses seguidos] | [Ej. Revision MBR mensual] | [Ej. Pausar paid, revisar pricing] | [CFO] |
+| KC-3 | [Ej. Churn mensual sobre 5 por ciento en segmento nuevo] | [Ej. Cierre de trimestre] | [Ej. Cerrar experimento] | [COO] |
+
+### D. Premortem, Wardley y Porter resumidos (copiable)
+
+Premortem rapido, 5 causas minimas en entrega ejecutiva:
+
+| Causa hipotetica si fracaso en 12 meses | Categoria | Probabilidad | Impacto | Mitigacion, dueno y trigger |
+|---|---|---|---|---|
+| [Ej. Adopcion bajo 20 por ciento] | Ejecutable | Alta | Alto | [Piloto 14 dias, CEO sponsor, trigger uso dia 7] |
+| [Ej. CAC duplica lo previsto] | Financiero | Media | Alto | [Tope diario, revision semanal, CFO] |
+| [Ej. Regulacion retrasa integracion] | Regulatorio | Media | Medio | [Validacion SII semana 1, GC] |
+
+Wardley mini:
+
+| Componente de la cadena | Etapa: genesis, custom, producto o commodity | Evidencia a fecha | Decision: construir, comprar o tercerizar |
+|---|---|---|---|
+| [Ej. Scoring IA propio] | Genesis | [Nadie lo ofrece igual] | Construir con equipo propio |
+| [Ej. Facturacion electronica] | Producto | [Proveedores maduros en Chile] | Comprar o aliarse |
+| [Ej. Hosting] | Commodity | [Precio por uso, SLA 99,9 por ciento] | Tercerizar |
+
+Porter mini:
+
+| Fuerza | Veredicto alto, medio o bajo | Evidencia fechada | Accion de moat y dueno |
+|---|---|---|---|
+| Rivalidad | [Veredicto] | [Ej. 3 competidores con precio X, 2026-10-01] | [Diferenciar por resultado medible] |
+| Entrantes | [Veredicto] | [Barrera o ausencia de switching cost] | [Contratos e integracion] |
+| Sustitutos | [Veredicto] | [Ej. Planilla y WhatsApp suficientes] | [Tiempo a valor bajo 7 dias] |
+| Poder cliente | [Veredicto] | [Ej. 2 clientes concentran 30 por ciento] | [Diversificar y expandir NRR] |
+| Poder proveedor | [Veredicto] | [Ej. API unica sin alternativa] | [Doble proveedor o abstraccion] |
+
+### E. Referencias oficiales segun dominio
+
+Usted verifica vigencia con websearch o webfetch y registra fecha de consulta. Usted cita fuente y fecha cuando afirma mercado, tasas o movimientos de competidores.
+
+| Fuente | URL | Uso |
+|---|---|---|
+| YC Startup Library | https://www.ycombinator.com/library | Validacion de idea, PMF y narrativa seed |
+| a16z Content | https://a16z.com | Estrategia, moat y tesis de crecimiento |
+| HBR Harvard Business Review | https://hbr.org | Porter 5 Forces y analisis de industria |
+| Google SRE Book | https://sre.google/books/ | Postmortem y aprendizaje operativo |
+| Awesome Startups en GitHub | https://github.com/topics/awesome | Plantillas y benchmarks comunitarios |
+| SII Chile | https://homer.sii.cl | Verificacion tributaria y F29 |
+| CMF Chile | https://www.cmfchile.cl | Mercado de valores y sociedades |
+| Banco Central Chile | https://www.bcentral.cl | TPM, UF y tipo de cambio a fecha |
+| Ley Chile | https://www.leychile.cl | Base normativa chilena |
+
+### F. Checklist de salida de este anexo
+
+1. Brief de 1 pagina completo con recomendacion y ask fechado.
+2. Tabla de 3 escenarios con probabilidad que suma 100 por ciento.
+3. OKR con 3 objetivos maximo, KR con base, meta y dueno.
+4. Al menos 2 kill criteria con metrica, umbral, fecha y accion.
+5. Premortem con 5 causas minimo y 3 mitigaciones con dueno.
+6. Wardley y Porter en tabla con decision construir, comprar o tercerizar.
+7. Referencias verificadas con fecha. Todo estimado marcado como estimacion.
 
 ## Anexo Rigor x10 y Verificacion x3 2026
 

@@ -2,33 +2,33 @@
 name: gsap-vue-svelte
 description: Animaciones GSAP en Vue, Nuxt, Svelte y SvelteKit, con ciclo de vida, selectores acotados y limpieza al desmontar. Para React usar gsap-react. (GSAP, Vue, Svelte, animation)
 license: MIT
+metadata:
+  version: "1.1.0"
 ---
 
 # GSAP with Vue, Svelte, and Other Frameworks
 
-## When to Use This Skill
+## Cuando usar esta skill
 
-Apply when writing or reviewing GSAP code in Vue (or Nuxt), Svelte (or SvelteKit), or other component frameworks that use a lifecycle (mounted/unmounted). For **React** specifically, use **gsap-react** (useGSAP hook, gsap.context()).
+Usar esta skill cuando escribes o revisas codigo GSAP en Vue (o Nuxt), Svelte (o SvelteKit) u otro framework con ciclo de vida (montaje y desmontaje). Para **React**, usar **gsap-react** (hook useGSAP, gsap.context()).
 
-**Related skills:** For tweens and timelines use **gsap-basico** and **gsap-linea-tiempo**; for scroll-based animation use **gsap-animacion-scroll**; for React use **gsap-react**.
+**Skills relacionadas:** para tweens y timelines usar **gsap-basico** y **gsap-linea-tiempo**; para animacion basada en scroll usar **gsap-animacion-scroll**; para React usar **gsap-react**.
 
-## Principles (All Frameworks)
+## Principios (todos los frameworks)
 
-- **Create** tweens and ScrollTriggers **after** the component’s DOM is available (e.g. onMounted, onMount).
-- **Kill or revert** them in the **unmount** (or equivalent) cleanup so nothing runs on detached nodes and there are no leaks.
-- **Scope selectors** to the component root so `.box` and similar only match elements inside that component, not the rest of the page.
+- **Crear** tweens y ScrollTriggers **despues** de que el DOM del componente este disponible (por ejemplo en onMounted u onMount).
+- **Eliminar o revertir** esas animaciones en la fase de **desmontaje** para evitar fugas y ejecucion sobre nodos desconectados.
+- **Acotar selectores** a la raiz del componente, de modo que `.box` solo busque dentro de ese componente y no en toda la pagina.
 
-## Vue 3 (Composition API)
+## Ejemplo minimo (Vue 3 Composition API)
 
-Minimal runnable pattern below (Vite + Vue 3, no extra project needed).
-
-Use **onMounted** to run GSAP after the component is in the DOM. Use **onUnmounted** to clean up.
+Patron minimo, runnable con Vite + Vue 3, sin proyecto adicional:
 
 ```javascript
 import { onMounted, onUnmounted, ref } from "vue";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-gsap.registerPlugin(ScrollTrigger); // once per app, e.g. in main.js
+gsap.registerPlugin(ScrollTrigger); // una vez por app, por ejemplo en main.js
 
 export default {
   setup() {
@@ -52,12 +52,45 @@ export default {
 };
 ```
 
-- ✅ **gsap.context(scope)** — pass the container ref (e.g. `container.value`) as the second argument so selectors like `.item` are scoped to that root. All animations and ScrollTriggers created inside the callback are tracked and reverted when **ctx.revert()** is called.
-- ✅ **onUnmounted** — always call **ctx.revert()** so tweens and ScrollTriggers are killed and inline styles reverted.
+Reglas del ejemplo:
+
+- **gsap.context(scope)** — pasar el ref del contenedor (por ejemplo `container.value`) como segundo argumento para acotar selectores como `.item` a esa raiz. Todas las animaciones y ScrollTriggers creados dentro se registran y se revierten con **ctx.revert()**.
+- **onUnmounted** — llamar siempre a **ctx.revert()** para eliminar tweens y ScrollTriggers y revertir estilos en linea.
+
+## Ejemplo minimo (Svelte)
+
+```javascript
+<script>
+  import { onMount } from "svelte";
+  import { gsap } from "gsap";
+  import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+  let container;
+
+  onMount(() => {
+    if (!container) return;
+    const ctx = gsap.context(() => {
+      gsap.to(".box", { x: 100 });
+      gsap.from(".item", { autoAlpha: 0, stagger: 0.1 });
+    }, container);
+    return () => ctx.revert();
+  });
+</script>
+
+<div bind:this={container}>
+  <div class="box">Box</div>
+  <div class="item">Item</div>
+</div>
+```
+
+Reglas del ejemplo:
+
+- **bind:this={container}** — obtener referencia al elemento raiz para pasarla a **gsap.context(scope)**.
+- **return () => ctx.revert()** — onMount puede devolver una funcion de limpieza; llamar a **ctx.revert()** ahi para limpiar al destruir el componente.
 
 ## Vue 3 (script setup)
 
-Same idea with `<script setup>` and refs:
+Misma idea con `<script setup>` y refs:
 
 ```javascript
 <script setup>
@@ -91,9 +124,7 @@ onUnmounted(() => {
 
 ## Nuxt 4
 
-> Reusable composable below (Nuxt 4 plugin registration, lazy loading, SSR-safe).
-
-Use a **reusable composable** to register GSAP Plugins and also to lazy load Plugins that are not extensively used in your application:
+Composable reutilizable (registro de plugins en Nuxt 4, carga diferida, seguro para SSR):
 
 ```typescript
 // composables/useGSAP.ts
@@ -127,7 +158,7 @@ const PLUGINS = [
   "TextPlugin",
 ] as const;
 
-// In order to dynamically load all the GSAP plugins
+// Carga dinamica de todos los plugins GSAP
 const pluginMap = {
   CustomEase: () => import("gsap/CustomEase"),
   Draggable: () => import("gsap/Draggable"),
@@ -158,19 +189,19 @@ const pluginMap = {
 type PluginMap = typeof pluginMap;
 type Plugins = keyof PluginMap;
 
-// Resolves the module type for a given key, then picks the named export matching the key
-// this allows to have the type definitions for autocomplete in your code editor
+// Resuelve el tipo del modulo para una clave dada y toma el export con el mismo nombre
+// Esto permite autocompletado de tipos en el editor
 type PluginModule<K extends Plugins> = Awaited<ReturnType<PluginMap[K]>>;
 type PluginExport<K extends Plugins> = PluginModule<K>[K & keyof PluginModule<K>];
 
 export default function () {
-  // Register all the GSAP Plugins you want at this point
+  // Registrar los plugins GSAP necesarios en este punto
   gsap.registerPlugin(ScrollTrigger);
 
   /*
-    If you want to lazy load some of the plugins that are
-    not widely used in your app (for example in just a couple
-    of components or a single route), you can use this method
+    Para carga diferida de plugins poco usados en la app
+    (por ejemplo en un par de componentes o en una sola ruta),
+    usar este metodo para reducir el bundle inicial
   */
   async function lazyLoadPlugin<K extends Plugins>(plugin: K): Promise<PluginExport<K>> {
     const loader = pluginMap[plugin];
@@ -188,104 +219,63 @@ export default function () {
 }
 ```
 
-Access in components via `useGSAP()`:
+Uso en componentes con `useGSAP()`:
 
 ```javascript
 const { gsap, ScrollTrigger, lazyLoadPlugin } = useGSAP();
 ```
 
-- ✅ **`useGSAP()`** provides typed access to the gsap instance and lazy load method.
-- ✅ **Lazy-load any plugin** (SplitText, MorphSVG, etc.) that is not widely used in your app to reduce initial bundle size.
-- ✅ Use **gsap.context(scope)** and **onUnmounted → ctx.revert()** in components, same as Vue 3.
+- **`useGSAP()`** entrega acceso tipado a la instancia gsap y al metodo de carga diferida.
+- **Cargar por demanda** cualquier plugin poco usado (SplitText, MorphSVG, etc.) para reducir el bundle inicial.
+- Usar **gsap.context(scope)** y **onUnmounted con ctx.revert()** en componentes, igual que en Vue 3.
 
-## Svelte
+## Acotar selectores
 
-Use **onMount** to run GSAP after the DOM is ready. Use the **returned cleanup function** from onMount (or track the context and clean up in a reactive block / component destroy) to revert. Svelte 5 uses a different lifecycle; the same principle applies: create in “mounted” and revert in “destroyed.”
+No usar selectores globales que puedan coincidir con elementos fuera del componente actual. Pasar siempre el **scope** (elemento contenedor o ref) como segundo argumento de **gsap.context(callback, scope)** para limitar la busqueda a ese subarbol.
 
-```javascript
-<script>
-  import { onMount } from "svelte";
-  import { gsap } from "gsap";
-  import { ScrollTrigger } from "gsap/ScrollTrigger";
+- Correcto: **gsap.context(() => { gsap.to(".box", ...) }, containerRef)** — `.box` solo se busca dentro de `containerRef`.
+- Incorrecto: ejecutar **gsap.to(".box", ...)** sin scope de contexto en un componente, porque puede afectar otras instancias o el resto de la pagina.
 
-  let container;
+## Limpieza de ScrollTrigger
 
-  onMount(() => {
-    if (!container) return;
-    const ctx = gsap.context(() => {
-      gsap.to(".box", { x: 100 });
-      gsap.from(".item", { autoAlpha: 0, stagger: 0.1 });
-    }, container);
-    return () => ctx.revert();
-  });
-</script>
+Las instancias de ScrollTrigger se crean al usar la config `scrollTrigger` en un tween o timeline, o con **ScrollTrigger.create()**. Quedan **incluidas** en **gsap.context()** y se revierten con **ctx.revert()**. Por lo tanto:
 
-<div bind:this={container}>
-  <div class="box">Box</div>
-  <div class="item">Item</div>
-</div>
-```
+- Crear los ScrollTriggers dentro del mismo callback de **gsap.context()** que se usa para los tweens.
+- Llamar a **ScrollTrigger.refresh()** despues de cambios de layout que afecten posiciones (por ejemplo despues de cargar datos); en Vue y Svelte esto suele ser despues de actualizar el DOM (nextTick en Vue, tick en Svelte, o tras carga asincrona).
 
-- ✅ **bind:this={container}** — get a reference to the root element so you can pass it to **gsap.context(scope)**.
-- ✅ **return () => ctx.revert()** — Svelte’s onMount can return a cleanup function; call **ctx.revert()** there so cleanup runs when the component is destroyed.
+## Cuando crear y cuando eliminar
 
-## Scoping Selectors
+| Ciclo de vida         | Accion                                                                                                       |
+| --------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **Montaje**           | Crear tweens y ScrollTriggers dentro de **gsap.context(scope)**.                                             |
+| **Desmontaje**        | Llamar a **ctx.revert()** para eliminar animaciones y ScrollTriggers y revertir estilos en linea.            |
 
-Do not use global selectors that can match elements outside the current component. Always pass the **scope** (container element or ref) as the second argument to **gsap.context(callback, scope)** so that any selector run inside the callback is limited to that subtree.
+No crear animaciones GSAP en el setup del componente ni en un script sincronico que corre antes de que exista el elemento raiz. Esperar a **onMounted** u **onMount** (o equivalente) para que el ref del contenedor ya este en el DOM.
 
-- ✅ **gsap.context(() => { gsap.to(".box", ...) }, containerRef)** — `.box` is only searched inside `containerRef`.
-- ❌ Running **gsap.to(".box", ...)** without a context scope in a component can affect other instances or the rest of the page.
+## Errores comunes
 
-## ScrollTrigger Cleanup
+- No crear tweens o ScrollTriggers antes del montaje (por ejemplo en setup sin onMounted); los nodos DOM pueden no existir todavia.
+- No usar strings de selector sin **scope**; pasar el contenedor a gsap.context() como segundo argumento.
+- No omitir la limpieza; llamar siempre a **ctx.revert()** en onUnmounted o en el retorno de onMount.
+- No registrar plugins dentro del cuerpo de un componente que corre en cada render; registrar una vez a nivel de app.
 
-ScrollTrigger instances are created when you use the `scrollTrigger` config on a tween/timeline or **ScrollTrigger.create()**. They are **included** in **gsap.context()** and reverted when you call **ctx.revert()**. So:
+## Referencias oficiales
 
-- Create ScrollTriggers inside the same **gsap.context()** callback you use for tweens.
-- Call **ScrollTrigger.refresh()** after layout changes (e.g. after data loads) that affect trigger positions; in Vue/Svelte that often means after the DOM updates (e.g. nextTick in Vue, tick in Svelte, or after async content load).
-
-## When to Create vs Kill
-
-| Lifecycle             | Action                                                                                                            |
-| --------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| **Mounted**           | Create tweens and ScrollTriggers inside **gsap.context(scope)**.                                                  |
-| **Unmount / Destroy** | Call **ctx.revert()** so all animations and ScrollTriggers in that context are killed and inline styles reverted. |
-
-Do not create GSAP animations in the component’s setup or in a synchronous top-level script that runs before the root element exists. Wait for **onMounted** / **onMount** (or equivalent) so the container ref is in the DOM.
-
-## Do Not
-
-- ❌ Create tweens or ScrollTriggers before the component is mounted (e.g. in setup without onMounted); the DOM nodes may not exist yet.
-- ❌ Use selector strings without a **scope** (pass the container to gsap.context() as the second argument) so selectors don’t match elements outside the component.
-- ❌ Skip cleanup; always call **ctx.revert()** in onUnmounted / onMount’s return so animations and ScrollTriggers are killed when the component is destroyed.
-- ❌ Register plugins inside a component body that runs every render (it doesn't hurt anything, it's just wasteful); register once at app level.
-
-### Learn More
-
-- **gsap-react** skill for React-specific patterns (useGSAP, contextSafe).
-
----
-
-## Anexo 2026 - Referencias oficiales y checklist
-
-Fuentes oficiales:
-
-- GSAP docs: https://www.gsap.com/docs/v3/
-- GSAP React: https://gsap.com/resources/React
+- Documentacion general GSAP: https://gsap.com/docs/v3/
+- Guia GSAP para frameworks (base React, aplica el patron context): https://gsap.com/resources/React
 - ScrollTrigger: https://gsap.com/docs/v3/Plugins/ScrollTrigger
-- GSAP skills: https://github.com/greensock/gsap-skills
+- Repositorio oficial de skills GSAP: https://github.com/greensock/gsap-skills
+- Guia Vue 3 (Composition API y ciclo de vida): https://vuejs.org/guide/
+- Nuxt (composables y plugins): https://nuxt.com/docs
+- Svelte (onMount y ciclo de vida): https://svelte.dev/docs/svelte/overview
+- SvelteKit (estructura y carga de componentes): https://kit.svelte.dev/docs
 
-Repos famosos:
-
-- https://github.com/greensock/gsap-skills
-- https://github.com/vuejs/core
-- https://github.com/sveltejs/svelte
-
-Checklist:
+## Checklist de verificacion
 
 - [ ] Tweens creados en onMounted u onMount, nunca antes.
-- [ ] Selectores acotados con gsap.context y scope al root.
-- [ ] ctx.revert en onUnmounted o cleanup de onMount.
-- [ ] Plugins registrados una vez a nivel app.
+- [ ] Selectores acotados con gsap.context y scope a la raiz.
+- [ ] ctx.revert en onUnmounted o en limpieza de onMount.
+- [ ] Plugins registrados una vez a nivel de app.
 - [ ] ScrollTrigger dentro del mismo contexto y refresh tras tick.
-- [ ] Lazy load de plugins poco usados en Nuxt para bundle chico.
+- [ ] Carga diferida de plugins poco usados en Nuxt para un bundle pequeno.
 - [ ] Sin animaciones en setup sincrono sin DOM listo.

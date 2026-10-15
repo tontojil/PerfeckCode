@@ -328,3 +328,214 @@ Usted realiza 10 pasadas: 1 delimitar objeto en 1 frase, 2 recuperar proceso, 3 
 ### 4. Revision x3 anti-alucinacion
 
 Usted verifica 3 veces: 1 busqueda inicial, 2 contraste cruzado en segunda fuente independiente, 3 apertura directa de URL, archivo o comando el dia de entrega. Usted registra las 3 revisiones con fecha. Usted solo declara listo con evidencia fresca y conteo. Usted prohibe Co-Authored-By, Generated-By y --no-verify. Usted exige Conventional Commits y git log --oneline -10 limpio antes de push cuando aplique.
+
+---
+
+## Anexo B - Diseno API REST ejecutable con ejemplo OpenAPI 2026
+
+Este anexo no reemplaza el contenido previo. Consolida paginacion, errores y versionado en una plantilla copiable con un ejemplo OpenAPI 3.1 valido.
+
+### B.1 Referencias oficiales
+
+1. OpenAPI Specification, estandar normativo para describir contratos HTTP en formato JSON o YAML. Referencia: https://spec.openapis.org/
+2. Diataxis, marco para organizar la documentacion tecnica en tutoriales, guias practicas, referencia y explicacion. Referencia: https://diataxis.fr/
+
+Usted aplica Diataxis asi: el contrato OpenAPI es la referencia normativa, esta seccion es la guia practica de uso, los ADR son la explicacion de decisiones, y un tutorial de inicio rapido acompana cada API nueva con un ejemplo ejecutable de ponta a punta.
+
+### B.2 Contrato base obligatorio
+
+Toda respuesta usa el sobre uniforme ya definido en este agente:
+
+```json
+{
+  "data": null,
+  "error": { "code": "VALIDATION_ERROR", "message": "Descripcion legible", "details": [] },
+  "meta": { "request_id": "uuid", "version": "v1" }
+}
+```
+
+Reglas:
+
+- Exito: `data` con recurso o coleccion, `error` en null.
+- Error: `data` en null, `error.code` maquina-legible en mayusculas con guion bajo, `error.message` para personas, `error.details[]` con campo y motivo por cada falla de validacion.
+- `meta.request_id` correlaciona logs y trazas. `meta.version` repite la version mayor de la API.
+- Nunca expone stacktrace ni SQL en 5xx.
+
+### B.3 Paginacion, filtrado y orden
+
+- Colecciones que crecen (pedidos, eventos, logs): paginacion por cursor opaco con `?limit=&cursor=`, respuesta con `meta.next_cursor` y `meta.has_more`.
+- Colecciones pequenas y administrables (<10k filas): paginacion por offset con `?page=&per_page=`, respuesta con `meta.total`, `meta.page` y `meta.per_page`.
+- Limites: `limit` y `per_page` entre 1 y 100, valor por omision 20. Fuera de rango devuelve `422 VALIDATION_ERROR`.
+- Filtrado con query params explicitos (`?status=paid`), orden con `?sort=-created_at`, inclusion acotada con `?include=customer` hasta 3 niveles.
+- La eleccion de cursor u offset queda registrada en ADR con volumen estimado y P95 medido.
+
+### B.4 Errores y codigos de estado
+
+- `201` con header `Location` al crear, `200` al leer o actualizar, `204` sin cuerpo al eliminar.
+- `400` para sintaxis invalida, `422` para validacion semantica con `details[]`, `401` sin token, `403` sin permiso, `404` recurso inexistente, `409` conflicto de negocio o duplicado.
+- `429` y `503` incluyen header `Retry-After`. Todo 429 documenta limites con `X-RateLimit-Limit`, `X-RateLimit-Remaining` y `X-RateLimit-Reset`.
+- Catalogo de `error.code` cerrado por version: `BAD_REQUEST`, `UNAUTHENTICATED`, `FORBIDDEN`, `NOT_FOUND`, `METHOD_NOT_ALLOWED`, `CONFLICT`, `PRECONDITION_FAILED`, `VALIDATION_ERROR`, `RATE_LIMITED`, `INTERNAL`, `UPSTREAM_ERROR`, `UNAVAILABLE`.
+
+### B.5 Versionado
+
+- Estrategia por omision: prefijo URL `/api/v1/`. Para APIs publicas puras se acepta header `Accept: application/vnd.api.v2+json` con justificacion en ADR.
+- Politica: se mantienen N y N-1 activas por 6 meses. La deprecacion anuncia headers `Deprecation: true` y `Sunset: <fecha RFC 1123>` mas guia de migracion.
+- Nunca se rompe `v1` sin ADR, ventana de aviso y ejemplos de migracion request por request.
+
+### B.6 Ejemplo OpenAPI 3.1 copiable
+
+Ejemplo minimo que integra versionado en URL, paginacion por cursor, sobre `data/error/meta`, errores tipados y rate limit documentado:
+
+```yaml
+openapi: 3.1.0
+info:
+  title: Orders API
+  version: 1.0.0
+  description: Listado y creacion de pedidos con paginacion por cursor y errores uniformes.
+servers:
+  - url: https://api.ejemplo.cl/api/v1
+paths:
+  /orders:
+    get:
+      summary: Listar pedidos con cursor
+      parameters:
+        - name: limit
+          in: query
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+        - name: cursor
+          in: query
+          schema: { type: string }
+          description: Cursor opaco base64url devuelto en meta.next_cursor.
+        - name: status
+          in: query
+          schema: { type: string, enum: [pending, paid, shipped] }
+        - name: sort
+          in: query
+          schema: { type: string, default: -created_at }
+      responses:
+        '200':
+          description: Pagina de pedidos.
+          headers:
+            X-RateLimit-Limit: { schema: { type: integer } }
+            X-RateLimit-Remaining: { schema: { type: integer } }
+            X-RateLimit-Reset: { schema: { type: integer } }
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, error, meta]
+                properties:
+                  data:
+                    type: array
+                    items: { $ref: '#/components/schemas/Order' }
+                  error: { type: 'null' }
+                  meta:
+                    type: object
+                    required: [next_cursor, limit, has_more, request_id, version]
+                    properties:
+                      next_cursor: { type: [string, 'null'] }
+                      limit: { type: integer }
+                      has_more: { type: boolean }
+                      request_id: { type: string, format: uuid }
+                      version: { type: string, const: v1 }
+        '422':
+          description: Parametro de paginacion invalido.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+        '429':
+          description: Limite excedido.
+          headers:
+            Retry-After: { schema: { type: integer } }
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+    post:
+      summary: Crear pedido con idempotencia
+      parameters:
+        - name: Idempotency-Key
+          in: header
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [total]
+              properties:
+                total: { type: integer, minimum: 1 }
+                status: { type: string, enum: [pending, paid] }
+      responses:
+        '201':
+          description: Pedido creado.
+          headers:
+            Location: { schema: { type: string } }
+            Idempotent-Replayed: { schema: { type: boolean } }
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, error, meta]
+                properties:
+                  data: { $ref: '#/components/schemas/Order' }
+                  error: { type: 'null' }
+                  meta:
+                    type: object
+                    required: [request_id, version]
+                    properties:
+                      request_id: { type: string, format: uuid }
+                      version: { type: string, const: v1 }
+        '409':
+          description: Duplicado por clave de negocio.
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ErrorEnvelope' }
+components:
+  schemas:
+    Order:
+      type: object
+      required: [id, total, status]
+      properties:
+        id: { type: string, example: ord_01J9ZQ }
+        total: { type: integer, example: 12990 }
+        status: { type: string, enum: [pending, paid, shipped] }
+    ErrorEnvelope:
+      type: object
+      required: [data, error, meta]
+      properties:
+        data: { type: 'null' }
+        error:
+          type: object
+          required: [code, message, details]
+          properties:
+            code: { type: string, example: VALIDATION_ERROR }
+            message: { type: string, example: Parametro limit fuera de rango. }
+            details:
+              type: array
+              items:
+                type: object
+                required: [field, reason]
+                properties:
+                  field: { type: string }
+                  reason: { type: string }
+        meta:
+          type: object
+          required: [request_id, version]
+          properties:
+            request_id: { type: string, format: uuid }
+            version: { type: string, const: v1 }
+```
+
+Usted valida este archivo con un validador OpenAPI 3.1 antes de entregarlo y genera el contrato final desde el codigo cuando el framework lo permite. Si el documento oficial en https://spec.openapis.org/ contradice este ejemplo, prevalece la especificacion oficial.
+
+### B.7 Lista de verificacion de contrato listo
+
+- [ ] OpenAPI 3.1 valido con ejemplo real de request y response por endpoint.
+- [ ] Sobre `data/error/meta` uniforme con `request_id` y `version`.
+- [ ] Paginacion definida con limites 1-100, filtrado y orden documentados.
+- [ ] Catalogo de errores cerrado con `code` maquina-legible y `message` para personas.
+- [ ] Versionado `/api/v1/` con politica N y N-1 y headers `Sunset` en deprecacion.
+- [ ] `Idempotency-Key` en escrituras criticas, rate limit con `429` y `Retry-After`.
+- [ ] Documentacion organizada segun Diataxis: referencia OpenAPI, guia practica de uso y ADR como explicacion.

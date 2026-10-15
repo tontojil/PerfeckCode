@@ -4,18 +4,85 @@ description: "Referencia de la API de Claude: modelos, precios, streaming, tools
 license: Complete terms in LICENSE.txt
 ---
 
-# Building LLM-Powered Applications with Claude
+# Aplicaciones con Claude API
 
 ## Cuando usar (leer primero)
 
-Úsalo cuando programes contra la API de Claude/Anthropic o preguntes por
-modelos, precios, límites o caching: NUNCA respondas de memoria, lee la
-referencia del lenguaje que corresponda (`python/`, `typescript/`, `curl/`,
-etc). OJO: modelos y precios cambian rápido; si la respuesta afecta plata
-o un deploy, verifica online antes de afirmar. Si el proyecto usa otro
-proveedor (OpenAI, Gemini, Ollama), esta skill no aplica.
+Utilice esta skill cuando programe contra la API de Claude/Anthropic o cuando
+pregunte por modelos, precios, limites o caching. Nunca responda de memoria:
+lea la referencia del lenguaje que corresponda (`python/`, `typescript/`,
+`curl/`, etc.). Los modelos y precios cambian con rapidez. Si la respuesta
+afecta costo o un despliegue, verifique en linea antes de afirmar. Si el
+proyecto utiliza otro proveedor (OpenAI, Gemini, Ollama), esta skill no aplica.
 
 This skill helps you build LLM-powered applications with Claude. Choose the right surface based on your needs, detect the project language, then read the relevant language-specific documentation.
+
+## Referencias oficiales
+
+- Documentacion de Anthropic: https://docs.anthropic.com/
+- Referencia de Messages API: https://docs.anthropic.com/en/api/messages
+- Modelos y precios: https://docs.anthropic.com/en/docs/about-claude/models-overview
+- Prompt caching: https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching
+- Tool use: https://docs.anthropic.com/en/docs/agents-and-tools/tool-use/overview
+- Rate limits y cabeceras: https://docs.anthropic.com/en/api/rate-limits
+- Seguridad LLM (OWASP): https://owasp.org/www-project-top-10-for-large-language-model-applications/
+- Seguridad API (OWASP): https://owasp.org/www-project-api-security/
+
+## Ejemplo minimo probado
+
+Ejemplo en Python con SDK oficial. Requiere `pip install anthropic` y
+variable `ANTHROPIC_API_KEY`. Sintaxis verificada contra `python/claude-api/README.md`
+de esta skill. No ejecuta red en revision estatica, solo validacion de importacion.
+
+```python
+# Ejemplo minimo: una llamada a Messages API
+from anthropic import Anthropic
+
+client = Anthropic()  # Lee ANTHROPIC_API_KEY del entorno
+resp = client.messages.create(
+    model="claude-opus-5",
+    max_tokens=256,
+    messages=[{"role": "user", "content": "Resume en una linea que es una API REST."}],
+)
+print(resp.content[0].text)
+```
+
+Ejemplo en cURL. Requiere cabeceras `x-api-key` y `anthropic-version`.
+
+```bash
+curl https://api.anthropic.com/v1/messages \
+  -H "x-api-key: $ANTHROPIC_API_KEY" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "content-type: application/json" \
+  -d '{
+    "model": "claude-opus-5",
+    "max_tokens": 256,
+    "messages": [{"role": "user", "content": "Hola"}]
+  }'
+```
+
+Ejemplo en TypeScript con SDK oficial. Requiere `npm install @anthropic-ai/sdk`.
+
+```typescript
+import Anthropic from "@anthropic-ai/sdk";
+
+const client = new Anthropic();
+const msg = await client.messages.create({
+  model: "claude-opus-5",
+  maxTokens: 256,
+  messages: [{ role: "user", content: "Hola" }],
+});
+console.log(msg.content);
+```
+
+## Repositorios pertinentes
+
+- SDK Python: https://github.com/anthropics/anthropic-sdk-python
+- SDK TypeScript: https://github.com/anthropics/anthropic-sdk-typescript
+- SDK Go: https://github.com/anthropics/anthropic-sdk-go
+- SDK Java: https://github.com/anthropics/anthropic-sdk-java
+- SDK Ruby: https://github.com/anthropics/anthropic-sdk-ruby
+- Ejemplos y cookbook: https://github.com/anthropics/anthropic-cookbook
 
 ## Before You Start
 

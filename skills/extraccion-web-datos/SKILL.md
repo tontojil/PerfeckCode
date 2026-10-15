@@ -53,6 +53,9 @@ Esta sección amplía sin modificar el proceso existente. Agrega Playwright docs
 - Playwright Waiting: https://playwright.dev/python/docs/actionability — auto-wait, `network_idle` y reintentos.
 - Robots Exclusion: https://developers.google.com/search/docs/crawling-indexing/robots/robots_txt — `Disallow`, `Crawl-delay` y `Request-rate`.
 - careggi robots.txt: https://www.rfc-editor.org/rfc/rfc9309.html — estándar oficial de exclusión.
+- OWASP Testing Guide (recopilación de información): https://owasp.org/www-project-web-security-testing-guide/
+- OWASP Automated Threats: https://owasp.org/www-project-automated-threats-to-web-applications/
+- Uso de Claude para análisis de datos extraídos: https://docs.anthropic.com/en/docs/build-with-claude/tool-use/overview
 - Privacidad Chile: Ley 19.628 y 21.719; valide con skill `privacidad-datos-chile` antes de guardar personales.
 
 ### Repositorios famosos y listas curadas
@@ -77,6 +80,55 @@ Esta sección amplía sin modificar el proceso existente. Agrega Playwright docs
 - `page.goto("https://example.com", wait_until="domcontentloaded")`
 - `items = page.locator(".product").all_text_contents()`
 - `browser.close()`
+
+### Ejemplo minimo probado
+
+Ejemplo con libreria estandar mas `requests` y `beautifulsoup4`.
+Verifica `robots.txt` antes de descargar, respeta pausa de 2 segundos
+y guarda fuente y fecha. Validado con `python -m py_compile`.
+
+```python
+# Requiere: pip install requests beautifulsoup4
+import time
+import datetime
+import urllib.robotparser
+from urllib.parse import urlparse
+import requests
+from bs4 import BeautifulSoup
+
+URL = "https://quotes.toscrape.com/"
+dominio = f"{urlparse(URL).scheme}://{urlparse(URL).netloc}"
+rp = urllib.robotparser.RobotFileParser()
+rp.set_url(dominio + "/robots.txt")
+rp.read()
+assert rp.can_fetch("MiProyecto contacto@example.com", URL), "Bloqueado por robots.txt"
+
+time.sleep(2)  # Pausa respetuosa minima
+resp = requests.get(URL, headers={"User-Agent": "MiProyecto contacto@example.com"}, timeout=15)
+resp.raise_for_status()
+sopa = BeautifulSoup(resp.text, "html.parser")
+items = [{"texto": c.get_text(strip=True), "fuente": URL,
+          "fecha": datetime.date.today().isoformat()}
+         for c in sopa.select(".quote .text")]
+print(items[:3])
+```
+
+Ejemplo con Scrapling `Fetcher`. Requiere `pip install "scrapling[fetchers]"`.
+
+```python
+# Requiere: pip install "scrapling[fetchers]"
+from scrapling.fetchers import Fetcher
+
+pagina = Fetcher.get("https://quotes.toscrape.com/")
+for cita in pagina.css(".quote .text"):
+    print(cita.text)
+```
+
+### Repositorios pertinentes adicionales
+
+- OWASP WSTG: https://github.com/OWASP/wstg — guia de pruebas web.
+- BeautifulSoup docs: https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+- Requests docs: https://requests.readthedocs.io/
 
 ### Checklist de verificación
 

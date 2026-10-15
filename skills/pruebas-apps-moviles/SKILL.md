@@ -3,6 +3,41 @@ name: pruebas-apps-moviles
 description: Estrategias de testing móvil, tests unitarios, integración, UI, snapshots y pipelines CI para Android Espresso e iOS XCTest. (mobile, testing, Espresso, XCTest)
 ---
 
+## Versiones mínimas
+
+- Android: `compileSdk` 37, AGP `9.1.2` o superior, Java 17 (Temurin).
+- Android unitarios: JUnit 4.13+ (o JUnit 5 con `kotlin-test`), MockK `1.13+`, Turbine `1.0+` para `StateFlow`, `kotlinx-coroutines-test` para `runTest`.
+- Android UI: Compose BOM `2026.08.00`+, Espresso `3.6+`, UIAutomator `2.3+`, Roborazzi `1.30+`.
+- iOS: Xcode `26.4.1` o superior (Swift `6.3.x`, SDK iOS `26.5`), destino `iPhone 16` en simulador.
+- iOS libs: XCTest y XCUITest incluidos en Xcode, swift-snapshot-testing `1.18+`.
+- Unity (cuando el juego es Unity): Unity 6 LTS + Test Framework `1.4+` (EditMode y PlayMode).
+- CI: runner `ubuntu-latest` para Android y `macos-26` o superior para iOS.
+
+## Ejemplo mínimo probado
+
+Unitario Android mínimo (JUnit + `runTest`, sin mocks):
+
+```kotlin
+class SumaTest {
+    @Test
+    fun `suma basica`() = runTest {
+        assertEquals(4, 2 + 2)
+    }
+}
+```
+
+Unitario iOS mínimo (XCTest, compila en Xcode 26):
+
+```swift
+import XCTest
+
+final class SumaTests: XCTestCase {
+    func testSumaBasica() {
+        XCTAssertEqual(2 + 2, 4)
+    }
+}
+```
+
 ## Cuando usar
 
 Usa esta skill cuando escribas tests para apps Android o iOS.
@@ -274,6 +309,7 @@ Esta sección amplía sin modificar las estrategias existentes. Úsela para vali
 - XCUITest: https://developer.apple.com/documentation/xctest/user-interface-tests — automatización de interfaz.
 - Swift Testing: https://developer.apple.com/documentation/testing — framework moderno de pruebas Swift.
 - Firebase Test Lab: https://firebase.google.com/docs/test-lab — dispositivos reales en la nube para Android e iOS.
+- Unity Test Framework: https://docs.unity3d.com/Packages/com.unity.test-framework@1.1/manual/index.html — EditMode y PlayMode en Unity 6.
 
 ### Repositorios famosos y listas curadas
 

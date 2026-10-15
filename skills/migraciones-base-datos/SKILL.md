@@ -1,111 +1,210 @@
 ---
 name: migraciones-base-datos
-description: Migraciones de base de datos seguras, sin caídas, compatibles hacia atrás y con rollback listo. Usalo cuando escribai migraciones, revisai el esquema o planificai un backfill. (database migration, zero-downtime, rollback-ready)
+description: Migraciones de base de datos seguras, sin caidas, compatibles hacia atras y con rollback listo. Utilizar al escribir migraciones, revisar el esquema o planificar un backfill. (database migration, zero-downtime, rollback-ready)
 ---
 
 # Database Migrations
 
-Safe migrations focused on zero-downtime and rollback.
+Migraciones seguras con enfasis en zero-downtime y rollback verificado.
 
 ## Cuando usar
 
-- Writing or reviewing migrations.
-- Adding columns, tables, indexes.
-- Modifying constraints in production.
-- Planning data backfills.
-- User asks about migrations or schema changes.
+- Escribir o revisar migraciones.
+- Agregar columnas, tablas o indices.
+- Modificar restricciones en produccion.
+- Planificar backfills de datos.
+- Evaluar riesgos de bloqueo o rollback.
 
-## Golden Rules
+## Reglas de oro
 
-1. **Every migration must be reversible**. If you have `up`, you have `down`.
-2. **Never block the table for more than 2 seconds**. Use lock-free strategies.
-3. **Expand & Contract**: first add, then migrate data, then remove the old.
-4. **Backfill in batches**. Never a single UPDATE over millions of rows.
+1. **Toda migracion debe ser reversible**. Si existe `up`, existe `down` probado.
+2. **Nunca bloquear la tabla mas de 2 segundos**. Usar estrategias sin bloqueo.
+3. **Expandir y contraer**: primero agregar, despues migrar datos, al final retirar lo antiguo.
+4. **Backfill por lotes**. Nunca un solo UPDATE sobre millones de filas.
 
-## Patterns
+## Migracion zero-downtime con expand-contract
 
-### Adding a NOT NULL column
+Patron en 3 despliegues. Cada despliegue es compatible hacia atras y hacia adelante.
 
-Bad:
-```sql
-ALTER TABLE users ADD COLUMN status VARCHAR NOT NULL;  -- blocks the entire table
+Fase 1 - Expandir (despliegue 1):
+- Agregar la estructura nueva sin romper la actual. Columna anulable, tabla nueva o columna paralela.
+- La aplicacion escribe en ambas estructuras (doble escritura) y sigue leyendo la antigua.
+
+Fase 2 - Migrar (despliegue 2):
+- Backfill historico por lotes de 1000 a 10000 filas, con pausas.
+- Cambiar las lecturas a la estructura nueva. Mantener doble escritura por seguridad.
+
+Fase 3 - Contraer (despliegue 3):
+- Detener la escritura en la estructura antigua.
+- Eliminar columna o tabla antigua cuando ya no recibe trafico.
+- Agregar restricciones finales (`NOT NULL`, `CHECK`, `FOREIGN KEY`) solo cuando todos los datos son validos.
+
+Ejemplo de secuencia para renombrar `users.name` a `users.full_name`:
+
+1. Despliegue 1: `ADD COLUMN full_name`, doble escritura `name` + `full_name`.
+2. Despliegue 2: backfill por lotes, lecturas desde `full_name`.
+3. Despliegue 3: dejar de escribir `name`, luego `DROP COLUMN name`.
+
+## Ejemplo SQL versionado
+
+Estructura compatible con golang-migrate. Un archivo `up` y uno `down` por version, numeracion secuencial.
+
+Archivos:
+```
+migrations/000001_add_status_to_users.up.sql
+migrations/000001_add_status_to_users.down.sql
+migrations/000002_backfill_status.up.sql
+migrations/000002_backfill_status.down.sql
+migrations/000003_set_status_not_null.up.sql
+migrations/000003_set_status_not_null.down.sql
 ```
 
-Good:
+`000001_add_status_to_users.up.sql` (expandir, sin bloqueo):
 ```sql
--- Step 1: nullable with default
+-- Expandir: columna anulable con valor por defecto.
 ALTER TABLE users ADD COLUMN status VARCHAR DEFAULT 'active';
+```
 
--- Step 2: backfill in batches (in code, not in migration)
--- UPDATE users SET status = 'active' WHERE status IS NULL LIMIT 10000;
+`000001_add_status_to_users.down.sql` (rollback):
+```sql
+-- Rollback: retirar la columna si aun no hay dependencia.
+ALTER TABLE users DROP COLUMN IF EXISTS status;
+```
 
--- Step 3: add NOT NULL when all rows have a value (next deploy)
+`000002_backfill_status.up.sql` (migrar por lotes):
+```sql
+-- Backfill por lotes. Ejecutar en lotes de 10000 desde el codigo o con pg_cron.
+-- UPDATE users SET status = 'active' WHERE status IS NULL AND id > $1 ORDER BY id LIMIT 10000;
+-- Repetir hasta que SELECT COUNT(*) FROM users WHERE status IS NULL = 0.
+SELECT 1;
+```
+
+`000002_backfill_status.down.sql`:
+```sql
+-- El backfill es idempotente. No requiere revertir datos.
+SELECT 1;
+```
+
+`000003_set_status_not_null.up.sql` (contraer):
+```sql
+-- Contraer: solo despues de verificar que no quedan NULL.
 ALTER TABLE users ALTER COLUMN status SET NOT NULL;
 ```
 
-### Renaming a column
-
+`000003_set_status_not_null.down.sql`:
 ```sql
--- Step 1: add new column
-ALTER TABLE users ADD COLUMN full_name VARCHAR;
-
--- Step 2: write to both columns from the app
--- Step 3: backfill historical data
--- Step 4: migrate reads to new column
--- Step 5: drop old column (next deploy)
-ALTER TABLE users DROP COLUMN name;
+ALTER TABLE users ALTER COLUMN status DROP NOT NULL;
 ```
 
-### Adding an index
+Ejemplo de indice sin bloqueo y su rollback:
 
 ```sql
--- CONCURRENTLY avoids blocking writes (PostgreSQL)
+-- up: indice concurrente, no bloquea escrituras (PostgreSQL).
 CREATE INDEX CONCURRENTLY idx_users_email ON users (email);
 ```
 
-MySQL: `ALGORITHM=INPLACE, LOCK=NONE` on InnoDB.
-
-### Dropping a column/table
-
-Bad:
 ```sql
-ALTER TABLE users DROP COLUMN old_field;  -- sure no one reads it?
+-- down: eliminar indice de forma segura.
+DROP INDEX CONCURRENTLY IF EXISTS idx_users_email;
 ```
 
-Good:
-1. Deploy 1: Stop writing to the column. App ignores reads.
-2. Deploy 2: Drop column (no traffic anymore).
+En MySQL InnoDB usar `ALGORITHM=INPLACE, LOCK=NONE` para operaciones equivalentes.
 
-## Pre-deploy Validation
+## Patrones
 
-- `down` migration tested in staging.
-- `EXPLAIN` for new queries. No full table scans on large tables.
-- Constraints validated against production data (anonymized copy).
-- Estimated migration time based on real table `ANALYZE`.
+### Agregar columna NOT NULL
+
+Incorrecto:
+```sql
+ALTER TABLE users ADD COLUMN status VARCHAR NOT NULL;  -- bloquea toda la tabla
+```
+
+Correcto en 3 pasos:
+```sql
+-- Paso 1: anulable con defecto.
+ALTER TABLE users ADD COLUMN status VARCHAR DEFAULT 'active';
+
+-- Paso 2: backfill por lotes desde el codigo, no en una sola transaccion.
+-- UPDATE users SET status = 'active' WHERE status IS NULL LIMIT 10000;
+
+-- Paso 3: agregar NOT NULL en un despliegue posterior.
+ALTER TABLE users ALTER COLUMN status SET NOT NULL;
+```
+
+### Renombrar columna
+
+```sql
+-- Paso 1: agregar columna nueva.
+ALTER TABLE users ADD COLUMN full_name VARCHAR;
+
+-- Paso 2: escribir en ambas columnas desde la aplicacion.
+-- Paso 3: backfill de datos historicos por lotes.
+-- Paso 4: mover lecturas a la columna nueva.
+-- Paso 5: eliminar columna antigua en un despliegue posterior.
+ALTER TABLE users DROP COLUMN name;
+```
+
+### Agregar indice
+
+```sql
+-- CONCURRENTLY evita bloquear escrituras (PostgreSQL).
+CREATE INDEX CONCURRENTLY idx_users_email ON users (email);
+```
+
+### Eliminar columna o tabla
+
+Incorrecto:
+```sql
+ALTER TABLE users DROP COLUMN old_field;  -- verificar que nadie la lee
+```
+
+Correcto:
+1. Despliegue 1: dejar de escribir en la columna. La aplicacion ignora las lecturas.
+2. Despliegue 2: eliminar la columna cuando ya no recibe trafico.
+
+## Rollback
+
+- Probar `down` en staging con copia anonimizada antes de cada despliegue.
+- Medir el tiempo de `up` y `down`. El rollback debe completar en menos de 5 minutos.
+- Definir responsable y criterio de rollback: tasa de error, bloqueo mayor a 2 segundos o validacion fallida.
+- Nunca editar una migracion ya aplicada en produccion. Crear una migracion nueva que corrija.
+- Para `CREATE INDEX CONCURRENTLY`, el rollback es `DROP INDEX CONCURRENTLY IF EXISTS`. Si el indice fallo a la mitad, queda como `INVALID` y se debe eliminar antes de reintentar.
+
+Comandos de referencia con golang-migrate:
+```bash
+migrate -path migrations -database "$DATABASE_URL" up 1
+migrate -path migrations -database "$DATABASE_URL" down 1
+migrate -path migrations -database "$DATABASE_URL" version
+```
+
+## Validacion previa al despliegue
+
+- Migracion `up` y `down` probadas en staging.
+- `EXPLAIN` en consultas nuevas. Sin escaneos completos en tablas grandes.
+- Restricciones validadas contra copia anonimizada de datos de produccion.
+- Tiempo estimado basado en `ANALYZE` real de la tabla.
 
 ## Frameworks
 
-| Framework | Nullable | Default | Concurrent Index | Rollback |
+| Framework | Anulable | Defecto | Indice concurrente | Rollback |
 |---|---|---|---|---|
-| **Prisma** | `?` in type | `@default()` | Not native | `prisma migrate diff` |
+| **Prisma** | `?` en el tipo | `@default()` | No nativo | `prisma migrate diff` |
 | **Django** | `null=True` | `default=` | `AddIndexConcurrently` | `migrate <app> <prev>` |
-| **Laravel** | `->nullable()` | `->default()` | Manual (raw SQL) | `migrate:rollback` |
-| **golang-migrate** | Pointer type `*string` | Default in SQL | Raw SQL in `.up.sql` | Explicit `.down.sql` |
+| **Laravel** | `->nullable()` | `->default()` | Manual (SQL directo) | `migrate:rollback` |
+| **golang-migrate** | Tipo puntero `*string` | Defecto en SQL | SQL directo en `.up.sql` | Archivo `.down.sql` explicito |
 | **Alembic** | `nullable=True` | `server_default=` | `postgresql_concurrently=True` | `alembic downgrade -1` |
 
-## Referencias oficiales y repositorios famosos
+## Referencias oficiales
 
-1. PostgreSQL ALTER TABLE y DDL concurrente (locks, CONCURRENTLY): https://www.postgresql.org/docs/current/sql-altertable.html
-2. Django Migrations docs (operaciones, squashing, rollback): https://docs.djangoproject.com/en/5.0/topics/migrations/
-3. golang-migrate repositorio famoso (up/down SQL versionados): https://github.com/golang-migrate/migrate
-4. Expand and Contract pattern por Martin Fowler (cambios compatibles): https://martinfowler.com/bliki/ParallelChange.html
+1. Documentacion PostgreSQL (DDL, locks, CONCURRENTLY): https://www.postgresql.org/docs/current/
+2. Repositorio golang-migrate (SQL versionado up/down): https://github.com/golang-migrate/migrate
 
-La documentacion oficial prevalece. Nunca bloquee tabla productiva mas de 2 segundos.
+La documentacion oficial prevalece. Nunca bloquear una tabla productiva mas de 2 segundos.
 
 ### Checklist aplicable antes de desplegar una migracion
 
-- [ ] Migracion `up` y `down` probadas en staging con copia anonimizada y `EXPLAIN` en queries nuevas.
-- [ ] Estrategia expandir y contraer: agregar compatible, doble escritura, backfill por lotes de 10k, contraer en deploy posterior.
+- [ ] Migracion `up` y `down` probadas en staging con copia anonimizada y `EXPLAIN` en consultas nuevas.
+- [ ] Estrategia expandir y contraer: agregar compatible, doble escritura, backfill por lotes de 10k, contraer en despliegue posterior.
 - [ ] Indices con `CONCURRENTLY` en Postgres o `ALGORITHM=INPLACE, LOCK=NONE` en MySQL InnoDB.
-- [ ] Tiempo estimado con `ANALYZE` real, rollback cronometrado menor a 5 minutos y dueno asignado.
+- [ ] Tiempo estimado con `ANALYZE` real, rollback cronometrado menor a 5 minutos y responsable asignado.
 - [ ] Sin `SELECT *`, sin `UPDATE` masivo sin `LIMIT`, restricciones FK y CHECK validadas contra datos reales.

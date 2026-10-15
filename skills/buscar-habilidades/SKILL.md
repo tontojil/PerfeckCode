@@ -3,142 +3,162 @@ name: buscar-habilidades
 description: Te ayuda a encontrar e instalar skills nuevos cuando preguntas cómo hacer algo o si existe un skill para eso. Úsalo cuando quieras ampliar lo que el agente sabe hacer. (find skills, discover, install)
 ---
 
-# Find Skills
+# Buscar Habilidades
 
-This skill helps you discover and install skills from the open agent skills ecosystem.
+Esta skill ayuda a descubrir e instalar skills del ecosistema abierto de agent skills.
 
-## When to Use This Skill
+## Cuándo usar esta skill
 
-Use this skill when the user:
+Use esta skill cuando el usuario:
 
-- Asks "how do I do X" where X might be a common task with an existing skill
-- Says "find a skill for X" or "is there a skill for X"
-- Asks "can you do X" where X is a specialized capability
-- Expresses interest in extending agent capabilities
-- Wants to search for tools, templates, or workflows
-- Mentions they wish they had help with a specific domain (design, testing, deployment, etc.)
+- Pregunta "cómo hago X" donde X puede ser una tarea común con una skill existente.
+- Dice "busca una skill para X" o "existe una skill para X".
+- Pregunta "puedes hacer X" donde X es una capacidad especializada.
+- Manifiesta interés en ampliar las capacidades del agente.
+- Quiere buscar herramientas, plantillas o flujos de trabajo.
+- Menciona que necesita ayuda en un dominio específico (diseño, pruebas, despliegue, etc.).
 
-## What is the Skills CLI?
+## Qué es la Skills CLI
 
-The Skills CLI (`npx skills`) is the package manager for the open agent skills ecosystem. Skills are modular packages that extend agent capabilities with specialized knowledge, workflows, and tools.
+La Skills CLI (`npx skills`) es el gestor de paquetes del ecosistema abierto de agent skills. Las skills son paquetes modulares que amplían las capacidades del agente con conocimiento especializado, flujos y herramientas.
 
-**Key commands:**
+**Comandos clave:**
 
-- `npx skills find [query]` - Search for skills interactively or by keyword
-- `npx skills add <package>` - Install a skill from GitHub or other sources
-- `npx skills check` - Check for skill updates
-- `npx skills update` - Update all installed skills
+- `npx skills find [consulta]` — buscar skills de forma interactiva o por palabra clave.
+- `npx skills add <paquete>` — instalar una skill desde GitHub u otras fuentes.
+- `npx skills check` — revisar actualizaciones disponibles.
+- `npx skills update` — actualizar todas las skills instaladas.
 
-**Browse skills at:** https://skills.sh/
+**Explorar skills en:** https://skills.sh/
 
-## autoskills — Automated Alternative
+## autoskills — Alternativa automatizada
 
-For initial project setup, `npx autoskills` automatically detects the project tech stack and installs curated, security-reviewed skills at project level. No interactive prompts — hands-off. Prefer `autoskills` for first-time setup; use `buscar-habilidades` for discovering specific additional skills later.
+Para la configuración inicial de un proyecto, `npx autoskills` detecta el stack tecnológico e instala skills curadas y revisadas a nivel de proyecto. Sin preguntas interactivas. Prefiera `autoskills` para la primera instalación; use `buscar-habilidades` para descubrir skills adicionales específicas después.
 
-## How to Help Users Find Skills
+## Cómo ayudar a encontrar skills
 
-### Step 1: Understand What They Need
+### Paso 1: Entender qué necesita
 
-When a user asks for help with something, identify:
+Cuando el usuario pide ayuda, identifique:
 
-1. The domain (e.g., React, testing, design, deployment)
-2. The specific task (e.g., writing tests, creating animations, reviewing PRs)
-3. Whether this is a common enough task that a skill likely exists
+1. El dominio (por ejemplo React, pruebas, diseño, despliegue).
+2. La tarea específica (por ejemplo escribir pruebas, crear animaciones, revisar PR).
+3. Si es una tarea común para la cual probablemente existe una skill.
 
-### Step 2: Search for Skills
+### Paso 2: Buscar skills
 
-Run the find command with a relevant query:
+Ejecute el comando de búsqueda con una consulta relevante:
 
 ```bash
-npx skills find [query]
+npx skills find [consulta]
 ```
 
-For example:
+Por ejemplo:
 
-- User asks "how do I make my React app faster?" → `npx skills find react performance`
-- User asks "can you help me with PR reviews?" → `npx skills find pr review`
-- User asks "I need to create a changelog" → `npx skills find changelog`
+- Usuario pregunta "cómo hago más rápida mi app React" → `npx skills find react performance`
+- Usuario pregunta "me ayudas con revisión de PR" → `npx skills find pr review`
+- Usuario pregunta "necesito crear un changelog" → `npx skills find changelog`
 
-The command will return results like:
+El comando retorna resultados como:
 
-```
+```text
 Install with npx skills add <owner/repo@skill>
 
 vercel-labs/agent-skills@vercel-react-best-practices
 └ https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices
 ```
 
-### Step 3: Present Options to the User
+### Paso 3: Presentar opciones al usuario
 
-When you find relevant skills, present them to the user with:
+Cuando encuentre skills relevantes, presente cada una con:
 
-1. The skill name and what it does
-2. The install command they can run
-3. A link to learn more at skills.sh
+1. Nombre de la skill y qué hace.
+2. Comando de instalación que puede ejecutar.
+3. Enlace para más información en skills.sh.
 
-Example response:
+Ejemplo de respuesta:
 
-```
-I found a skill that might help! The "vercel-react-best-practices" skill provides
-React and Next.js performance optimization guidelines from Vercel Engineering.
+```text
+Encontré una skill que puede ayudar. La skill "vercel-react-best-practices"
+entrega guías de optimización React y Next.js del equipo de ingeniería de Vercel.
 
-To install it:
+Para instalarla:
 npx skills add vercel-labs/agent-skills@vercel-react-best-practices
 
-Learn more: https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices
+Más información: https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices
 ```
 
-### Step 4: Offer to Install
+### Paso 4: Ofrecer instalar
 
-If the user wants to proceed, you can install the skill for them:
+Si el usuario decide continuar, puede instalar la skill por él:
 
 ```bash
 npx skills add <owner/repo@skill> -g -y
 ```
 
-The `-g` flag installs globally (user-level) and `-y` skips confirmation prompts.
+La bandera `-g` instala a nivel global (usuario) y `-y` omite confirmaciones.
 
 ### Fijar versión al instalar
 
-Al instalar skills de terceros, fija versión con `@v1` o commit SHA (ej: `npx skills add owner/repo@skill@v1`).
-Así evitas cambios rotos por updates automáticos. Revisa updates con `npx skills check` antes de subir versión.
+Al instalar skills de terceros, fije versión con `@v1` o SHA de commit (ejemplo: `npx skills add owner/repo@skill@v1`).
+Así evita cambios rotos por actualizaciones automáticas. Revise actualizaciones con `npx skills check` antes de subir versión.
 
-## Common Skill Categories
+## Categorías comunes de skills
 
-When searching, consider these common categories:
+Al buscar, considere estas categorías:
 
-| Category        | Example Queries                          |
-| --------------- | ---------------------------------------- |
-| Web Development | react, nextjs, typescript, css, tailwind |
-| Testing         | testing, jest, playwright, e2e           |
-| DevOps          | deploy, docker, kubernetes, ci-cd        |
-| Documentation   | docs, readme, changelog, api-docs        |
-| Code Quality    | review, lint, refactor, best-practices   |
-| Design          | ui, ux, design-system, accessibility     |
-| Productivity    | workflow, automation, git                |
+| Categoría        | Consultas ejemplo                         |
+| ---------------- | ----------------------------------------- |
+| Desarrollo web   | react, nextjs, typescript, css, tailwind  |
+| Pruebas          | testing, jest, playwright, e2e            |
+| DevOps           | deploy, docker, kubernetes, ci-cd         |
+| Documentación    | docs, readme, changelog, api-docs        |
+| Calidad código   | review, lint, refactor, best-practices    |
+| Diseño           | ui, ux, design-system, accessibility       |
+| Productividad    | workflow, automation, git                  |
 
-## Tips for Effective Searches
+## Consejos para búsquedas efectivas
 
-1. **Use specific keywords**: "react testing" is better than just "testing"
-2. **Try alternative terms**: If "deploy" doesn't work, try "deployment" or "ci-cd"
-3. **Check popular sources**: Many skills come from `vercel-labs/agent-skills` or `ComposioHQ/awesome-claude-skills`
+1. **Use palabras específicas**: "react testing" es mejor que solo "testing".
+2. **Pruebe términos alternos**: si "deploy" no funciona, pruebe "deployment" o "ci-cd".
+3. **Revise fuentes populares**: muchas skills vienen de `vercel-labs/agent-skills` o `ComposioHQ/awesome-claude-skills`.
 
-## When No Skills Are Found
+## Cuando no se encuentran skills
 
-If no relevant skills exist:
+Si no existen skills relevantes:
 
-1. Acknowledge that no existing skill was found
-2. Offer to help with the task directly using your general capabilities
-3. Suggest the user could create their own skill with `npx skills init`
+1. Reconozca que no se encontró una skill existente.
+2. Ofrezca ayuda directa con la tarea usando capacidades generales.
+3. Sugiera crear una skill propia con `npx skills init`.
 
-Example:
+Ejemplo:
 
-```
-I searched for skills related to "xyz" but didn't find any matches.
-I can still help you with this task directly! Would you like me to proceed?
+```text
+Busqué skills relacionadas con "xyz" pero no encontré coincidencias.
+Igual puedo ayudar con esta tarea directamente. Desea que continúe?
 
-If this is something you do often, you could create your own skill:
+Si esto es algo frecuente, puede crear su propia skill:
 npx skills init my-xyz-skill
+```
+
+## Ejemplo mínimo
+
+Flujo completo copiable para "revisión de PR":
+
+```bash
+npx skills find pr review
+# Revisar ficha en https://skills.sh/ antes de instalar
+npx skills add vercel-labs/agent-skills@vercel-react-best-practices@v1
+npx skills check
+```
+
+Respuesta mínima al usuario:
+
+```text
+Skill: vercel-react-best-practices — guías de revisión React y Next.js.
+Instalar: npx skills add vercel-labs/agent-skills@vercel-react-best-practices@v1
+Ficha: https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices
+Prueba: pida "revisa este componente con la skill instalada" y compare con baseline.
 ```
 
 ## Referencias oficiales y repositorios famosos
@@ -179,5 +199,5 @@ Esta sección amplía sin modificar el flujo de descubrimiento existente. Úsela
 - [ ] La instalación fija versión con `@v1` o SHA y evita `latest` implícito.
 - [ ] Se ofrece instalación asistida con `-g -y` solo tras aprobación del usuario.
 - [ ] Si no existen resultados, se ofrece ayuda directa y creación con `npx skills init`.
-- [ ] No se instalan skills con permisos excesivos sin revisión deDocs.
+- [ ] No se instalan skills con permisos excesivos sin revisión de docs.
 - [ ] El skill instalado se prueba con un prompt real antes de declararlo útil.

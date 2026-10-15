@@ -470,3 +470,74 @@ Usted realiza 10 pasadas: 1 delimitar objeto en 1 frase, 2 recuperar proceso, 3 
 ### 4. Revision x3 anti-alucinacion
 
 Usted verifica 3 veces: 1 busqueda inicial, 2 contraste cruzado en segunda fuente independiente, 3 apertura directa de URL, archivo o comando el dia de entrega. Usted registra las 3 revisiones con fecha. Usted solo declara listo con evidencia fresca y conteo. Usted prohibe Co-Authored-By, Generated-By y --no-verify. Usted exige Conventional Commits y git log --oneline -10 limpio antes de push cuando aplique.
+
+## Anexo B - Kit ejecutable (comandos listos + referencias oficiales 2026)
+
+Usted aplica este anexo despues del Anexo A y del Rigor x10. Usted no borra nada previo. Usted mantiene aprobacion escrita antes de publicar, borrar o migrar. Usted verifica con `docker ps` y `curl -k -I` antes de declarar listo. Fecha de verificacion de referencias: 2026-10-15.
+
+### B.1 Referencias oficiales que usted cita
+
+| Fuente | URL | Cuando usted la abre |
+|---|---|---|
+| Docker docs Compose | https://docs.docker.com/compose/ | Networks, volumes y healthcheck antes de afirmar sintaxis |
+| Caddy docs | https://caddyserver.com/docs/ | Caddyfile, reverse_proxy y TLS automatico con wildcard |
+| restic docs | https://restic.readthedocs.io/ | Init, backup, forget, check y restore con deduplicacion |
+| kernel.org WireGuard | https://www.kernel.org/doc/html/latest/networking/ | WireGuard en kernel, AllowedIPs y handshake |
+| Microsoft Learn contenedores Windows | https://learn.microsoft.com/virtualization/windowscontainers/ | Cuando el host es Windows con Docker Desktop |
+| web.dev HTTPS | https://web.dev/articles/why-https-matters/ | HSTS y redireccion HTTPS que usted exige en Caddy |
+| web.dev cache HTTP | https://web.dev/articles/http-cache/ | Cache-Control en apps estaticas tras el proxy |
+
+Usted prefiere docs oficiales sobre videos. Usted verifica el repo con webfetch si tiene dudas.
+
+### B.2 Chequeo previo en 60 segundos (ejecutable)
+
+```bash
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+df -h
+bottle status
+nslookup web.ejemplo.cl
+curl -k -I https://web.ejemplo.cl/health
+ls -l /run/secrets/db_password /srv/bottle/.env
+```
+
+Exito: contenedor `Up healthy`, `curl` con 200, secretos en 0600 y DNS que resuelve. Si `df -h` muestra menos de 20 por ciento libre, usted limpia Tier 1 y poda con `docker image prune -f` solo con aprobacion.
+
+### B.3 Publicar o actualizar una app (ejecutable)
+
+```bash
+bottle deploy -c cloudinabottle.toml
+bottle status
+docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+curl -k -I https://web.ejemplo.cl/health
+curl -k -I https://api.ejemplo.cl/health
+bottle backup --all
+restic -r /srv/bottle-backups/restic snapshots | tail -n 5
+```
+
+Rollback: `bottle deploy -c cloudinabottle.toml.prev` o restaurar volumen desde `/srv/bottle-backups/<fecha>` con procedimiento probado. Usted no borra el origen hasta tener HTTPS en verde y restore probado.
+
+### B.4 Respaldo restic diario y prueba mensual (ejecutable)
+
+```bash
+export RESTIC_PASSWORD_FILE=/run/secrets/restic
+restic -r /srv/bottle-backups/restic backup /srv/bottle/web_data /srv/bottle/pgdata --tag diario
+restic -r /srv/bottle-backups/restic forget --keep-daily 7 --keep-weekly 4 --keep-monthly 6 --prune
+restic -r /srv/bottle-backups/restic check
+mkdir -p /tmp/restore-test && restic -r /srv/bottle-backups/restic restore latest --target /tmp/restore-test --include "*/config.json"
+ls -lh /tmp/restore-test
+```
+
+Sin restore probado en `/tmp/restore-test`, usted no declara respaldo listo. Usted alerta si `bottle backup --all` no corrio en 24 horas.
+
+### B.5 WireGuard y Uptime Kuma solo por VPN (ejecutable)
+
+```bash
+wg show
+ip a show wg0
+ss -ulpn | grep 51820
+docker ps --format "table {{.Names}}\t{{.Status}}" | grep -E "kuma|caddy"
+curl -k -I https://10.8.0.1:3001/
+docker logs caddy --tail 50 | grep -i -E "error|tls|cert"
+```
+
+Usted exige handshake reciente en `wg show` y admin solo por `10.8.0.0/24`. Si no hay handshake, usted revisa reloj, puerto UDP 51820 y `journalctl -u wg-quick@wg0`.

@@ -34,13 +34,73 @@ End-to-end testing with Playwright. Focus on user flows, not implementation deta
 
 ```
 pages/
-  login.page.ts    # selectors + actions for /login
-  checkout.page.ts # selectors + actions for /checkout
+  login.page.ts    # selectores + acciones para /login
+  checkout.page.ts # selectores + acciones para /checkout
+tests/
+  login.spec.ts    # aserciones y flujos
+  checkout.spec.ts
 ```
 
-- Selectors in page objects, assertions in tests.
-- One page object per route/component.
-- Async methods returning locators, not raw elements.
+- Selectores en page objects, aserciones en tests.
+- Un page object por ruta/componente.
+- Metodos async que devuelven acciones, no elementos crudos.
+
+Ejemplo real minimo (clase completa):
+
+```typescript
+// pages/login.page.ts
+import type { Page, Locator } from '@playwright/test';
+
+export class LoginPage {
+  readonly page: Page;
+  readonly email: Locator;
+  readonly password: Locator;
+  readonly submit: Locator;
+  readonly error: Locator;
+
+  constructor(page: Page) {
+    this.page = page;
+    // Prioridad getByRole > getByLabel > getByTestId
+    this.email = page.getByLabel('Email');
+    this.password = page.getByLabel('Contraseña');
+    this.submit = page.getByRole('button', { name: 'Iniciar sesión' });
+    this.error = page.getByTestId('login-error');
+  }
+
+  async goto(): Promise<void> {
+    await this.page.goto('/login');
+  }
+
+  async login(email: string, password: string): Promise<void> {
+    await this.email.fill(email);
+    await this.password.fill(password);
+    await this.submit.click();
+  }
+}
+```
+
+Uso en el spec (asercion fuera del page object):
+
+```typescript
+// tests/login.spec.ts
+import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/login.page';
+
+test('login feliz redirige a /panel', async ({ page }) => {
+  const login = new LoginPage(page);
+  await login.goto();
+  await login.login('ana@ejemplo.cl', 'Clave1234.');
+  await page.waitForURL('/panel');
+  await expect(page.getByRole('heading', { name: 'Panel' })).toBeVisible();
+});
+
+test('login con clave invalida muestra error', async ({ page }) => {
+  const login = new LoginPage(page);
+  await login.goto();
+  await login.login('ana@ejemplo.cl', 'clave-erronea');
+  await expect(login.error).toContainText('Credenciales inválidas');
+});
+```
 
 ### Fixtures
 
@@ -63,20 +123,96 @@ page.locator('.btn-primary')      // breaks on restyle
 page.locator('//div[2]/button')   // breaks on restructure
 ```
 
+### Configuracion completa (playwright.config.ts)
+
+```typescript
+// playwright.config.ts
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './tests',
+  timeout: 30 * 1000,
+  expect: { timeout: 5000 },
+  fullyParallel: true,
+  forbidOnly: !!process.env.CI,
+  // Reintentos: 2 en CI, 0 en local
+  retries: process.env.CI ? 2 : 0,
+  // Workers: 1 en CI para corridas deterministas, auto en local
+  workers: process.env.CI ? 1 : undefined,
+  reporter: [['list'], ['html', { open: 'never' }]],
+  use: {
+    baseURL: process.env.BASE_URL ?? 'http://localhost:3000',
+    // Trace solo en reintento para depurar sin llenar disco
+    trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
+  },
+  projects: [
+    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
+    { name: 'webkit', use: { ...devices['Desktop Safari'] } },
+    // Viewports moviles solicitados por la estrategia
+    { name: 'mobile-iphone', use: { ...devices['iPhone 14'] } },
+    { name: 'mobile-pixel', use: { ...devices['Pixel 7'] } },
+  ],
+  // Levanta la app antes de los tests en CI
+  // webServer: {
+  //   command: 'npm run start',
+  //   url: 'http://localhost:3000',
+  //   reuseExistingServer: !process.env.CI,
+  //   timeout: 120 * 1000,
+  // },
+});
+```
+
+Claves: `trace: on-first-retry` habilita `trace.zip`, `workers: 1` en CI
+evita condiciones de carrera, `retries: 2` absorbe flakiness de red.
+
 ## CI Configuration
 
 ```yaml
-# Playwright in CI
-- uses: actions/checkout@v4
-- uses: actions/setup-node@v4
-- run: npx playwright install --with-deps chromium
-- run: npx playwright test --reporter=html
-- uses: actions/upload-artifact@v4
-  if: failure()
-  with:
-    name: playwright-report
-    path: playwright-report/
+# .github/workflows/e2e.yml — Chromium + Firefox + WebKit
+name: e2e
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # Instala dependencias del SO + el navegador de la matriz
+      - run: npx playwright install --with-deps ${{ matrix.project }}
+      - run: npx playwright test --project=${{ matrix.project }} --reporter=html
+        env:
+          CI: true
+          BASE_URL: http://localhost:3000
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-${{ matrix.project }}
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7
 ```
+
+- Matriz con `chromium`, `firefox` y `webkit` para regresion cruzada.
+- `install --with-deps <navegador>` instala dependencias del SO en el runner.
+- `--project=` ejecuta solo el navegador de la matriz; el trace (`on-first-retry`) y el HTML quedan en `test-results/` y `playwright-report/`.
+- `retries=2` y `workers=1` vienen del `playwright.config.ts` cuando `CI=true`.
 
 - `--retries=2` in CI, `--retries=0` locally.
 - `--workers=1` in CI for deterministic runs.

@@ -219,6 +219,30 @@ docker compose run --rm app sh
 docker compose logs --since 1h app
 ```
 
+## Secretos BuildKit y escaneo Trivy
+
+```dockerfile
+# syntax=docker/dockerfile:1.7
+FROM node:22-alpine AS deps
+WORKDIR /app
+COPY package.json pnpm-lock.yaml ./
+RUN --mount=type=secret,id=npm_token \
+  NPM_TOKEN=$(cat /run/secrets/npm_token) pnpm install --frozen-lockfile
+```
+
+```bash
+# Build con secreto sin dejar rastro en capas
+DOCKER_BUILDKIT=1 docker build --secret id=npm_token,src=.npm_token -t app:latest .
+
+# Escaneo de vulnerabilidades HIGH y CRITICAL
+trivy image --severity HIGH,CRITICAL --no-progress app:latest
+
+# app:latest (alpine 3.19.1)
+# Total: 0 (HIGH: 0, CRITICAL: 0)
+```
+
+El secreto nunca queda en el historial de capas. Corrija primero CRITICAL, luego HIGH, y bloquee el deploy si hay CRITICAL sin corregir.
+
 ## Rules
 
 - Multi-stage builds. Always.

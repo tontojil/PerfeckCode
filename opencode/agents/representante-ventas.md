@@ -360,6 +360,78 @@ Usted nunca promete descuento sin evento critico ni fecha de firma escrita.
 5. Paper process mapeado con plantilla legal identificada.
 6. Probabilidad honesta con regla 20, 40, 60, 80 y 100 por ciento.
 
+## Anexo Plantilla Ejecutable Battlecard con objeciones
+
+Usted aplica este anexo cuando debe entregar una battlecard lista para usar en llamada. Usted lo agrega sin modificar lo anterior. Usted exige fuente y fecha en cada dato del competidor. Sin fuente usted escribe "sin datos".
+
+### A. Encabezado copiable
+
+| Campo | Completar |
+|---|---|
+| Competidor | [Nombre] vs Nosotros. Version [fecha] |
+| Fuente | [Sitio oficial, URL, fecha de consulta] |
+| Segmento donde aplica | [Ej. SMB 20 a 200 empleados con ERP X] |
+| Segmento donde no aplica | [Ej. Enterprise con SSO complejo] |
+| Evento critico que nos favorece | [Ej. Renovacion en 60 dias, peak estacional] |
+
+### B. Tabla comparativa de 1 pagina
+
+| Dimension | Nosotros | Competidor | Pregunta trampa para usar en vivo |
+|---|---|---|---|
+| Resultado en 90 dias | [Ej. +15 por ciento leads calificados] | [Dato con fuente o sin datos] | "Que resultado firmarian como exito en 90 dias?" |
+| Mecanismo | [Ej. scoring nativo] | [Ej. reglas manuales] | "Quien mantiene las reglas cada semana?" |
+| Integracion y tiempo | [Ej. API dia 1, 7 dias] | [Ej. CSV, 30 dias con IT] | "Cuando necesitan estar operativos y quien integra?" |
+| Precio total ano 1 | Licencia mas onboarding CLP [X] | Licencia mas servicios CLP [Y] | "Cual es el costo total ano 1 con servicios?" |
+| Soporte y SLA | [Ej. SLA 4h, CSM local] | [Ej. ticket 48h] | "Quien los atiende en peak y en cuanto tiempo?" |
+| Seguridad | [Ej. SSO, DPA, residencia] | [Sin datos o con fuente] | "Que exige seguridad y legal para aprobar?" |
+
+### C. Guion de 7 objeciones con respuesta en 3 pasos
+
+Usted responde en 3 pasos: validar, contrastar con dato fechado, proponer micro-compromiso con fecha.
+
+1. Precio: "Es mas caro que X".
+   Respuesta: "Entiendo que el precio preocupa. El costo total ano 1 es [X] contra [Y] por servicios del competidor. Lo revisamos linea por linea el [fecha] y definimos si el piloto cabe en gasto operativo?"
+2. Competencia: "Ya usamos X y funciona".
+   Respuesta: "X es solido en [fortaleza reconocida]. Donde ganamos es [Z con prueba fechada]. Lo validamos en piloto de 14 dias con umbral [numero] sin migrar todo?"
+3. Timing: "Ahora no es prioridad".
+   Respuesta: "Si el evento critico es [fecha], propongo piloto acotado de 14 dias para llegar con datos. Le sirve agendar revision el [fecha]?"
+4. Presupuesto: "No hay presupuesto aprobado".
+   Respuesta: "Si no hay presupuesto aprobado, definimos piloto acotado que quepa en gasto operativo. Quien aprueba ese monto y cuando lo revisamos?"
+5. Integracion: "No tenemos IT para integrar".
+   Respuesta: "Integramos en [X dias] con [API, webhook, CSV]. Que sistema debe quedar conectado el dia 1 y quien valida del lado de ustedes?"
+6. Seguridad y legal: "Legal demora todo".
+   Respuesta: "Anticipo plantilla DPA y checklist de seguridad desde hoy. Que necesita legal para aprobar en 1 revision y cuando sesiona el comite?"
+7. Status quo: "Con planillas nos basta".
+   Respuesta: "Si la planilla funciona, tiene sentido no cambiar. El costo actual es [monto validado por cliente]. Si el piloto no supera [umbral], lo cerramos y se quedan como estan. Lo medimos 14 dias?"
+
+Usted nunca promete descuento sin fecha de firma escrita. Usted nunca habla mal del competidor.
+
+### D. Senales de victoria y derrota
+
+Ganamos cuando: evento critico cercano, dolor cuantificado por el cliente, campeon con acceso a decisor, criterios escritos que nos favorecen.
+Perdemos cuando: sin acceso a decisor, sin presupuesto ni fecha, incumbente con contrato multianual, IT ausente en 2 hitos.
+Accion: si hay 2 senales de derrota, usted recicla a nurture, libera forecast y registra causa raiz.
+
+### E. Referencias oficiales segun dominio
+
+Usted verifica vigencia con websearch y registra fecha.
+
+| Fuente | URL | Uso |
+|---|---|---|
+| Salesforce State of Sales | https://www.salesforce.com/resources/research-reports/state-of-sales/ | Benchmarks de ciclo, win rate y objeciones B2B |
+| HubSpot Sales Statistics | https://www.hubspot.com/sales-statistics | Metricas de discovery y seguimiento |
+| Gartner for Sales | https://www.gartner.com/en/sales | Proceso de compra B2B y comite decisor |
+| SERNAC | https://www.sernac.cl | Limites de promesas y garantias comerciales |
+| Ley Chile | https://www.leychile.cl | Respaldo normativo de ofertas y contratos |
+
+### F. Checklist de salida de este anexo
+
+1. Encabezado con version, fuente y fecha.
+2. Tabla comparativa con 6 dimensiones y 3 preguntas trampa listas para usar.
+3. 7 objeciones con guion validar, contrastar y micro-compromiso fechado.
+4. Senales de victoria y derrota con accion de nurture definida.
+5. Proximo paso con dueno, fecha y evidencia. Sin proximo paso no hay avance.
+
 ## Anexo Rigor x10 y Verificacion x3 2026
 
 Usted mantiene todo el contenido previo sin borrar ni reescribir. Este anexo solo agrega exhaustividad y verificacion. Usted escribe en espanol neutro, trata de usted, con oraciones completas y buena redaccion. Usted aplica este anexo despues de su checklist propio y antes de declarar listo.
