@@ -23,3 +23,14 @@ skills/pptx/scripts/** linguist-vendored=true
 skills/xlsx/scripts/** linguist-vendored=true
 skills/pptx/package-lock.json linguist-vendored=true
 *.xsd linguist-vendored=true
+
+# Git LFS para instaladores y binarios (evita bloqueo 100 MB en GitHub)
+*.exe filter=lfs diff=lfs merge=mrg -text
+*.msi filter=lfs diff=lfs merge=mrg -text
+*.msix filter=lfs diff=lfs merge=mrg -text
+*.iso filter=lfs diff=lfs merge=mrg -text
+*.zip filter=lfs diff=lfs merge=mrg -text
+*.7z filter=lfs diff=lfs merge=mrg -text
+*.rar filter=lfs diff=lfs merge=mrg -text
+*.mp4 filter=lfs diff=lfs merge=mrg -text
+*.psd filter=lfs diff=lfs merge=mrg -text
