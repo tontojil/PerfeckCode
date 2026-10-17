@@ -4,10 +4,10 @@ Catalogo central de skills para Claude Code. Las skills se auto-descubren desde
 `~/.claude/skills/` (cada una con su `SKILL.md`). Esta tabla es la referencia rapida:
 escanea triggers ANTES de codear y aplica la skill que calce.
 
-- **Total skills:** 74
+- **Total skills:** 77
 - **Fuente:** `~/.claude/skills/`
 - **Invocacion:** Claude carga la skill por su `name` del frontmatter cuando el contexto calza.
-- **Ultima sync:** 2026-09-26
+- **Ultima sync:** 2026-10-17
 
 ---
 
@@ -90,6 +90,7 @@ escanea triggers ANTES de codear y aplica la skill que calce.
 | `informe-maestro` | Sistema definitivo informes largos CUALQUIER tema con nota maxima: densidad, codigos D/F/CU/CA/K/S/R, formulas, limites, APA 7. |
 | `sistematizacion-uc` | Sistematizacion UC Trabajo Social personas mayores, plan accion, Jara/Martinic/Cifuentes, formato UC APA 7. |
 | `pdf` | Manipular PDFs: unir, dividir, OCR, tablas, formularios. |
+| `rescatar-pdf` | Rescatar PDFs que el lector nativo no puede abrir ("PDF parser FaaS call failed"): extrae texto e imágenes con PyMuPDF local. |
 
 ## Core & Workflow
 

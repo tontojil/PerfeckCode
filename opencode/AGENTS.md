@@ -114,5 +114,6 @@ Primario con Tab: `tonto jil`, identico a build (acceso total, en rojo). No se i
 Usa la herramienta skill cuando la descripción calza. Las skills se descubren nativamente desde ~/.claude/skills y skills/ del proyecto. No uses Read manual.
 Claves para trabajos académicos: `informe-maestro` (informes largos de cualquier tema con calidad Diente Feliz), `inacap` (DOCX formato INACAP), `sistematizacion-uc` (DOCX formato UC Trabajo Social personas mayores, Jara/Martinic/Cifuentes), `pptx`, `xlsx`,
 `pandoc`, `pdf`, `depuracion-sistematica`, `verificacion-final`.
+PDF que no se lee ("PDF parser FaaS call failed", "does not support pdf input"): usa `rescatar-pdf` (texto e imágenes con PyMuPDF local).
 Web: `diseno-frontend` + `buen-gusto-diseno`.
 En caso de conflicto, prevalece la indicación del docente.
