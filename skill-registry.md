@@ -86,7 +86,7 @@ escanea triggers ANTES de codear y aplica la skill que calce.
 | `pandoc` | Conversor universal MD/DOCX/PDF/HTML/EPUB/LaTeX/PPTX. |
 | `pptx` | Cualquier .pptx: decks, slides, presentaciones. |
 | `xlsx` | Cualquier planilla .xlsx/.xlsm/.csv/.tsv como input/output. |
-| `inacap` | DOCX academico formato INACAP (python-docx) + Anexo 7.0 para maxima calificacion. |
+| `inacap` | DOCX academico formato INACAP (python-docx) + Anexo 7.0, indices TOC automaticos con `\h` y actualizacion con Word (`actualizar_word.ps1`). |
 | `informe-maestro` | Sistema definitivo informes largos CUALQUIER tema con nota maxima: densidad, codigos D/F/CU/CA/K/S/R, formulas, limites, APA 7. |
 | `sistematizacion-uc` | Sistematizacion UC Trabajo Social personas mayores, plan accion, Jara/Martinic/Cifuentes, formato UC APA 7. |
 | `pdf` | Manipular PDFs: unir, dividir, OCR, tablas, formularios. |

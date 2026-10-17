@@ -462,6 +462,7 @@ Antes de correr el script usted verifica: 1. Usa `inacap/template.py`, nunca el 
 2. PROHIBIDO `doc.add_heading` en crudo sin linea: deja H1 sin borde rojo. Use siempre `heading(doc, text, level)`. QA exigido: H1 con linea #ed1c24 = total de H1.
 3. PROHIBIDO lista manual de indice: el indice es UNICAMENTE el campo automatico `TOC \o "1-3" \h \z \u` con Heading 1, 2 y 3 reales. Al abrir vaya a Referencias > Actualizar tabla. No se escribe estatico ni suplemento tipeado.
 4. PROHIBIDO Read en PDF de 30 a 124 paginas: falla con `PDF parser FaaS call failed`. Use `pypdf` en local para patron oro (Diente Feliz 124p, 59 tablas, 35 figuras, 26058 palabras, 14 cierres, 25 refs).
+5. PROHIBIDO indice "rellenado a mano" o con numeros escritos: si el indice no redirige con Ctrl+clic, esta malo. Reglas que evitan repetir el caso Diente Feliz: (a) los 3 indices son campos automaticos (`TOC \o "1-3" \h \z \u` para contenido, `TOC \c "Tabla" \h \z` y `TOC \c "Figura" \h \z` para tablas y figuras) con `\h` obligatorio para hipervinculos; (b) cada epigrafe lleva campo SEQ (`SEQ Tabla` / `SEQ Figura`) y NUNCA numero tipeado; (c) el estilo de los titulos de indice (TOCTitulo) NO lleva nivel de esquema, o los indices se tragan sus propios titulos; (d) el cierre del trabajo es con Word real: script `actualizar_word.ps1` (abre el DOCX, actualiza todos los campos, guarda y exporta el PDF), luego se verifica el PDF con la skill `rescatar-pdf`. QA exigido: 3 campos TOC + SEQ Tabla = total de tablas + SEQ Figura = total de figuras + Ctrl+clic redirige en los 3 indices.
 
 ---
 
