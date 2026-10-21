@@ -93,6 +93,7 @@ Use agents PROACTIVELY via Agent tool with `subagent_type`. Agents self-document
 | CI/CD, Docker, deploy, GitHub Actions | `ingeniero-despliegue` |
 | E2E tests, Playwright, regressions | `ingeniero-calidad-qa` |
 | Docs, README, changelog, ADR, PPTX, XLSX, DOCX | `redactor-tecnico` |
+| Humanizar informe, quitar IA, detectores Turnitin/GPTZero | `humanizador-informes` |
 | PR review, code quality, security | `revisor-codigo` + `auditor-seguridad` (parallel) |
 | Monitoring, logging, tracing, SLI/SLO, alerts | `ingeniero-observabilidad` |
 | Code review, static analysis, quality gates | `revisor-codigo` |

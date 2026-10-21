@@ -72,6 +72,7 @@ Primario con Tab: `tonto jil`, identico a build (acceso total, en rojo). No se i
 - Avisos pagados Google/Meta/TikTok -> @auditor-anuncios "@auditor-anuncios audita mis avisos de Google"
 - Aprender a programar gratis -> @mentor-programacion "@mentor-programacion enséñame Python desde cero"
 - Nube propia y servidor -> @jefe-nube-propia "@jefe-nube-propia publica mi app en mi servidor"
+- Humanizar informe, quitar IA, detectores Turnitin/GPTZero -> @humanizador-informes "@humanizador-informes humaniza esta introducción que marca IA"
 
 ### Triggers
 
@@ -108,12 +109,14 @@ Primario con Tab: `tonto jil`, identico a build (acceso total, en rojo). No se i
 | Avisos pagados Google/Meta/TikTok | @auditor-anuncios |
 | Aprender a programar gratis | @mentor-programacion |
 | Nube propia y servidor | @jefe-nube-propia |
+| Humanizar informe, quitar IA, detectores | @humanizador-informes |
 
 ## Skills
 
 Usa la herramienta skill cuando la descripción calza. Las skills se descubren nativamente desde ~/.claude/skills y skills/ del proyecto. No uses Read manual.
 Claves para trabajos académicos: `informe-maestro` (informes largos de cualquier tema con calidad Diente Feliz), `inacap` (DOCX formato INACAP), `sistematizacion-uc` (DOCX formato UC Trabajo Social personas mayores, Jara/Martinic/Cifuentes), `pptx`, `xlsx`,
 `pandoc`, `pdf`, `depuracion-sistematica`, `verificacion-final`.
+Anti-IA para informes: `escritura-humana` (humanizar en español, rewrite/detect/edit, 2 pases), `detector-ia` (score local 0-100 + gate pass/warn/fail), base inglesa `avoid-ai-writing` (SKILL.md + references/patterns.md + detector/).
 PDF que no se lee ("PDF parser FaaS call failed", "does not support pdf input"): usa `rescatar-pdf` (texto e imágenes con PyMuPDF local).
 Web: `diseno-frontend` + `buen-gusto-diseno`.
 En caso de conflicto, prevalece la indicación del docente.
