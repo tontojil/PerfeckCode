@@ -4,10 +4,10 @@ Catalogo central de skills para Claude Code. Las skills se auto-descubren desde
 `~/.claude/skills/` (cada una con su `SKILL.md`). Esta tabla es la referencia rapida:
 escanea triggers ANTES de codear y aplica la skill que calce.
 
-- **Total skills:** 80
-- **Fuente:** `~/.claude/skills/`
+- **Total skills:** 104 (80 base + 24 contrib)
+- **Fuente:** `~/.claude/skills/` (base en raiz, nuevas en `skills/contrib/`)
 - **Invocacion:** Claude carga la skill por su `name` del frontmatter cuando el contexto calza.
-- **Ultima sync:** 2026-10-21
+- **Ultima sync:** 2026-10-26
 
 ---
 
@@ -125,3 +125,34 @@ escanea triggers ANTES de codear y aplica la skill que calce.
 | `traspaso-sesion` | Estado HANDOFF.md para traspaso de sesion. |
 | `buscar-habilidades` | Descubrir/instalar skills nuevas. |
 | `creador-habilidades` | Crear skills nuevas segun la Agent Skills spec. |
+
+---
+
+## Contrib (nuevas, adaptadas a neutro)
+
+| Skill | Trigger |
+|---|---|
+| `contrib/incident-commander` | Incidente en produccion, severidad, roles y postmortem. |
+| `contrib/slo-architect` | SLI, SLO, error budget y alertas por burn rate. |
+| `contrib/feature-flags` | Flags por entorno, rollout progresivo y kill switch. |
+| `contrib/pr-review-expert` | PR con blast radius, seguridad y cobertura delta. |
+| `contrib/api-test-suite-builder` | Generar suites Vitest y Pytest desde rutas API. |
+| `contrib/performance-profiler` | Profiling Node, Python y Go, bundle y carga. |
+| `contrib/dependency-auditor` | Auditoria multi-lenguaje, licencias y upgrades. |
+| `contrib/skill-security-auditor` | Auditar skill de terceros antes de instalar: PASS, WARN, FAIL. |
+| `contrib/git-worktree-manager` | Trabajo paralelo con worktree y puertos aislados. |
+| `contrib/codebase-onboarding` | Generar docs de onboarding desde el repo. |
+| `contrib/runbook-generator` | Runbooks operativos con comandos exactos. |
+| `contrib/changelog-generator` | Conventional Commits a changelog estructurado. |
+| `contrib/rag-architect` | Pipeline RAG, chunking y evaluacion de retrieval. |
+| `contrib/mcp-server-builder` | MCP desde OpenAPI en Python y TS. |
+| `contrib/agent-workflow-designer` | Patrones secuencial, paralelo, router y evaluador. |
+| `contrib/prompt-toolkit` | Versionar prompts, prueba A/B y calidad. |
+| `contrib/deep-research` | Investigacion con rigor y limites declarados. |
+| `contrib/litreview` | Revision de literatura con matriz y APA 7. |
+| `contrib/interview-mapper` | Codificar entrevistas con citas verificadas. |
+| `contrib/capture` | Volcado mental a acciones con GTD. |
+| `contrib/weekly-review` | Revision semanal GTD con compuerta. |
+| `contrib/deep-work` | Bloques de enfoque y presupuesto superficial. |
+| `contrib/pricing-strategist` | Precios por plan con costos y margen. |
+| `contrib/month-end-close` | Cierre mensual con conciliacion y variaciones. |

@@ -79,6 +79,57 @@ Mida siempre en las mismas condiciones. Mismo dispositivo, misma red y misma URL
    ```
    - La documentacion oficial prevalece. Evalue en p75 de campo (CrUX o RUM), no solo en laboratorio.
 
+## Ejemplo deficiente contra ejemplo correcto
+
+Ejemplo de informe deficiente:
+
+```text
+La pagina ahora carga mas rapido despues de optimizar imagenes.
+```
+
+Problema: no entrega numeros antes y despues, ni comando exacto, ni que cambio causo la mejora. No es verificable.
+
+Ejemplo de informe correcto:
+
+```text
+Reclamo: LCP mejoro en portada tras convertir a WebP.
+Comando ejecutado: npx -y lighthouse https://ejemplo.com --preset=desktop --output=json --output-path=./despues.json --chrome-flags="--headless" (2026-10-20, commit a3f9c1d)
+Resumen: LCP 3,8 s -> 2,1 s, INP 210 ms -> 160 ms, CLS 0,22 -> 0,05.
+Evidencia: antes.json y despues.json con mismos dispositivo y red.
+Causa: portada.png de 1,8 MB reemplazada por portada.webp de 220 KB con dimensiones explicitas.
+Estado final: pass.
+```
+
+Ejemplo de codigo deficiente:
+
+```html
+<img src="portada.png" />
+```
+
+Problema: imagen pesada sin formato moderno, sin tamaño ni carga diferida. Genera LCP alto y CLS por salto de layout.
+
+Ejemplo de codigo correcto:
+
+```html
+<img src="portada.webp" srcset="portada-480.webp 480w, portada-960.webp 960w"
+  sizes="(max-width: 600px) 480px, 960px"
+  width="960" height="540" loading="lazy" decoding="async" alt="Portada de la tienda" />
+```
+
+## Niveles de aplicacion
+
+- Base o pagina simple: linea base Lighthouse, optimizacion de imagenes y tabla antes y despues.
+- Intermedio o sitio con trafico: lo anterior mas particion de JavaScript por ruta, CSS critico y presupuesto en CI con budget.json.
+- Avanzado o ecommerce: todo lo anterior mas datos de campo en p75 con web-vitals, hit-rate de CDN y monitoreo continuo.
+
+## Reglas estrictas
+
+- Sin numero no hay mejora. Mida antes, cambie una cosa y mida despues en mismas condiciones.
+- Evalue en p75 de datos de campo, no solo en laboratorio. La documentacion oficial prevalece.
+- Reporte siempre LCP, INP y CLS con comando exacto, fecha o commit y archivo JSON o captura.
+- Si el proyecto define presupuesto en budget.json, ese valor es obligatorio. Si lo excede, el estado es fail.
+- Un cambio a la vez. Si mezcla varios cambios, no atribuya la mejora a uno solo.
+
 ## Output Contract
 
 Entregue: tabla antes | despues de LCP/INP/CLS con comando exacto, captura o JSON, y que cambio causo cada mejora.

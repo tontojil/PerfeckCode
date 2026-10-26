@@ -81,6 +81,70 @@ Stock: mochila negra inicial 20 - vendidas 3 = 17, sistema muestra 17 -> cuadra
 Folios restantes 39: 120. Si quedan < 20, solicitar nuevos CAF.
 ```
 
+## Ejemplo deficiente contra ejemplo correcto
+
+Ejemplo de flujo deficiente:
+
+```text
+Cliente paga y se emite la boleta de inmediato por el monto del carrito.
+```
+
+Problema: emite antes de confirmar el pago en el servidor y no verifica que carrito, pago y boleta calcen. Genera descuadres y dobles boletas.
+
+Ejemplo de flujo correcto:
+
+```python
+# Ejemplo mínimo: no emitir si hay descuadre
+carrito = 25990
+pago_confirmado = 25990
+if carrito != pago_confirmado:
+    raise ValueError("Descuadre: frenar y no emitir boleta")
+# recién aquí emitir boleta 39 por 25990
+emitir_boleta_39(monto=carrito, folio_caf=46)
+```
+
+Ejemplo de decision de documento deficiente:
+
+```text
+Todo pago con tarjeta lleva boleta 39 adicional por seguridad.
+```
+
+Problema: duplica el documento cuando el voucher Webpay ya es valido como boleta. Genera doble tributacion aparente.
+
+Ejemplo de decision correcta:
+
+```text
+Cliente paga 25.000 CLP con tarjeta Webpay aprobada -> voucher válido como boleta. NO emitir boleta 39 adicional.
+Cliente transfiere 25.000 CLP -> emitir boleta electrónica 39 por 25.000 CLP, enviar PDF + QR.
+Empresa pide factura por 100.000 CLP + IVA -> emitir factura 33 por 119.000 CLP total.
+Cliente devuelve producto con boleta 45 -> emitir nota de crédito 61 que referencia folio 45.
+```
+
+## Niveles de aplicacion
+
+- Base o primera venta: papeles al dia, un canal, emision manual con verificacion de montos y cierre diario en cuaderno o planilla.
+- Intermedio o tienda web activa: carrito con confirmacion en servidor, cola de emision, stock unico local mas web y revision semanal del RCV.
+- Avanzado o alto volumen: todo lo anterior mas conciliacion automatica pago contra DTE, alertas de folios bajos, monitoreo de rechazos y cierre contable con contador antes del F29.
+
+## Reglas estrictas
+
+- Nunca emita boleta o factura antes de confirmar el pago en su servidor. Lo que diga el navegador no vale.
+- Monto carrito debe ser igual a monto pago y a monto boleta. Si difieren, frene y no emita.
+- Un folio se usa una sola vez. Si el SII rechaza por folio duplicado, tome uno nuevo y reemita.
+- Tarjeta aprobada con voucher valido no lleva segunda boleta. Efectivo y transferencia siempre llevan boleta 39.
+- Devolucion siempre con nota de credito 61 que referencia el folio original. Prohibido devolver sin nota.
+- Cierre diario 23:59 obligatorio con suma local mas web y cuadre de stock. Si no cuadra, frene ventas y revise.
+- No guarde RUT completo ni claves en texto plano en ordenes o logs.
+
+### Checklist aplicable antes de la primera venta real
+
+- [ ] RUT con giro, certificado digital vigente y folios CAF por tipo verificados en sii.cl.
+- [ ] Flujo carrito -> crear pago -> confirmar en servidor -> emitir -> enviar comprobante probado en ambiente de pruebas.
+- [ ] Tabla de ordenes con orden, folio, trackId y estado sin datos sensibles.
+- [ ] Regla de montos iguales aplicada en codigo y probada con descuadre simulado.
+- [ ] Cierre diario y revision semanal del RCV definidos con responsable.
+- [ ] Plan sin internet con folios de reserva y sincronizacion antes de 24 horas.
+
 ## Repositorios
 
 - Plataforma ecommerce: https://github.com/woocommerce/woocommerce - plataforma abierta de comercio electronico sobre WordPress para tienda, catalogo y checkout.

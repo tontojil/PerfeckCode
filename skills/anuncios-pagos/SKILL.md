@@ -69,6 +69,39 @@ Llamado: Cotice por WhatsApp hoy y reciba mañana.
 UTM: ?utm_source=google&utm_medium=cpc&utm_campaign=flores_santiago
 ```
 
+## Ejemplo deficiente contra ejemplo correcto
+
+Ejemplo de decision deficiente:
+
+```text
+La campaña en Meta gasta mucho, hay que subir el presupuesto para vender mas.
+```
+
+Problema: opina sin gasto, ventas, costo por venta ni ROAS por rango de fechas. No verifica tracking ni UTM.
+
+Ejemplo de decision correcta:
+
+```text
+Meta IG 01-07 oct: gasto 35.000 CLP, ventas 42.000 CLP, costo por venta 14.000 CLP, ROAS 1,2, health_score 55.
+Objetivo: costo maximo 9.000 CLP. Decision: pausar y revisar creativo, no escalar.
+Evidencia: reporte de plataforma mas UTM coincidente con ventas en base propia.
+```
+
+## Niveles de aplicacion
+
+- Base o primera campaña: una meta, una audiencia, una oferta, presupuesto diario maximo y fecha de revision. Sin datos no se opina.
+- Intermedio o pauta activa: auditoria semanal por plataforma con health_score, evidence_coverage y decision escrita de mantener, pausar o escalar.
+- Avanzado o multi-plataforma: todo lo anterior mas experimentos A/B con tope, ventana de verificacion y reversibilidad garantizada.
+
+## Reglas estrictas
+
+- Ningun cambio sin evidencia y sin permiso del dueño dentro de topes. Sin topes no hay escritura.
+- Verifique conversion tracking, UTM y coincidencia de montos antes de opinar sobre rendimiento.
+- Cobertura bajo 60 por ciento se marca como insufficient_evidence y no se califica.
+- No realice borrado permanente. Todo cambio debe ser reversible con plan de reversion.
+- No guarde claves ni tokens de cuentas publicitarias en el repositorio ni en el chat.
+- Meta minima antes de escalar: una venta medible con costo objetivo cumplido.
+
 ## Referencias oficiales
 
 - Google Ads Ayuda: https://support.google.com/google-ads

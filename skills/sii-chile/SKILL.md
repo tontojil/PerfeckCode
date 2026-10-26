@@ -79,6 +79,65 @@ pfx vigente: si | CAF tipo 39 con folios 124-200: si | XSD valido: si -> firmar
 pfx vencido o sin folios -> detener y avisar, no firmar
 ```
 
+## Ejemplo deficiente contra ejemplo correcto
+
+Ejemplo de emision deficiente:
+
+```python
+# Emite y supone que el trackId es aprobacion
+track_id = sii.emit(xml_firmado)
+guardar_como_aceptado(track_id)
+```
+
+Problema: el comprobante inicial solo es acuse de recibo. Sin poll hasta estado final no sabe si el SII acepto, observo o rechazo.
+
+Ejemplo de emision correcta:
+
+```python
+# Pseudocodigo valido para cualquier motor DTE
+dte = {
+    "tipo": 39,          # boleta electronica
+    "folio": 124,        # tomado una sola vez desde CAF
+    "receptor_rut": "66666666-6",
+    "monto_neto": 8403,
+    "monto_iva": 1597,
+    "monto_total": 10000,
+}
+xml_firmado = firmar(dte, certificado_pfx="ruta/segura/cert.pfx")
+track_id = sii.emit(xml_firmado)  # solo acuse de recibo
+
+# Consultar hasta estado final, sin reutilizar folio
+estado = sii.poll(track_id)  # DOK, DNK, RCH o EPR
+while estado == "EPR":
+    esperar(minutos=5)
+    estado = sii.poll(track_id)
+guardar(dte["tipo"], dte["folio"], track_id, estado)
+```
+
+## Niveles de aplicacion
+
+- Base o emision ocasional: validacion previa de pfx, CAF y XSD, emision con poll hasta estado final y archivo de XML y PDF.
+- Intermedio o venta diaria: lo anterior mas asignacion de folios con transaccion, cola de reintentos para EPR y registro de folio, fecha y estado.
+- Avanzado o alto volumen: todo lo anterior mas alertas de vencimiento de certificado y folios bajos, conciliacion contra RCV y monitoreo de rechazos por tipo.
+
+## Reglas estrictas
+
+- El SII autoriza a su RUT, no al software. El comprobante inicial no es aprobacion.
+- Un folio se usa una sola vez por tipo DTE. No mezcle folios entre tipos. Si rechazan por duplicado, tome uno nuevo.
+- Produccion usa canal REST y certificacion usa SOAP con resolucion 0. No mezcle ambientes.
+- Si queda en EPR mas de 30 minutos, encole y reintente cada 5 y 30 minutos sin reutilizar folio y sin reemitir con otro folio.
+- Custodie el pfx y su clave en vault, nunca en env ni en el chat. Avise 15 dias antes del vencimiento.
+- No emitir o reutilizar folio se sanciona segun el Codigo Tributario. Confirme con su contador.
+
+### Checklist aplicable antes de firmar
+
+- [ ] Certificado pfx vigente y con RUT autorizado para facturar.
+- [ ] CAF vigente del mismo tipo DTE con folios disponibles.
+- [ ] RUT receptor valido, montos con IVA calculado y formato XSD sin errores.
+- [ ] Folio asignado una sola vez con transaccion por tipo.
+- [ ] Poll hasta DOK, DNK, RCH o EPR con trackId, fecha y estado registrados.
+- [ ] XML y PDF archivados con tipo, folio, trackId y estado final.
+
 ## Errores frecuentes
 
 - `RCH por folio duplicado`: tome folio nuevo, corrija y reemita.
