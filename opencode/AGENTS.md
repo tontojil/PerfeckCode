@@ -111,6 +111,15 @@ Primario con Tab: `tonto jil`, identico a build (acceso total, en rojo). No se i
 | Nube propia y servidor | @jefe-nube-propia |
 | Humanizar informe, quitar IA, detectores | @humanizador-informes |
 
+## Equipos (/comandos full por tema)
+
+El primario `tonto-jil` orquesta. No implementa directo, delega con `Task` en paralelo y guarda el plan en `HANDOFF.md`. Loop con `/ralph` hasta 5 intentos y cierre con `/verify`.
+
+- `/equipo-programacion` "implementa login JWT": jefe-producto, arquitecto-backend, disenador-ui-ux, desarrollador-frontend, ingeniero-calidad-qa, depurador, revisor-codigo, auditor-seguridad, ingeniero-rendimiento, ingeniero-despliegue.
+- `/equipo-informes` "informe de 30 paginas con DOCX": redactor-tecnico, analista-datos, humanizador-informes, tutor-inacap, trabajo-social.
+- `/equipo-negocios` "plan GTM y propuesta": estratega-ceo, finanzas-cfo, estratega-marketing, representante-ventas, vendedor-redes, auditor-anuncios, jefe-operaciones, exito-cliente, recursos-humanos, legal-cumplimiento, jefe-producto.
+- `/equipo-sistemas` "publica mi app con Docker": ingeniero-windows, ingeniero-linux, jefe-nube-propia, ingeniero-despliegue, ingeniero-observabilidad, ingeniero-rendimiento, auditor-seguridad, cazador-vulnerabilidades con autorizacion, super-agente-sii, mentor-programacion.
+
 ## Skills
 
 Usa la herramienta skill cuando la descripción calza. Las skills se descubren nativamente desde ~/.claude/skills y skills/ del proyecto. No uses Read manual.
