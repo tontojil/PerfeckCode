@@ -1,0 +1,129 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  // Formato automatico despues de editar (patron oh-my-opencode).
+  "formatter": true,
+  // Agente por defecto del proyecto. No fija modelo global.
+  "default_agent": "perfeck",
+  // Modelo personal no fijado aqui para estabilidad v1+v2. Ejemplo:
+  // "model": "opencode/su-modelo",
+  // Tema solo en cli.json con theme perfeckcode. tui.jsonc quedo obsoleto en V2 y se elimino.
+  // MCP portable v1+v2. Solo remote para no atar rutas de Windows.
+  "mcp": {
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp"
+    }
+    // Ejemplo opcional codegraph (no activo):
+    // "codegraph": {
+    //   "type": "local",
+    //   "command": ["codegraph", "serve", "--mcp"]
+    // },
+    // Ejemplo local para engram (descomente y ajuste la ruta con ~):
+    // "engram": {
+    //   "type": "local",
+    //   "command": ["~/engram/bin/engram", "mcp", "--tools=agent"]
+    // }
+  },
+  // Permisos en formato objeto documentado hoy. No migrar a arreglo permissions.
+  // Defensa en profundidad: secretos piden confirmacion antes de abrir.
+  "permission": {
+    "read": {
+      "**/.env*": "ask",
+      "**/secrets/**": "ask",
+      "**/credentials.json": "ask",
+      // Llaves privadas y config de editor con tokens: preguntan, no pasan directo.
+      "**/*.pem": "ask",
+      "**/*.key": "ask",
+      "**/*.p12": "ask",
+      "**/*.pfx": "ask",
+      "**/id_rsa*": "ask",
+      "**/id_ed25519*": "ask",
+      "**/.ssh/**": "ask",
+      "**/*token*": "ask",
+      "**/settings.json": "ask"
+    },
+    "edit": {
+      "**/.env*": "ask",
+      "**/secrets/**": "ask",
+      "**/credentials.json": "ask",
+      // Llaves privadas y config de editor con tokens: preguntan, no pasan directo.
+      "**/*.pem": "ask",
+      "**/*.key": "ask",
+      "**/*.p12": "ask",
+      "**/*.pfx": "ask",
+      "**/id_rsa*": "ask",
+      "**/id_ed25519*": "ask",
+      "**/.ssh/**": "ask",
+      "**/*token*": "ask",
+      "**/settings.json": "ask"
+    },
+    // Solo comandos seguros por defecto, instalacion con confirmacion, destructivos denegados.
+    "bash": {
+      "git status": "allow",
+      "git diff*": "allow",
+      "git log*": "allow",
+      "npm ci": "allow",
+      "npm audit": "allow",
+      "npm install": "ask",
+      "git push": "ask",
+      "python *": "allow",
+      "python -m markitdown*": "allow",
+      "pandoc *": "allow",
+      "rm -rf *": "deny",
+      "sudo *": "deny"
+    },
+    // Skills con confirmacion por defecto para evitar prompt injection. Cambie a allow solo por skill auditada.
+    "skill": {
+      "*": "ask"
+    }
+  },
+  // Guarda de delegacion del orquestador (patron gentle-ai + docs oficiales
+  // de permisos de subagent en V2). La clave V1 `task` se mantiene como
+  // plantilla: el instalador la traduce a la accion nativa `subagent`; no la
+  // renombre a mano. perfeck solo delega a especialistas propios, y esta lista
+  // debe coincidir con los 32 agentes mode: subagent de opencode/agents/*.md.
+  // Sin esto OpenCode 2 puede rutear a los subagentes built-in explore/general
+  // que no tienen skill tool. Ultima regla coincidente gana: "*" deny primero.
+  "agent": {
+    "perfeck": {
+      "permission": {
+        "question": "allow",
+        "task": {
+          "*": "deny",
+          "analista-datos": "allow",
+          "arquitecto-backend": "allow",
+          "auditor-anuncios": "allow",
+          "auditor-seguridad": "allow",
+          "cazador-vulnerabilidades": "allow",
+          "depurador": "allow",
+          "desarrollador-frontend": "allow",
+          "disenador-ui-ux": "allow",
+          "estratega-ceo": "allow",
+          "estratega-marketing": "allow",
+          "exito-cliente": "allow",
+          "finanzas-cfo": "allow",
+          "humanizador-informes": "allow",
+          "ingeniero-calidad-qa": "allow",
+          "ingeniero-despliegue": "allow",
+          "ingeniero-linux": "allow",
+          "ingeniero-observabilidad": "allow",
+          "ingeniero-rendimiento": "allow",
+          "ingeniero-windows": "allow",
+          "jefe-nube-propia": "allow",
+          "jefe-operaciones": "allow",
+          "jefe-producto": "allow",
+          "legal-cumplimiento": "allow",
+          "mentor-programacion": "allow",
+          "recursos-humanos": "allow",
+          "redactor-tecnico": "allow",
+          "representante-ventas": "allow",
+          "revisor-codigo": "allow",
+          "super-agente-sii": "allow",
+          "trabajo-social": "allow",
+          "tutor-inacap": "allow",
+          "vendedor-redes": "allow"
+        }
+      }
+    }
+  }
+}

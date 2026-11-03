@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "scripts": { "test": "bun test tests" },
+  "dependencies": { "@opencode/plugin": "2.1.2" }
+}
