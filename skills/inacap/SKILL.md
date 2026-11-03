@@ -429,9 +429,9 @@ Orden: titulo, subtitulo si hay, profesor nombre completo, integrantes completos
 
 1 tabla cada 1.5 a 2 paginas con formato "Tabla N. Titulo. Fuente: Elaboracion propia." Mas Nota cuando aplica. Figuras con "Figura N. Titulo. Nota. Elaboracion propia." Indices de tablas y figuras al inicio cuando hay mas de 5. Minimo 5 referencias APA 7 con fecha de recuperacion en trabajo corto, 10 en medio, 20 en titulo. Guia base obligatoria: INACAP (s.f.). Guia para citas y referencias bibliograficas segun Norma APA, 7.a edicion. https://digital.inacap.cl/documentos/biblioteca/Norma_APA_7ma_ed_v2.pdf
 
-### C. Trazabilidad INACAP con codigos
+### C. Trazabilidad INACAP (solo interna, nunca en DOCX)
 
-D1-Dn evidencias del equipo, F1-Fn fuentes oficiales, CU/RF/CA/KPI segun carrera, S01 supuestos, R01 riesgos. Mas 3 tablas: objetivos vs capitulos, trazabilidad completa, correspondencia informe vs rubrica del docente (criterio, seccion, evidencia). Esta ultima es la que el docente usa para calificar.
+D1-Dn, F1-Fn, CU, RF, CA, KPI, S01 y R01 son apuntes internos en el chat. PROHIBIDO escribir codigos, tablas de trazabilidad o correspondencia contra rubrica dentro del DOCX. Si necesita verificar, informe en 1 parrafo en el chat.
 
 ### D. Contenido por carrera (plantillas verificadas)
 
@@ -450,7 +450,7 @@ Tildes (Evaluacion, Introduccion, Araucania), mayusculas (INACAP, Ley 21.719, SI
 
 ### G. Entrega 7.0
 
-Usted entrega: ruta completa + paginas estimadas (palabras / 450) + tablas + figuras + palabras + referencias + puntaje rubrica 100 (menos de 80 corrige) + pendientes del estudiante (datos personales, fechas, docente, plazo). Usted aplica verificacion-final antes de declarar listo. Para metodologia de contenido vea `informe-maestro`.
+Usted entrega: ruta completa + paginas estimadas + tablas + figuras + palabras + referencias solo en el chat, nunca dentro del DOCX. Usted aplica verificacion-final antes de declarar listo. Para metodologia de contenido vea `informe-maestro`.
 
 ### H. Checklist pre-generacion INACAP (obligatorio, evita el demo sin formato)
 

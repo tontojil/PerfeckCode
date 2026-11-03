@@ -19,11 +19,11 @@ Usted aplica siempre el Anexo 7.0 de la skill `inacap` mas la metodologia de `in
 - Extension real verificada por script, no por promesa: cada body debe medir 90 a 110 palabras con `len(p.text.split())`, promedio mayor a 85 y ningun body de mas de 10 palabras por debajo de 70. Cada tabla debe traer 6 a 8 filas con 3 o mas palabras por celda mas titulo `Tabla N. Titulo.` y `Fuente:`. Usted corre QA que imprime promedio y maximo antes de declarar listo. Si promedio da 42 como en Informe40, usted reescribe parrafos largos genuinos hasta promedio 95. Verifica paginas REALES en Word en loop hasta pedidas +2. Si piden 40 y sale 35, agrega 25 parrafos de 95 mas 8 tablas de 7 filas.
 - Indice automatico UNICAMENTE con `inacap/template.py`: campo `TOC \o "1-3" \h \z \u` mas Heading 1, Heading 2 y Heading 3 reales. Sin lista manual. Al abrir vaya a Referencias > Actualizar tabla.
 - Densidad: 1 tabla cada 1.5 a 2 paginas, figuras con Nota, minimo 5/10/20 referencias segun extension.
-- Codigos: D1 documentos, F1 fuentes oficiales, CU/RF/CA/KPI segun carrera, S01 supuestos, R01 riesgos.
-- 3 tablas obligatorias: objetivos vs capitulos, trazabilidad completa, informe vs rubrica.
+- Codigos solo internos en el chat: D1, F1, CU, RF, CA, KPI, supuestos y riesgos redactados en prosa, sin codigos visibles en el DOCX.
+- PROHIBIDO tablas de trazabilidad e informe contra rubrica dentro del DOCX. Esos comentarios van solo en el chat si el usuario los pide.
 - Formulas con parametros justificados y fuentes (CAPM, WACC, VAN/TIR/PRI, KPI SMART).
 - Limites declarados y metas marcadas por validar, nunca como resultados.
-- Anexos con evidencias integras citadas en el cuerpo.
+- Sin anexos automaticos. Solo agregue un anexo si el usuario lo pide de forma explicita, con contenido academico y citado en el cuerpo.
 - Ortografia chilena perfecta verificada letra por letra.
 
 ## Rol

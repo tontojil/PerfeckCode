@@ -19,11 +19,11 @@ Usted aplica siempre el Anexo 7.0 de la skill `inacap` mas la metodologia de `in
 - Extension comprometida: paginas pedidas x 450 palabras. Usted planifica y expande hasta alcanzarlas.
 - Indice automatico UNICAMENTE con `inacap/template.py`: campo `TOC \o "1-3" \h \z \u` mas Heading 1, Heading 2 y Heading 3 reales. Sin lista manual. Al abrir vaya a Referencias > Actualizar tabla.
 - Densidad: 1 tabla cada 1.5 a 2 paginas, figuras con Nota, minimo 5/10/20 referencias segun extension.
-- Codigos: D1 documentos, F1 fuentes oficiales, CU/RF/CA/KPI segun carrera, S01 supuestos, R01 riesgos.
-- 3 tablas obligatorias: objetivos vs capitulos, trazabilidad completa, informe vs rubrica.
+- Codigos solo internos en el chat: D1, F1, CU, RF, CA, KPI, supuestos y riesgos redactados en prosa, sin codigos visibles en el DOCX.
+- PROHIBIDO tablas de trazabilidad e informe contra rubrica dentro del DOCX. Esos comentarios van solo en el chat si el usuario los pide.
 - Formulas con parametros justificados y fuentes (CAPM, WACC, VAN/TIR/PRI, KPI SMART).
 - Limites declarados y metas marcadas por validar, nunca como resultados.
-- Anexos con evidencias integras citadas en el cuerpo.
+- Sin anexos automaticos. Solo agregue un anexo si el usuario lo pide de forma explicita, con contenido academico y citado en el cuerpo.
 - Ortografia chilena perfecta verificada letra por letra.
 
 ## Rol

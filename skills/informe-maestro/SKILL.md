@@ -1,6 +1,6 @@
 ---
 name: informe-maestro
-description: Sistema definitivo para informes de cualquier tema con maxima calificacion, densidad verificable, trazabilidad con codigos, tablas y figuras numeradas, formulas justificadas, limites declarados, APA 7 y DOCX. (informes, reportes, tesis, diagnostico, diseno)
+description: Sistema definitivo para informes de cualquier tema con maxima calificacion, densidad verificable, tablas y figuras numeradas, formulas justificadas, limites declarados, APA 7 y DOCX. (informes, reportes, tesis, diagnostico, diseno)
 ---
 
 # Informe Maestro v3 — Sistema Definitivo para Maxima Calificacion
@@ -26,7 +26,7 @@ Todo informe maestro cumple estas densidades medidas en los 7 modelos. Usted las
 | Figuras o diagramas | 1 cada 3 a 4 paginas, todas con Nota | Diente Feliz 35, CientoUno 16, EVA2 8 |
 | Palabras cuerpo | 400 a 500 por pagina; informe 30p = 12.000 a 15.000 palabras | GreenIoT 4.545 en ~20p cuerpo, Andina 2.271 en ~12p cuerpo |
 | Referencias APA 7 | Minimo 5 en informe corto, 10 en medio, 20 en titulo; todas con URL verificada y fecha de recuperacion | CientoUno 30 refs, GreenIoT 10 refs |
-| Capitulos desarrollo | Minimo 5 secciones numeradas + introduccion + conclusiones + referencias + 2 anexos | Todos los modelos |
+| Capitulos desarrollo | Minimo 5 secciones numeradas + introduccion + conclusiones + referencias, sin anexos por defecto | Todos los modelos |
 | Cierres de capitulo | 100% de capitulos con parrafo de cierre que conecta al siguiente | Diente Feliz patron total |
 
 Si no alcanza la densidad, usted expande contenido real (mas evidencia, mas tablas, mas analisis), nunca relleno.
@@ -63,30 +63,16 @@ Indice de Figuras (Figura N + titulo exacto)
 6. Organizacion, riesgos y supuestos (cronograma, RACI o responsables, horas-persona, S01, R01)
 7. Conclusiones (por objetivo en orden + generales + limitaciones + trabajo futuro)
 8. Referencias APA 7 (con fecha de recuperacion)
-Anexo A. Instrumentos o evidencias originales integros
-Anexo B. Catalogos, diccionarios, casos de prueba o calculos
-Anexo C. Vistas, prototipos, maquetas o diagramas complementarios
+Sin anexos por defecto. PROHIBIDO generar anexos automaticos con comentarios internos de la IA. Solo agregue un anexo si el usuario lo pide de forma explicita y con contenido academico, nunca con trazabilidad interna, puntajes ni pendientes.
 ```
 
 Para software: capitulos 3 a 5 son historias, arquitectura 4+1, interfaces, BD, pruebas, UML. Para finanzas: son inversion, WACC, depreciacion, flujos, VAN/TIR/PRI, sensibilidad. Para innovacion: son oportunidades, requerimientos, casos, ideacion, metricas, co-creacion. La logica no cambia.
 
-## 4. Sistema de codigos de trazabilidad (obligatorio)
+## 4. Sistema de codigos de trazabilidad (solo interno, nunca en DOCX)
 
-Todo elemento lleva codigo. Sin codigo no es trazable y baja la nota:
+Los codigos D1-Dn, F1-Fn, CU, RF, CA, K, S01 y R01 son solo apuntes internos de la IA en el chat. PROHIBIDO escribirlos en el DOCX, en tablas visibles o en anexos. Si necesita verificar cobertura, informe en el chat en 1 parrafo, sin tablas de trazabilidad ni matriz contra rubrica en el documento.
 
-| Codigo | Uso | Ejemplo modelo |
-|---|---|---|
-| D1-Dn | Documentos o evidencias del equipo | D1 portafolio EVA1, D2 instrumento perfil, D7 material asignatura |
-| F1-Fn | Fuentes oficiales externas | F1 Mercado Libre ecosistema, F3 Chatwoot community, F5 Odoo docs |
-| CU01-CUn | Casos de uso | CU01 autenticarse, CU06 gestionar eventos y pagos |
-| RF/RNF | Requerimientos funcionales y no funcionales | RF02 fichas, RNF01 aislamiento |
-| CA01-CAn o CP01-CPn | Casos de aceptacion o prueba | CA01 login con MFA, CP11 agendar mismo doctor otro box se rechaza |
-| K1-Kn o KPI | Indicadores SMART | K1 mediana dias emision cartas, K3 uso semanal feed |
-| S01-Sn | Supuestos pendientes de validacion | S01 dos sucursales con 6 boxes |
-| R01-Rn | Riesgos con mitigacion | R01 agenda consume mas horas, probabilidad media impacto alto |
-| AT/VC/AS/GA o similar | Catalogo de ideas o elementos | AT01 transcriptor voz, VC03 carrito conversacional |
-
-Mas 3 tablas obligatorias: (a) objetivos vs capitulos, (b) trazabilidad completa elemento-evidencia-capitulo, (c) correspondencia informe vs rubrica (criterio, seccion, evidencia principal). La tabla (c) es la que el docente usa para poner la nota.
+PROHIBIDO incluir en el DOCX las 3 tablas internas: (a) objetivos vs capitulos, (b) trazabilidad completa, (c) informe vs rubrica. Esos comentarios de la IA van solo en el chat si el usuario los pide, nunca en el documento entregado.
 
 ## 5. Tablas y figuras formato 7.0
 
@@ -95,7 +81,7 @@ Tabla:
 ```
 Tabla N. Titulo descriptivo con variables.
 [contenido, encabezado negrita fondo oscuro, filas alternadas]
-Nota. Elaboracion propia a partir de X / Sintesis de instrumento Y [D2] / Adaptado de Autor (ano).
+Nota. Elaboracion propia a partir de X / Sintesis de instrumento Y / Adaptado de Autor (ano).
 ```
 
 Figura:
@@ -156,16 +142,9 @@ Limites declarados:
 - Variar longitud de oraciones (cortas 10-15 palabras con largas 25-35).
 - Cada parrafo de desarrollo = afirmacion + evidencia + analisis.
 
-## 9. Evidencia en anexos (lo que separa 6.0 de 7.0)
+## 9. Anexos (solo si el usuario los pide)
 
-Minimo 2 anexos, ideal 3 a 4:
-
-- Anexo A. Instrumentos originales integros (fotos PNG, lienzos, canvas, mapas) con pie "Original proporcionado por el equipo, conservado integro. Ampliar la imagen digital para revisar el detalle."
-- Anexo B. Catalogo completo codificado (40 ideas AT/VC/AS/GA, 22 casos CA, diccionario 18 tablas, 42 casos prueba) con nota de que los codigos se crearon para facilitar consulta.
-- Anexo C. Vistas conceptuales o prototipo (pantallas, maquetas, diagramas) con advertencia "Son imagenes de apoyo a la ideacion. Sus cifras son ejemplos; no muestran un sistema implementado."
-- Anexo D. Estados, permisos, privacidad, continuidad (maquinas de estado, matriz RACI o de permisos por rol, flujo de datos personales).
-
-Cada anexo citado al menos una vez en el cuerpo. Nada de anexo sin cita.
+PROHIBIDO generar anexos automaticos. No agregue Anexo A, B, C ni D por defecto, y nunca incluya catalogos codificados, matrices de trazabilidad ni comentarios internos de la IA. Si el usuario pide un anexo academico de forma explicita, incluya solo ese contenido y citelo una vez en el cuerpo.
 
 ## 10. Flujo de trabajo en 7 pasos (no se salta ninguno)
 
@@ -173,23 +152,23 @@ Cada anexo citado al menos una vez en el cuerpo. Nada de anexo sin cita.
 2. Propuesta de indice completo numerado antes de redactar. Sin indice aprobado no hay redaccion.
 3. Investigacion: minimo 3 queries WebSearch, 5 fuentes (1 norma, 1 academica, 1 dato, 1 marco, 1 alternativa), WebFetch a cada URL el dia de entrega.
 4. Escritura por capitulos con patron apertura-desarrollo-cierre. Cada capitulo con al menos 1 tabla. Conteo continuo de tablas, figuras, palabras.
-5. Codificacion: asignar D, F, CU, CA, K, S, R a cada elemento y construir las 3 tablas de trazabilidad.
-6. Honestidad: agregar supuestos S01, riesgos R01, limites declarados, matriz rubrica vs seccion.
-7. QA y entrega: rubrica 100 puntos, checklist ortografia, conteo real paginas/tablas/figuras/referencias, skill verificacion-final, informe de entrega con ruta + numeros + puntaje + pendientes del estudiante.
+5. Cobertura: verifique en el chat que cada objetivo quedo cubierto, sin escribir codigos ni tablas de trazabilidad en el DOCX.
+6. Honestidad: agregue limites declarados y metas marcadas por validar. Supuestos y riesgos van redactados en prosa, sin codigos S01 ni R01 visibles en el documento.
+7. QA y entrega: checklist ortografia, conteo real paginas/tablas/figuras/referencias, skill verificacion-final. El puntaje, la ruta y los pendientes del estudiante se informan solo en el chat, nunca dentro del DOCX.
 
 ## 11. Rubrica universal 100 puntos (autoaplicada, menos de 80 corrige)
 
 | Criterio | Max | Que verifica para 7.0 |
 |---|---|---|
 | Portada y presentacion formal | 10 | Nombres, carrera, asignatura con codigo, seccion, docente completo, fecha, sede; cero faltas |
-| Indices y estructura | 15 | Indice contenido + tablas + figuras con numeros reales; orden portada, indices, intro, desarrollo, conclusiones, referencias, anexos |
-| Desarrollo y densidad | 30 | Responde todo lo pedido, 1 tabla cada 1.5-2p, figuras con Nota, formulas con parametros y fuentes, codigos D/F/CU/CA/K |
-| Trazabilidad y honestidad | 15 | 3 tablas obligatorias, supuestos S01, riesgos R01, limites declarados, metas marcadas por validar |
+| Indices y estructura | 15 | Indice contenido + tablas + figuras con numeros reales; orden portada, indices, intro, desarrollo, conclusiones, referencias |
+| Desarrollo y densidad | 30 | Responde todo lo pedido, 1 tabla cada 1.5-2p, figuras con Nota, formulas con parametros y fuentes |
+| Trazabilidad y honestidad | 15 | Limites declarados y metas marcadas por validar, sin tablas internas en el documento |
 | Conclusiones | 10 | Una por objetivo en orden, responde objetivo general, limitaciones, trabajo futuro, conclusiones personales si equipo |
 | Bibliografia APA 7 | 10 | Minimo 5/10/20 segun extension, citas en texto, lista ordenada, URLs verificadas con fecha recuperacion |
 | Redaccion y formato | 10 | Espanol neutro formal, fuente unica, interlineado uniforme, paginas numeradas, checklist ortografia pasado |
 
-Usted informa puntaje por criterio al entregar, por ejemplo 9+13+27+13+9+9+9 = 89.
+Usted informa puntaje por criterio solo en el chat, nunca dentro del DOCX.
 
 ## 12. Workflow DOCX
 
@@ -227,8 +206,8 @@ Los informes flojos de 9 a 11 paginas con 11 a 15 tablas fallan en lo mismo. Ust
 
 - NUNCA inventar datos, entrevistas, cifras, citas ni URLs. Lo no validado es Supuesto S01.
 - NUNCA numero sin formula, parametro y fuente. NUNCA meta presentada como resultado.
-- SIEMPRE indice aprobado antes de redactar, patron apertura-cierre por capitulo, 3 tablas de trazabilidad, limites declarados, matriz rubrica.
-- SIEMPRE conteo real: paginas, tablas, figuras, palabras, referencias. Ruta completa + numeros al entregar.
+- SIEMPRE indice aprobado antes de redactar, patron apertura-cierre por capitulo y limites declarados. PROHIBIDO tablas de trazabilidad y matriz contra rubrica dentro del DOCX.
+- SIEMPRE conteo real: paginas, tablas, figuras, palabras, referencias. Ruta completa + numeros solo en el chat, nunca en el documento.
 - WebFetch a cada URL el dia de entrega. Si no abre, se elimina.
 
 ## Archivos

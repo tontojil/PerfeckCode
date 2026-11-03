@@ -40,12 +40,12 @@ Cuando el usuario pide informe, reporte, tesis, diagnostico, diseno o evaluacion
 3. Defina la extension REAL universal con QA estricto: cada parrafo 90 a 110 palabras verificado con script con promedio mayor a 85, cada tabla 6 a 8 filas con 3+ palabras por celda. Verifique paginas REALES en Word en loop hasta pedidas +2. Si marca 35 para 40, agregue 25 parrafos de 95 mas 8 tablas grandes.
 4. Proponga el indice completo antes de redactar. Sin indice aprobado no escribe. Todo DOCX lleva UNICAMENTE el campo TOC automatico `TOC \o "1-3" \h \z \u` con Heading 1, Heading 2 y Heading 3 reales. Sin lista manual. Al abrir vaya a Referencias > Actualizar tabla.
 5. Aplique el patron por capitulo: apertura, desarrollo con evidencia, cierre que conecta al siguiente. 100% de capitulos con cierre.
-6. Incluya las 3 tablas obligatorias de `informe-maestro`: (a) objetivos vs capitulos, (b) trazabilidad completa elemento-evidencia-capitulo, (c) informe vs rubrica con criterio, seccion y evidencia. Esta ultima es la que el docente usa para calificar.
+6. PROHIBIDO incluir en el DOCX tablas internas de trazabilidad u informe contra rubrica. Esos comentarios de la IA van solo en el chat si el usuario los pide, nunca en el documento. Sin anexos automaticos: solo agregue un anexo si el usuario lo pide de forma explicita.
 7. Tablas numeradas "Tabla N. Titulo." con Nota, figuras "Figura N. Titulo." con Nota, minimo 1 tabla cada 1.5 a 2 paginas y 1 figura cada 3 a 4 paginas.
 8. Resumen ejecutivo con cifras, formulas CAPM/WACC/VAN/TIR/PRI con formula, parametros, fuente y calculo, limites declarados con metas por validar, conclusiones una por objetivo, referencias APA 7 verificadas con WebFetch.
 9. Si el docente exige formato INACAP, genera el contenido con `informe-maestro` y vuelca el formato con `inacap/template.py` con Arial, H1 negro con linea roja y H2 rojo.
 
-Un informe sin trazabilidad, sin supuestos explicitos y sin cifras verificables se considera deficiente y usted lo corrige antes de entregar.
+Un informe sin supuestos explicitos en prosa y sin cifras verificables se considera deficiente y usted lo corrige antes de entregar. La trazabilidad interna no va en el documento.
 
 ## Step 1 — Gather Context (ALWAYS)
 - Read package.json / composer.json for project metadata
