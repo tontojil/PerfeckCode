@@ -3,6 +3,41 @@ name: pruebas-apps-moviles
 description: Estrategias de testing móvil, tests unitarios, integración, UI, snapshots y pipelines CI para Android Espresso e iOS XCTest. (mobile, testing, Espresso, XCTest)
 ---
 
+## Versiones mínimas
+
+- Android: `compileSdk` 37, AGP `9.1.2` o superior, Java 17 (Temurin).
+- Android unitarios: JUnit 4.13+ (o JUnit 5 con `kotlin-test`), MockK `1.13+`, Turbine `1.0+` para `StateFlow`, `kotlinx-coroutines-test` para `runTest`.
+- Android UI: Compose BOM `2026.08.00`+, Espresso `3.6+`, UIAutomator `2.3+`, Roborazzi `1.30+`.
+- iOS: Xcode `26.4.1` o superior (Swift `6.3.x`, SDK iOS `26.5`), destino `iPhone 16` en simulador.
+- iOS libs: XCTest y XCUITest incluidos en Xcode, swift-snapshot-testing `1.18+`.
+- Unity (cuando el juego es Unity): Unity 6 LTS + Test Framework `1.4+` (EditMode y PlayMode).
+- CI: runner `ubuntu-latest` para Android y `macos-26` o superior para iOS.
+
+## Ejemplo mínimo probado
+
+Unitario Android mínimo (JUnit + `runTest`, sin mocks):
+
+```kotlin
+class SumaTest {
+    @Test
+    fun `suma basica`() = runTest {
+        assertEquals(4, 2 + 2)
+    }
+}
+```
+
+Unitario iOS mínimo (XCTest, compila en Xcode 26):
+
+```swift
+import XCTest
+
+final class SumaTests: XCTestCase {
+    func testSumaBasica() {
+        XCTAssertEqual(2 + 2, 4)
+    }
+}
+```
+
 ## Cuando usar
 
 Usa esta skill cuando escribas tests para apps Android o iOS.
@@ -260,3 +295,45 @@ jobs:
 - `FakeXxx` implementations over mocks for complex dependencies.
 - Test file mirrors source file path.
 - CI pipeline: unit → integration → UI.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar las estrategias existentes. Úsela para validar testing Android e iOS.
+
+### Documentación oficial
+
+- Testing Android: https://developer.android.com/training/testing — fundamentos, capas y estrategia.
+- Compose Testing: https://developer.android.com/develop/ui/compose/testing — `createComposeRule`, matchers y sincronización.
+- JUnit y Espresso: https://developer.android.com/training/testing/espresso — UI funcional en Android.
+- XCTest Apple: https://developer.apple.com/documentation/xctest — unit y performance en iOS y macOS.
+- XCUITest: https://developer.apple.com/documentation/xctest/user-interface-tests — automatización de interfaz.
+- Swift Testing: https://developer.apple.com/documentation/testing — framework moderno de pruebas Swift.
+- Firebase Test Lab: https://firebase.google.com/docs/test-lab — dispositivos reales en la nube para Android e iOS.
+- Unity Test Framework: https://docs.unity3d.com/Packages/com.unity.test-framework@1.1/manual/index.html — EditMode y PlayMode en Unity 6.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Mobile Testing: https://github.com/shellyln/awesome-mobile — recursos curados de testing móvil.
+- MockK: https://github.com/mockk/mockk — mocks para Kotlin y corutinas.
+- Roborazzi: https://github.com/takahashi-shubun/roborazzi — screenshot testing para Compose.
+- swift-snapshot-testing: https://github.com/pointfreeco/swift-snapshot-testing — snapshots en SwiftUI y UIKit.
+- Turbine: https://github.com/cashapp/turbine — testing de `Flow` y `StateFlow`.
+
+### Guías de profundización sugeridas
+
+- Revise la pirámide de testing Android antes de agregar UI tests costosos.
+- Consulte Compose Testing para aislar estado con `FakeViewModel` en cada test.
+- Valide XCUITest con `launchArguments` para datos deterministas.
+- Verifique snapshots en modo claro y oscuro antes de aprobar cambios visuales.
+- Mida cobertura y tiempo: unitarios en cada PR, UI en nightly o Test Lab.
+
+### Checklist de verificación
+
+- [ ] Se consultó `developer.android.com/training/testing` o `developer.apple.com/documentation/xctest` según plataforma.
+- [ ] Los unitarios aíslan dependencias externas y utilizan objetos reales para el resto.
+- [ ] Los tests UI verifican flujos de usuario, no implementación interna.
+- [ ] Existen snapshots en tema claro y oscuro cuando hay cambios visuales.
+- [ ] Los tests Swift de ViewModel utilizan `@MainActor`.
+- [ ] Los tests Kotlin utilizan `runTest` con `advanceUntilIdle` o `advanceTimeBy`.
+- [ ] Cada archivo de test replica la ruta del archivo fuente.
+- [ ] El pipeline CI ejecuta en orden: unit, integración y UI.

@@ -6,7 +6,7 @@ Detalle de firmas y ejemplos. Resumen y decision rapida en `../SKILL.md`.
 
 ## Forma funcion
 
-Muchos utils aceptan el valor a transformar como **ultimo** argumento. Si lo omitis, devuelven una **funcion** reutilizable. Excepcion: **random()** usa `true` final.
+Muchos utils aceptan el valor a transformar como **ultimo** argumento. Si se omite, devuelven una **funcion** reutilizable. Excepcion: **random()** usa `true` final.
 
 ```javascript
 // Con valor: devuelve el resultado
@@ -26,7 +26,7 @@ c(-10); // 0
 gsap.utils.clamp(0, 100, 150); // 100
 ```
 
-Limita un valor entre `min` y `max`. Omiti `value` para forma funcion: `clamp(min, max)(value)`. Uso tipico: drag, scroll, progress.
+Limita un valor entre `min` y `max`. Omitir `value` para forma funcion: `clamp(min, max)(value)`. Uso tipico: drag, scroll, progress.
 
 ### mapRange(inMin, inMax, outMin, outMax, value?)
 
@@ -34,7 +34,7 @@ Limita un valor entre `min` y `max`. Omiti `value` para forma funcion: `clamp(mi
 gsap.utils.mapRange(0, 100, 0, 500, 50); // 250
 ```
 
-Convierte un rango a otro (scroll, progress 0-1, input). Omiti `value` para forma funcion: `mapRange(inMin, inMax, outMin, outMax)(value)`.
+Convierte un rango a otro (scroll, progress 0-1, input). Omitir `value` para forma funcion: `mapRange(inMin, inMax, outMin, outMax)(value)`.
 
 ### normalize(min, max, value?)
 
@@ -42,7 +42,7 @@ Convierte un rango a otro (scroll, progress 0-1, input). Omiti `value` para form
 gsap.utils.normalize(0, 100, 50); // 0.5
 ```
 
-Normaliza a 0-1 dentro del rango. Inverso del mapeo cuando el destino es 0-1. Omiti `value` para forma funcion: `normalize(min, max)(value)`.
+Normaliza a 0-1 dentro del rango. Inverso del mapeo cuando el destino es 0-1. Omitir `value` para forma funcion: `normalize(min, max)(value)`.
 
 ### interpolate(start, end, progress?)
 
@@ -50,7 +50,7 @@ Normaliza a 0-1 dentro del rango. Inverso del mapeo cuando el destino es 0-1. Om
 gsap.utils.interpolate(0, 100, 0.5); // 50
 ```
 
-Interpola entre dos valores con `progress` 0-1. Acepta numeros, colores y objetos con mismas keys. Omiti `progress` para forma funcion: `interpolate(start, end)(progress)`.
+Interpola entre dos valores con `progress` 0-1. Acepta numeros, colores y objetos con mismas keys. Omitir `progress` para forma funcion: `interpolate(start, end)(progress)`.
 
 ```javascript
 gsap.utils.interpolate("#ff0000", "#0000ff", 0.5); // color intermedio
@@ -87,7 +87,7 @@ gsap.to(".item", { backgroundColor: "random([red, blue, green])" });
 gsap.utils.snap(10, 23); // 20
 ```
 
-Redondea al multiplo de `snapTo` o al valor mas cercano de un array. Omiti `value` para forma funcion: `snap(snapTo)(value)`.
+Redondea al multiplo de `snapTo` o al valor mas cercano de un array. Omitir `value` para forma funcion: `snap(snapTo)(value)`.
 
 ```javascript
 gsap.utils.snap([0, 100, 200], 150); // 100 o 200 (mas cercano)
@@ -185,7 +185,7 @@ Compone funciones: `pipe(f1, f2, f3)(value)` = `f3(f2(f1(value)))`. Ideal para c
 gsap.utils.wrap(0, 360, 370); // 10
 ```
 
-Envuelve el valor en el rango (min inclusivo, max exclusivo). Para scroll infinito o valores ciclicos. Omiti `value` para forma funcion: `wrap(min, max)(value)`.
+Envuelve el valor en el rango (min inclusivo, max exclusivo). Para scroll infinito o valores ciclicos. Omitir `value` para forma funcion: `wrap(min, max)(value)`.
 
 ### wrapYoyo(min, max, value?)
 
@@ -193,4 +193,4 @@ Envuelve el valor en el rango (min inclusivo, max exclusivo). Para scroll infini
 gsap.utils.wrapYoyo(0, 100, 150); // 50 (rebota)
 ```
 
-Como `wrap` pero con rebote en los extremos (ida y vuelta). Omiti `value` para forma funcion.
+Como `wrap` pero con rebote en los extremos (ida y vuelta). Omitir `value` para forma funcion.

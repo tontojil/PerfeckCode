@@ -320,3 +320,44 @@ with open("encrypted.pdf", "wb") as output:
 - For JavaScript libraries (pdf-lib), see reference.md
 - If you need to fill out a PDF form, follow the instructions in forms.md
 - For troubleshooting guides, see reference.md
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar las recetas existentes. Úsela para validar librerías, accesibilidad y OCR.
+
+### Documentación oficial
+
+- pypdf: https://pypdf.readthedocs.io/ — lectura, unión, división, rotación y cifrado.
+- pdfplumber: https://github.com/jsvine/pdfplumber — extracción de texto y tablas con layout.
+- ReportLab: https://docs.reportlab.com/ — creación con Canvas y Platypus.
+- qpdf: https://qpdf.readthedocs.io/ — unión, división y rotación por línea de comando.
+- Poppler `pdftotext`: https://poppler.freedesktop.org/ — extracción con preservación de layout.
+- PDF accesible WCAG: https://www.w3.org/WAI/standards-guidelines/wcag/ — etiquetado, orden de lectura y contraste.
+- Tesseract OCR: https://tesseract-ocr.github.io/ — OCR para PDFs escaneados con `pytesseract`.
+
+### Repositorios famosos y listas curadas
+
+- Awesome PDF: https://github.com/sindresorhus/awesome-pdf — herramientas y librerías curadas.
+- pypdf: https://github.com/py-pdf/pypdf — código fuente y ejemplos oficiales.
+- pdfplumber: https://github.com/jsvine/pdfplumber — issues y casos de tablas complejas.
+- OCRmyPDF: https://github.com/ocrmypdf/OCRmyPDF — OCR con capa de texto buscable.
+- pdf-lib: https://github.com/Hopding/pdf-lib — formularios y edición desde JavaScript.
+
+### Guías de profundización sugeridas
+
+- Revise pypdf antes de manipular páginas cifradas o con permisos restringidos.
+- Consulte pdfplumber para tablas con bordes irregulares y valide con `extract_tables` por página.
+- Valide accesibilidad: PDF etiquetado, idioma, orden de lectura y texto alternativo en imágenes.
+- Verifique OCR con resolución mínima 300 DPI y revisión manual de tablas numéricas.
+- Mida con `reference.md` y `forms.md` antes de elegir entre pypdf, pdf-lib o qpdf.
+
+### Checklist de verificación
+
+- [ ] Se consultó la documentación oficial de la librería utilizada (`pypdf`, `pdfplumber` o `reportlab`).
+- [ ] El texto extraído conserva orden y páginas verificadas por muestreo.
+- [ ] Las tablas se validan fila por fila y se exportan con encabezados correctos.
+- [ ] El PDF generado incluye metadata de título, autor e idioma.
+- [ ] Si es para distribución, se verifica etiquetado y orden de lectura accesible.
+- [ ] El OCR indica páginas procesadas y nivel de confianza cuando aplica.
+- [ ] Las operaciones `qpdf` o `pdftk` se prueban en copia antes de sobrescribir.
+- [ ] No se exponen contraseñas en logs ni en comandos versionados.

@@ -271,3 +271,46 @@ Checklist QA obligatorio antes de entregar (Windows, 8 lineas):
 - [ ] 6) Arial en todo el deck + un visual por slide (imagen, tabla o icono en circulo rojo).
 - [ ] 7) `npx tsc --noEmit` en verde solo si tocaste codigo del skill (scripts/*.ts); no correr por el .pptx.
 - [ ] 8) Archivo abre en PowerPoint sin errores y `thumbnail.py salida.pptx` sin slides rotas; soffice/subagentes opcional.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar el flujo existente. Agrega accesibilidad obligatoria para presentaciones.
+
+### Documentación oficial
+
+- python-pptx: https://python-pptx.readthedocs.io/ — creación, layouts, tablas y texto.
+- PptxGenJS: https://gitbrent.github.io/PptxGenJS/ — generación desde cero con `node` en `skills/pptx/`.
+- MarkItDown PPTX: https://github.com/microsoft/markitdown — extracción de texto para QA de contenido.
+- Accesibilidad PowerPoint Microsoft: https://support.microsoft.com/en-us/office/make-your-powerpoint-presentations-accessible-to-people-with-disabilities-6f7772b2-2f33-4bd2-8ca7-dae3b2b3ef25 — orden de lectura y texto alternativo.
+- WCAG presentaciones W3C: https://www.w3.org/WAI/standards-guidelines/wcag/ — contraste, foco y alternativas textuales.
+- LibreOffice Impress: https://help.libreoffice.org/latest/en-US/text/simpress/main.html — conversión a PDF para QA visual.
+- Paleta y tipografía INACAP: norma interna del curso; ante conflicto, prevalece la indicación del docente.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Presentations: https://github.com/awesome-presentation/awesome-presentations — diseño y recursos curados.
+- python-pptx: https://github.com/python-openxml/python-pptx — código fuente y ejemplos.
+- PptxGenJS: https://github.com/gitbrent/PptxGenJS — demos y tablas de API.
+- MarkItDown: https://github.com/microsoft/markitdown — conversores PPTX a Markdown.
+- Office Scripts: https://learn.microsoft.com/office/dev/scripts/ — automatización complementaria.
+
+### Accesibilidad obligatoria para PPTX
+
+- Defina título único por slide y orden de lectura lógico de arriba hacia abajo.
+- Agregue texto alternativo conciso a cada imagen, icono y gráfico; marque decorativos como tales.
+- Mantenga contraste mínimo 4.5:1 para cuerpo y 3:1 para títulos grandes; verifique rojo `#ed1c24` sobre blanco.
+- No transmita información solo con color; agregue etiqueta textual o patrón.
+- Utilice tablas reales con fila de encabezado, no texto con tabulaciones ni imágenes de tablas.
+- Agregue subtítulos o transcripción si el deck incluye audio o video embebido.
+- Exporte PDF etiquetado cuando el entregable deba leerse con lector de pantalla.
+
+### Checklist de verificación
+
+- [ ] Se consultó `python-pptx.readthedocs.io` o `PptxGenJS` según vía de creación o edición.
+- [ ] `python -m markitdown salida.pptx` resulta legible y sin placeholders.
+- [ ] Cada slide posee título único y un elemento visual pertinente.
+- [ ] Todo objeto no textual posee texto alternativo o está marcado decorativo.
+- [ ] El contraste de texto y de iconos cumple WCAG AA verificado manualmente.
+- [ ] Las tablas utilizan encabezados reales y orden de lectura correcto.
+- [ ] La paleta INACAP se respeta cuando el deck es académico.
+- [ ] El archivo abre en PowerPoint sin errores y el QA visual completa un ciclo fix-and-verify.

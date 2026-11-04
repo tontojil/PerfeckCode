@@ -3,6 +3,17 @@ name: ffmpeg
 description: Comandos FFmpeg para convertir, comprimir, cortar, unir video y audio, filtros, subtítulos y proceso en lote. Úsela cuando trabaje con video o audio por consola. (FFmpeg, video conversion, compression, trimming)
 ---
 
+Esta skill cubre conversión, compresión, corte, unión, subtítulos y procesamiento por lotes con FFmpeg por consola. Úsela cuando necesite transformar video o audio de forma reproducible y verificable.
+
+## Ejemplo minimo
+
+Verificar instalacion y convertir a MP4 compatible con web:
+
+```bash
+ffmpeg -version
+ffmpeg -i entrada.mov -c:v libx264 -crf 23 -preset medium -c:a aac -b:a 128k -movflags +faststart salida.mp4
+```
+
 ## Common Operations
 
 ### Convert Video Format
@@ -16,6 +27,12 @@ ffmpeg -i input.mp4 -c:v libvpx-vp9 -crf 30 -b:v 0 -c:a libopus -b:a 128k output
 
 # MP4 (H.265/HEVC — smaller file)
 ffmpeg -i input.mp4 -c:v libx265 -crf 28 -preset medium -c:a aac -b:a 128k output.mp4
+
+# Extraer audio a MP3 192k (conversión audio)
+ffmpeg -i input.mp4 -vn -c:a libmp3lame -b:a 192k output.mp3
+
+# Convertir a MP4 compatible con web (+faststart)
+ffmpeg -i input.mov -c:v libx264 -crf 23 -preset medium -c:a aac -b:a 128k -movflags +faststart output.mp4
 ```
 
 ### Compress Video
@@ -30,6 +47,9 @@ ffmpeg -i input.mp4 -c:v libx264 -b:v ${BITRATE}k -pass 2 -c:a aac -b:a 128k out
 
 # Quick compress (single pass, CRF)
 ffmpeg -i input.mp4 -c:v libx264 -crf 28 -preset fast -c:a copy output.mp4
+
+# Comprimir audio a AAC 96k (voz o podcast)
+ffmpeg -i input.m4a -c:a aac -b:a 96k output-small.m4a
 ```
 
 ### Trim / Cut
@@ -43,6 +63,9 @@ ffmpeg -i input.mp4 -ss 00:01:30 -to 00:03:00 -c:v libx264 -crf 23 -c:a aac outp
 
 # Remove first 10 seconds
 ffmpeg -i input.mp4 -ss 00:00:10 -c copy output.mp4
+
+# Extraer segmento de 30 segundos desde el minuto 1 (corte por duración)
+ffmpeg -ss 00:01:00 -i input.mp4 -t 30 -c copy output.mp4
 ```
 
 ### Merge / Concat
@@ -100,6 +123,9 @@ ffmpeg -i input.mp4 -vf subtitles=subtitle.srt -c:a copy output.mp4
 
 # Add as track (soft)
 ffmpeg -i input.mp4 -i subtitle.srt -c copy -c:s mov_text output.mp4
+
+# Extraer subtítulos a archivo .srt
+ffmpeg -i input.mp4 -map 0:s:0 subtitle.srt
 ```
 
 ### Batch Processing
@@ -171,3 +197,44 @@ ffmpeg -i input.mp4 -vf "select='not(mod(n,30))',scale=160:90,tile=5x5" -frames:
 - `ffprobe` to inspect before processing.
 - Always specify `-c:a` explicitly. Default varies by format.
 - `-movflags +faststart` for web-playable MP4s.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los comandos existentes. Úsela para validar filtros, codecs y uso web.
+
+### Documentación oficial
+
+- Documentación FFmpeg: https://ffmpeg.org/documentation.html — manual, formatos y componentes.
+- Wiki FFmpeg: https://trac.ffmpeg.org/wiki — guías de H.264, H.265, VP9 y streaming.
+- Filtros: https://ffmpeg.org/ffmpeg-filters.html — `scale`, `setpts`, `atempo`, `subtitles` y `overlay`.
+- ffprobe: https://ffmpeg.org/ffprobe.html — inspección de duración, streams y metadata.
+- H.264 Guide: https://trac.ffmpeg.org/wiki/Encode/H.264 — CRF, presets y tuning.
+- H.265 Guide: https://trac.ffmpeg.org/wiki/Encode/H.265 — compresión eficiente para archivo.
+- Faststart: https://trac.ffmpeg.org/wiki/Encode/H.264#faststart-for-web-video — MP4 reproducible en web.
+
+### Repositorios famosos y listas curadas
+
+- Awesome FFmpeg: https://github.com/transitive-bullshit/awesome-ffmpeg — scripts, herramientas y recursos curados.
+- FFmpeg: https://github.com/FFmpeg/FFmpeg — código fuente oficial y changelog.
+- awesome-video: https://github.com/krzemienski/awesome-video — codecs, streaming y procesamiento.
+- HandBrake: https://github.com/HandBrake/HandBrake — presets de compresión de referencia.
+- Shaka Player: https://github.com/shaka-project/shaka-player — validación de MP4 web con `faststart`.
+
+### Guías de profundización sugeridas
+
+- Revise la wiki antes de elegir entre CRF y 2-pass según objetivo de tamaño.
+- Consulte la guía H.264 para seleccionar `preset` según equilibrio velocidad y compresión.
+- Valide subtítulos: `mov_text` para soft y `subtitles` para quemados, con archivo `.srt` revisado.
+- Verifique con `ffprobe` duración, resolución y codecs antes de concatenar.
+- Mida calidad con VMAF o comparación visual antes de cambiar CRF en lote.
+
+### Checklist de verificación
+
+- [ ] Se consultó `ffmpeg.org` o `trac.ffmpeg.org/wiki` para el filtro utilizado.
+- [ ] Se inspeccionó la entrada con `ffprobe` antes de procesar.
+- [ ] Se utiliza `-c copy` cuando no se requiere recodificar.
+- [ ] El CRF se mantiene en 18-28 para H.264 salvo justificación documentada.
+- [ ] El codec de audio se declara explícito con `-c:a`.
+- [ ] Los MP4 web incluyen `-movflags +faststart`.
+- [ ] El batch conserva nombres y no sobrescribe originales sin respaldo.
+- [ ] La salida se reproduce completa con audio y subtítulos verificados.

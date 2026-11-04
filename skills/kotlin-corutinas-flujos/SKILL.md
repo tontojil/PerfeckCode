@@ -3,6 +3,123 @@ name: kotlin-corutinas-flujos
 description: Patrones Kotlin con coroutines y Flow, concurrencia estructurada, channels, shared flows, state flows y manejo de errores. (Kotlin, coroutines, Flow, channels)
 ---
 
+## Versiones mínimas
+
+- Kotlin 2.0 o superior, `kotlinx-coroutines-core` 1.8 o superior, `kotlinx-coroutines-test` 1.8 para `runTest`.
+- JDK 17 para compilación local, Gradle 8.7 o superior si usa Android.
+- En Android: `lifecycle-runtime-ktx` 2.8 para `viewModelScope` y `lifecycleScope`.
+- Portal base: https://kotlinlang.org/docs/
+- Notas de versión: https://github.com/Kotlin/kotlinx.coroutines/releases
+
+## Ejemplo mínimo probado (archivo único ejecutable)
+
+Probado como guía con Kotlin 2.0 y `kotlinx-coroutines-core` 1.8. Incluye `suspend`, `StateFlow`, `SharedFlow`, `combine` y manejo de errores.
+
+`build.gradle.kts` mínimo para JVM:
+
+```kotlin
+plugins { kotlin("jvm") version "2.0.20" }
+dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+}
+```
+
+`Main.kt` completo. Ejecute con `./gradlew run`:
+
+```kotlin
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+
+sealed interface MiniUiState {
+    data object Loading : MiniUiState
+    data class Success(val names: List<String>) : MiniUiState
+    data class Error(val message: String) : MiniUiState
+}
+
+sealed interface MiniEvent {
+    data class ShowMessage(val text: String) : MiniEvent
+}
+
+class MiniRepository {
+    suspend fun fetchNames(): List<String> {
+        delay(100)
+        return listOf("Ana", "Bruno", "Carla")
+    }
+
+    fun observeNames() = flow<Result<List<String>>> {
+        emit(Result.success(fetchNames()))
+    }.catch { emit(Result.failure(it)) }
+     .flowOn(Dispatchers.IO)
+}
+
+class MiniViewModel(private val repository: MiniRepository) {
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+
+    private val _uiState = MutableStateFlow<MiniUiState>(MiniUiState.Loading)
+    val uiState: StateFlow<MiniUiState> = _uiState.asStateFlow()
+
+    private val _events = MutableSharedFlow<MiniEvent>()
+    val events: SharedFlow<MiniEvent> = _events.asSharedFlow()
+
+    fun load() {
+        scope.launch {
+            repository.observeNames().collect { result ->
+                result
+                    .onSuccess { _uiState.value = MiniUiState.Success(it) }
+                    .onFailure { _uiState.value = MiniUiState.Error(it.message ?: "Error") }
+            }
+        }
+    }
+
+    fun greet(name: String) {
+        scope.launch { _events.emit(MiniEvent.ShowMessage("Hola, $name")) }
+    }
+
+    fun clear() = scope.cancel()
+}
+
+fun main(): Unit = runBlocking {
+    val viewModel = MiniViewModel(MiniRepository())
+
+    val dashboardJob = launch {
+        combine(viewModel.uiState, flow { emit(42) }) { state, total ->
+            "estado=$state total=$total"
+        }.collect(::println)
+    }
+
+    val eventsJob = launch {
+        viewModel.events.collect { println("evento=$it") }
+    }
+
+    viewModel.load()
+    delay(500)
+    viewModel.greet("Ana")
+    delay(200)
+
+    dashboardJob.cancel()
+    eventsJob.cancel()
+    viewModel.clear()
+}
+```
+
+Verificación: `./gradlew run` imprime `estado=Success(names=[Ana, Bruno, Carla])` y `evento=ShowMessage(text=Hola, Ana)`. En tests use `runTest` con `StandardTestDispatcher`.
+
 ## Cuando usar
 
 Utilice esta skill cuando trabaje con código Kotlin con corutinas, Flow o channels.
@@ -244,3 +361,45 @@ class UserViewModelTest {
 - `flatMapLatest` over `flatMapMerge` for cancel-previous semantics.
 - `flowOn(Dispatchers.IO)` once, not on every operator.
 - Test with `StandardTestDispatcher` and `runTest`.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los patrones existentes. Úsela para validar corutinas, Flow y testing.
+
+### Documentación oficial
+
+- Portal base Kotlin: https://kotlinlang.org/docs/
+- Kotlin Coroutines: https://kotlinlang.org/docs/coroutines-guide.html — guía base de concurrencia estructurada.
+- Flow: https://kotlinlang.org/docs/flow.html — creación, operadores y colección.
+- StateFlow y SharedFlow: https://kotlinlang.org/docs/flow.html#stateflow-and-sharedflow — estado versus eventos.
+- Testing de corutinas: https://kotlinlang.org/docs/coroutines-test.html — `runTest` y dispatchers de prueba.
+- `viewModelScope`: https://developer.android.com/topic/libraries/architecture/coroutines — scopes Android y cancelación.
+- Channels: https://kotlinlang.org/docs/channels.html — productor-consumidor y `channelFlow`.
+- Excepciones: https://kotlinlang.org/docs/exception-handling.html — `SupervisorJob`, `catch` y `retry`.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Kotlin: https://github.com/KotlinBy/awesome-kotlin — librerías y recursos curados.
+- kotlinx.coroutines: https://github.com/Kotlin/kotlinx.coroutines — implementación, ejemplos y guías.
+- Now in Android: https://github.com/android/nowinandroid — uso real de `StateFlow`, `combine` y `flatMapLatest`.
+- Turbine: https://github.com/cashapp/turbine — testing de Flows con assertions legibles.
+- Kotlin: https://github.com/JetBrains/kotlin — lenguaje y propuestas de evolución.
+
+### Guías de profundización sugeridas
+
+- Revise concurrencia estructurada antes de crear un `CoroutineScope` manual.
+- Consulte Flow para elegir entre `combine`, `zip` y `flatMapLatest` según semántica.
+- Valide manejo de errores con `runCatching` o `catch` sin ocultar excepciones de cancelación.
+- Verifique búsqueda con `debounce`, `filter` y `distinctUntilChanged` antes de llamar a red.
+- Mida con `TestDispatcher`, `advanceTimeBy` y `advanceUntilIdle` para pruebas deterministas.
+
+### Checklist de verificación
+
+- [ ] Se consultó `kotlinlang.org/docs/coroutines-guide.html` para el operador utilizado.
+- [ ] No se utiliza `GlobalScope` en ningún código de producción.
+- [ ] El estado utiliza `StateFlow` y los eventos utilizan `SharedFlow`.
+- [ ] Los hijos independientes utilizan `SupervisorJob` documentado.
+- [ ] La búsqueda implementa `debounce` y `distinctUntilChanged`.
+- [ ] Se utiliza `flatMapLatest` cuando debe cancelarse la consulta previa.
+- [ ] `flowOn(Dispatchers.IO)` aparece una sola vez por cadena.
+- [ ] Los tests utilizan `StandardTestDispatcher` con `runTest` y avance explícito de tiempo.

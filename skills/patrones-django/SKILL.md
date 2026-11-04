@@ -1,14 +1,14 @@
 ---
 name: patrones-django
-description: Patrones Django y DRF, optimización ORM, viewsets, serializers, cache, signals, middleware y testing. Usalo cuando trabajai con Django. (Django, DRF, ORM, serializers)
+description: Patrones Django y DRF, optimización ORM, viewsets, serializers, cache, signals, middleware y testing. Utilizar al trabajar con Django. (Django, DRF, ORM, serializers)
 ---
 
 ## Cuando usar
 
-Usa esta skill cuando trabajai con Django o DRF (modelos, ORM, viewsets, serializers).
+Utilizar esta skill al trabajar con Django o DRF (modelos, ORM, viewsets, serializers).
 Cubre optimización ORM, cache, signals, middleware, paginación y testing con pytest-django.
-No uses esta skill fuera del stack Django (para Flask/FastAPI u otro backend usa su skill).
-No cambies recetas existentes; solo aplica los patrones tal cual.
+No utilizar esta skill fuera del stack Django (para Flask, FastAPI u otro backend utilizar su skill correspondiente).
+No modificar recetas existentes; aplicar los patrones tal como se documentan.
 
 ## Project Structure
 
@@ -147,6 +147,26 @@ class UserViewSet(viewsets.ModelViewSet):
         user.is_active = False
         user.save(update_fields=["is_active", "updated_at"])
         return Response({"status": "deactivated"})
+
+### ViewSet con ORM optimizado (select_related)
+
+```python
+from rest_framework import viewsets
+
+class OrderViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = OrderSerializer
+
+    def get_queryset(self):
+        # Optimizado: evita N+1 en ForeignKey user y product.
+        # Referencia: https://docs.djangoproject.com/en/stable/topics/db/optimization/
+        return (
+            Order.objects
+            .select_related("user", "product")
+            .prefetch_related("items")
+            .only("id", "total", "created_at", "user__email", "product__name")
+            .order_by("-created_at")
+        )
+```
 ```
 
 ### Pagination
@@ -244,3 +264,56 @@ class TestUserAPI:
 - `pytest-django` with `@pytest.mark.django_db`.
 - `only()` / `defer()` to limit query fields.
 - Signals for cross-app communication only.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los patrones existentes. Úsela para validar ORM, DRF y testing.
+
+### Documentación oficial
+
+- Documentación Django: https://docs.djangoproject.com/ — guía base de modelos, ORM y configuración.
+- Optimización de consultas: https://docs.djangoproject.com/en/stable/topics/db/optimization/ — `select_related`, `prefetch_related` y `only`.
+- Django REST Framework: https://www.django-rest-framework.org/ — viewsets, serializers, permisos y paginación.
+- Serializers DRF: https://www.django-rest-framework.org/api-guide/serializers/ — validación y `ModelSerializer`.
+- Caché Django: https://docs.djangoproject.com/en/stable/topics/cache/ — backends y estrategia de invalidación.
+- Signals: https://docs.djangoproject.com/en/stable/topics/signals/ — uso correcto entre aplicaciones.
+- Testing con pytest-django: https://pytest-django.readthedocs.io/ — fixtures, `django_db` y configuración.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Django: https://github.com/wsvincent/awesome-django — paquetes, recursos y proyectos de referencia.
+- Django: https://github.com/django/django — código fuente oficial del framework.
+- DRF: https://github.com/encode/django-rest-framework — viewsets, routers y permisos.
+- Django Debug Toolbar: https://github.com/jazzband/django-debug-toolbar — detección de N+1 en desarrollo.
+- Cookiecutter Django: https://github.com/cookiecutter/cookiecutter-django — estructura `config/`, `apps/` y `core/` lista para producción.
+
+### Guías de profundización sugeridas
+
+- Revise la guía de optimización de base de datos antes de agregar un endpoint de listado.
+- Consulte la guía de paginación de DRF para decidir entre cursor y page number.
+- Valide la estrategia de caché: clave, TTL e invalidación explícita por escritura.
+- Verifique permisos personalizados con `BasePermission` antes de agregar lógica en vistas.
+- Mida consultas con `django-debug-toolbar` o `django-silk` y registre el conteo antes y después.
+
+### Checklist de verificación
+
+- [ ] Se consultó `djangoproject.com` y `django-rest-framework.org` para la versión en uso.
+- [ ] Cada endpoint de listado utiliza `select_related` o `prefetch_related`.
+- [ ] La lógica de negocio reside en `services.py`, no en vistas.
+- [ ] Se utiliza paginación cursor para conjuntos grandes.
+- [ ] Cada valor cacheado define clave, TTL e invalidación.
+- [ ] Los tests utilizan `pytest-django` con marcador `django_db` y `APIClient`.
+- [ ] Los campos se limitan con `only()` o `defer()` cuando la tabla es ancha.
+- [ ] Las signals se limitan a comunicación entre aplicaciones.
+
+## Ejemplo minimo
+
+Listado optimizado que evita consultas N+1:
+
+```python
+from django.http import JsonResponse
+def lista_usuarios(request):
+    usuarios = User.objects.select_related("perfil").only("id", "email", "name")[:20]
+    datos = [{"id": u.id, "email": u.email, "nombre": u.name} for u in usuarios]
+    return JsonResponse({"resultados": datos})
+```

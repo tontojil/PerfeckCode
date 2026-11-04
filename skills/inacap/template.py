@@ -11,7 +11,11 @@ from docx.oxml.ns import nsdecls, qn
 from docx.oxml import parse_xml
 import os
 
-ASSETS = os.path.expanduser("~/.claude/skills/inacap/assets")
+ASSETS_CANDIDATOS = [
+    os.path.expanduser("~/.claude/skills/inacap/assets"),
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets"),
+]
+ASSETS = next((p for p in ASSETS_CANDIDATOS if os.path.isdir(p)), ASSETS_CANDIDATOS[0])
 
 # ── Constantes de formato (colores institucionales INACAP) ──────────────────
 
@@ -242,7 +246,7 @@ def figure(doc, number, description):
     pf = p.paragraph_format
     pf.space_before = Pt(6)
     pf.space_after = Pt(4)
-    run = p.add_run(f"Figura {number}: {description}")
+    run = p.add_run(f"Figura {number}. {description}")
     run.font.size = Pt(9)
     run.italic = True
     run.font.color.rgb = RGBColor(0x59, 0x59, 0x59)
@@ -250,16 +254,62 @@ def figure(doc, number, description):
     return p
 
 
-def insert_toc(doc, levels=3):
-    """Inserta campo de Tabla de Contenido. Usar justo despues de create_doc().
+def toc_entry(doc, level, text, page):
+    """Entrada de indice estilo Word con puntos y numero: texto + tab + pagina.
 
-    El usuario debe abrir el DOCX en Word, seleccionar todo (Ctrl+A)
-    y presionar F9 para generar la tabla de contenido.
+    level 1 = capitulo en negrita, level 2 = seccion con sangria, level 3 = subseccion.
+    Usa tab derecho con leader dot para que se vea como TOC real sin presionar F9.
+    """
+    p = doc.add_paragraph()
+    pPr = p._p.get_or_add_pPr()
+    tabs = parse_xml(
+        f'<w:tabs {nsdecls("w")}>'
+        f'<w:tab w:val="right" w:leader="dot" w:pos="9350"/>'
+        f'</w:tabs>'
+    )
+    pPr.append(tabs)
+    pf = p.paragraph_format
+    pf.space_after = Pt(0)
+    pf.space_before = Pt(0)
+    pf.line_spacing = 1.0
+    if level == 2:
+        pf.left_indent = Cm(0.5)
+    elif level == 3:
+        pf.left_indent = Cm(1.0)
+    r = p.add_run(text)
+    r.font.name = "Arial"
+    r.font.size = Pt(11) if level == 1 else Pt(10)
+    r.bold = (level == 1)
+    r.font.color.rgb = RGBColor(0, 0, 0)
+    rt = p.add_run("\t")
+    rp = p.add_run(str(page))
+    rp.font.name = "Arial"
+    rp.font.size = Pt(11) if level == 1 else Pt(10)
+    rp.bold = (level == 1)
+    return p
+
+
+def insert_toc(doc, levels=3):
+    """Inserta UNICAMENTE la Tabla automatica de Word (Referencias > Tabla de contenido).
+
+    Usa los estilos Heading 1, Heading 2 y Heading 3 del documento. Al abrir en Word
+    vaya a Referencias > Actualizar tabla y el indice se rellena solo con puntos y paginas.
+    No genera lista manual. La funcion toc_entry queda solo para compatibilidad y no se usa.
     """
     # Titulo "Tabla de Contenido" con estilo H1
     heading(doc, "Tabla de Contenido", level=1)
 
-    # Campo TOC
+    # Activar actualizacion de campos al abrir para que Word pregunte actualizar
+    try:
+        settings = doc.settings.element
+        update = settings.find(qn('w:updateFields'))
+        if update is None:
+            update = parse_xml(f'<w:updateFields {nsdecls("w")} w:val="true"/>')
+            settings.append(update)
+    except Exception:
+        pass
+
+    # Campo TOC automatico real: TOC \o "1-3" \h \z \u
     p = doc.add_paragraph()
     run = p.add_run()
 
@@ -280,7 +330,7 @@ def insert_toc(doc, levels=3):
     )
     run._r.append(fldChar_separate)
 
-    run2 = p.add_run("[Actualizar tabla de contenido: Ctrl+A, luego F9]")
+    run2 = p.add_run("Haga clic derecho > Actualizar campo o vaya a Referencias > Actualizar tabla.")
     run2.font.size = Pt(9)
     run2.font.color.rgb = RGBColor(0x99, 0x99, 0x99)
     run2.font.name = "Arial"

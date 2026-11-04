@@ -43,6 +43,59 @@ description: "Para cobrar con tarjeta vía Webpay Plus: crear, confirmar y valid
    - Códigos -97/-98/-99 son límite del banco del cliente, no error suyo.
    - Webpay solo opera en pesos chilenos sin decimales.
 
+## Ejemplo minimo: crear y confirmar en servidor
+
+```js
+// Requiere SDK oficial de Transbank en el servidor, nunca en el navegador
+import { WebpayPlus } from "transbank-sdk";
+
+// 1. Crear transaccion
+const buyOrder = "OC-2026-000123"; // unico, maximo 26 caracteres
+const sessionId = "sesion-abc-123";
+const amount = 10000; // CLP, sin decimales
+const returnUrl = "https://mi-tienda.cl/webpay/retorno";
+
+const creada = await new WebpayPlus.Transaction().create(
+  buyOrder, sessionId, amount, returnUrl
+);
+// Guarde en base: buyOrder + creada.token + amount antes de redirigir
+// Redirija al cliente a creada.url con creada.token
+
+// 2. Confirmar al retorno, siempre en servidor
+const resultado = await new WebpayPlus.Transaction().commit(tokenRecibido);
+
+const pagoValido =
+  resultado.status === "AUTHORIZED" &&
+  Number(resultado.response_code) === 0 &&
+  Number(resultado.amount) === montoGuardadoEnBase &&
+  resultado.buy_order === buyOrderGuardada;
+
+if (!pagoValido) {
+  // No emita boleta, marque orden como rechazada
+  throw new Error("Pago no valido, verificar monto y codigo");
+}
+// Recien aqui emita boleta 39 o factura 33 al SII
+```
+
+Ejemplo de tabla minima de ordenes:
+
+```text
+buy_order      | token         | monto_base | estado
+OC-2026-000123 | tok_abc123    | 10000      | pendiente -> aprobado
+OC-2026-000124 | tok_def456    | 15500      | pendiente -> abandonado
+```
+
+## Repositorios
+
+- SDK oficial Python: https://github.com/TransbankDevelopers/transbank-sdk-python - codigo fuente del SDK de Transbank para crear y confirmar transacciones Webpay Plus en servidor.
+
+## Referencias oficiales
+
+- Documentacion Webpay Plus: https://www.transbankdevelopers.cl/documentacion/webpay-plus/
+- Portal Transbank Developers: https://www.transbankdevelopers.cl
+- Codigos de integracion y tarjetas de prueba: https://www.transbankdevelopers.cl/documentacion/como_empezar/
+- Validacion para paso a produccion: formulario en Transbank Developers
+
 ## Output Contract
 
 Entregue: estado (aprobado/rechazado/abandonado), monto verificado contra su base, y orden lista para boleta.

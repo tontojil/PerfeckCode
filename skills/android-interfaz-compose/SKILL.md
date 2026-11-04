@@ -3,6 +3,61 @@ name: android-interfaz-compose
 description: Desarrollo Android con Jetpack Compose, manejo de estado, navegación, Material 3, side effects y patrones de arquitectura. Úsela cuando cree pantallas en Compose. (Jetpack Compose, state management, navigation, Material 3)
 ---
 
+## Versiones mínimas
+
+- Kotlin 2.0 o superior (desde Kotlin 2.0 el compilador de Compose se gestiona con el plugin oficial `org.jetbrains.kotlin.plugin.compose`).
+- Compose BOM `2026.08.00` o superior (núcleo Compose `1.12.1`, Material3 `1.4.0`).
+- `compileSdk` 37 y AGP `9.1.2` o superior (requisito de Compose 1.12 en adelante).
+- `minSdk` 21 o superior; dynamic color de Material You requiere Android 12 (API 31).
+- Navigation Compose `2.8` o superior para navegación type-safe con `@Serializable`.
+- `lifecycle-runtime-compose` para `collectAsStateWithLifecycle()`.
+
+## Ejemplo mínimo probado
+
+Dependencias mínimas (`build.gradle.kts` del módulo):
+
+```kotlin
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.plugin.compose")
+}
+
+android {
+    compileSdk = 37
+    defaultConfig { minSdk = 23 }
+}
+
+dependencies {
+    val composeBom = platform("androidx.compose:compose-bom:2026.08.00")
+    implementation(composeBom)
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.activity:activity-compose")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose")
+}
+```
+
+Pantalla mínima que compila y muestra preview:
+
+```kotlin
+@Composable
+fun Saludo(nombre: String, modifier: Modifier = Modifier) {
+    Text(
+        text = "Hola, $nombre",
+        style = MaterialTheme.typography.headlineSmall,
+        modifier = modifier.padding(16.dp),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SaludoPreview() {
+    MaterialTheme {
+        Saludo(nombre = "Mundo")
+    }
+}
+```
+
 ## Compose State
 
 ### State Hoisting
@@ -182,3 +237,44 @@ private fun LoginScreenPreview() {
 - `Modifier` as first optional parameter.
 - Preview every composable.
 - `viewModelScope.launch` for coroutines in ViewModel.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los patrones Compose existentes. Úsela para validar estado, navegación y Material 3.
+
+### Documentación oficial
+
+- Jetpack Compose: https://developer.android.com/develop/ui/compose — fundamentos y ciclo de vida de composables.
+- Estado en Compose: https://developer.android.com/develop/ui/compose/state — hoisting y stateful versus stateless.
+- StateFlow y Lifecycle: https://developer.android.com/topic/libraries/architecture/lifecycle — `collectAsStateWithLifecycle`.
+- Navegación Compose: https://developer.android.com/develop/ui/compose/navigation — rutas type-safe y `NavHost`.
+- Material 3: https://developer.android.com/develop/ui/compose/designsystems/material3 — color, tipografía y dynamic color.
+- LazyColumn: https://developer.android.com/develop/ui/compose/lists — listas, keys y `animateItem`.
+- Previews: https://developer.android.com/develop/ui/compose/tooling/previews — `@Preview` y buenas prácticas.
+
+### Repositorios famosos y listas curadas
+
+- Compose Samples: https://github.com/android/compose-samples — ejemplos oficiales de navegación, estado y listas.
+- Now in Android: https://github.com/android/nowinandroid — Material 3, navegación type-safe y theming.
+- Awesome Compose: https://github.com/mrmilu/awesome-jetpack-compose — componentes y recursos curados.
+- Material3: https://github.com/material-components/material-components-android — sistema de diseño.
+- Accompanist: https://github.com/google/accompanist — utilidades complementarias para Compose.
+
+### Guías de profundización sugeridas
+
+- Revise estado y hoisting antes de agregar `remember` en un composable reutilizable.
+- Consulte navegación type-safe para pasar solo IDs y no objetos completos.
+- Valide efectos con `LaunchedEffect` para eventos de una sola vez y snackbar.
+- Verifique `LazyColumn` con `key` estable y `contentPadding` consistente.
+- Mida recomposiciones con Layout Inspector y evite parámetros inestables.
+
+### Checklist de verificación
+
+- [ ] Se consultó `developer.android.com/develop/ui/compose` para el API utilizado.
+- [ ] Los composables reutilizables son stateless con estado elevado al padre.
+- [ ] Se utiliza `collectAsStateWithLifecycle` y no `collectAsState` directo.
+- [ ] El ViewModel expone `StateFlow` inmutable y conserva `MutableStateFlow` privado.
+- [ ] Cada `LazyColumn` define `key` estable por ítem.
+- [ ] Los eventos de una sola vez utilizan `LaunchedEffect`.
+- [ ] `Modifier` es el primer parámetro opcional de cada composable público.
+- [ ] Cada pantalla y componente principal incluye `@Preview`.

@@ -29,8 +29,8 @@ Usted describe el objetivo en lenguaje normal y el sistema deriva al especialist
 
 Los asistentes de IA olvidan decisiones entre sesiones, no siguen las convenciones del proyecto y obligan a repetir contexto. PerfeckCode aporta tres elementos:
 
-- Memoria de trabajo: 73 skills con criterios por area (backend, frontend, movil, documentos, DevOps, testing, seguridad).
-- Oficios definidos: 31 agentes en opencode (30 especialistas mas el agente primario `tonto-jil`) y 30 agentes en Claude Code, cada uno con ambito y formato de salida propios.
+- Memoria de trabajo: 80 skills con criterios por area (backend, frontend, movil, documentos, DevOps, testing, seguridad, anti-IA).
+- Oficios definidos: 33 archivos en opencode/agents (32 especialistas con @ mas el primario `tonto jil`, identico a build) y 33 agentes en Claude Code, cada uno con ambito y formato de salida propios.
 - Disciplina: verificar con comandos recien ejecutados antes de decir "listo", commits atómicos con Conventional Commits y prohibicion de secretos en el codigo.
 
 El resultado es menos repeticion, menos errores evitables y menos tokens gastados.
@@ -76,9 +76,9 @@ El detalle del flujo (capturar, reproducir, aislar, probar, corregir) esta defin
 
 | Parte | Contenido |
 |---|---|
-| 31 agentes en opencode | 30 especialistas mas el agente primario `tonto-jil` (se elige con Tab) |
-| 30 agentes en Claude Code | Mismos 30 especialistas en `claude-agents/` |
-| 73 skills | Backend, frontend, movil, documentos universitarios, DevOps, testing, seguridad |
+| 33 archivos en opencode/agents | 32 especialistas con @ mas el primario `tonto jil`, identico a build (se elige con Tab) |
+| 33 agentes en Claude Code | Mismos 33 especialistas en `claude-agents/` |
+| 80 skills | Backend, frontend, movil, documentos universitarios, DevOps, testing, seguridad, anti-IA |
 | Comandos en opencode | `/verify` (evidencia antes del "listo"), `/ralph` (itera hasta terminar) |
 | Comandos en Claude Code | 4 comandos en `claude-commands/` (`code-review`, `security-scan`, `plan`, `model-route`) |
 | Reglas | Estilo de codigo, flujo git, testing, seguridad y anti-filtracion de secretos en `rules/` |
@@ -123,7 +123,7 @@ chmod +x install.sh
 2. Si es primera vez, complete sus claves de proveedor en `~/.claude/settings.json` guiandose por `settings.template.json`.
 3. Reinicie opencode o Claude Code.
 4. Pruebe con `@depurador hola` (debe responder el depurador).
-5. Con Tab cambie al agente `tonto-jil`.
+5. Con Tab cambie al primario `tonto jil` (identico a build).
 
 ### Solución de problemas
 
@@ -136,16 +136,16 @@ chmod +x install.sh
 
 ```text
 PerfeckCode/
-├── opencode/               # 31 agentes, 2 comandos, AGENTS.md global, opencode.jsonc
-├── claude-agents/          # 30 agentes para Claude Code
+├── opencode/               # 33 archivos (32 especialistas + primario tonto jil), 2 comandos, AGENTS.md global, opencode.jsonc
+├── claude-agents/          # 33 agentes para Claude Code
 ├── claude-commands/        # 4 comandos para Claude Code
-├── skills/                 # 73 skills, cada una con SKILL.md
+├── skills/                 # 80 skills, cada una con SKILL.md
 ├── output-styles/          # estilo tonto-jil
 ├── rules/                  # 5 reglas en common/ mas npm-security.md
 ├── templates/              # 7 plantillas de especificacion (SDD)
 ├── hooks/                  # 6 hooks (incluye secret-detect)
 ├── scripts/                # desinstalar (uninstall) + utilidades (squash-auto-saves)
-├── skill-registry.md       # indice de las 73 skills
+├── skill-registry.md       # indice de las 80 skills
 ├── settings.template.json  # plantilla SIN claves
 ├── security_rules.md       # protocolos de seguridad y operacion
 ├── CLAUDE.md               # instrucciones globales
@@ -154,7 +154,7 @@ PerfeckCode/
 └── LICENSE                 # MIT
 ```
 
-Conteos verificados en esta revision: 31 archivos en `opencode/agents`, 30 en `claude-agents`, 73 directorios en `skills`, 2 comandos en `opencode/commands`, 4 en `claude-commands`.
+Conteos verificados en esta revision: 33 archivos en `opencode/agents`, 33 en `claude-agents`, 80 directorios en `skills`, 2 comandos en `opencode/commands`, 4 en `claude-commands`.
 
 ## Seguridad
 
@@ -176,11 +176,11 @@ No. Ambos instaladores respaldan cada carpeta existente como `.backup-<fecha>` y
 
 **2. ¿Funciona igual en opencode y en Claude Code?**
 
-Si, con la misma base. opencode usa 31 agentes (incluye el primario `tonto-jil`) y 2 comandos; Claude Code usa 30 agentes y 4 comandos. Las 73 skills y las reglas son compartidas.
+Si, con la misma base. opencode usa 33 archivos (32 especialistas + primario `tonto jil`, identico a build) y 2 comandos; Claude Code usa 33 agentes y 4 comandos. Las 80 skills y las reglas son compartidas.
 
 **3. ¿Por que `@depurador` no responde despues de instalar?**
 
-En la mayoria de los casos falta reiniciar la aplicacion. Cierre opencode o Claude Code por completo, abralo de nuevo y pruebe `@depurador hola`. En opencode, use Tab para cambiar al agente `tonto-jil` si desea el trato general.
+En la mayoria de los casos falta reiniciar la aplicacion. Cierre opencode o Claude Code por completo, abralo de nuevo y pruebe `@depurador hola`. En opencode, use Tab para cambiar al primario `tonto jil` si desea el trato general.
 
 **4. ¿Como actualizo o revierto?**
 

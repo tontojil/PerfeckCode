@@ -5,13 +5,14 @@ Instrucciones para seguir mejorando opencode en cualquier sesión nueva.
 ## 1. Dónde vive cada cosa
 
 - Esta carpeta (`PerfeckCode/`) es la fuente de verdad. Se edita aquí.
+- `opencode-v1/` es su configuracion actual V1 con `tonto-jil`. `opencode-v2/` es la configuracion nueva V2 con `perfeck`, `cli.json`, `themes/` y `plugins/` del pull. `opencode/` queda como compatibilidad con V1.
 - Lo instalado vive en `C:/Users/Pablo/.config/opencode/` (opencode) y `C:/Users/Pablo/.claude/` (Claude Code + skills).
-- Ambas deben quedar gemelas. El instalador copia de aquí hacia allá.
+- Ambas deben quedar gemelas. El instalador copia de aquí hacia allá con `-Version V1` por defecto y `-Version V2` para otras personas.
 
 ## 2. Reglas de edición
 
 - Lea el archivo con Read antes de editar. Cambios chicos, nunca rewrites.
-- Español neutro, trato de usted, sin modismos. Tildes y ñ sí, comillas ASCII rectas.
+- Español neutro, habla normal y neutra, sin modismos. Tildes y ñ sí, comillas ASCII rectas.
 - `color:` en frontmatter solo hexadecimal entre comillas (`"#ff0000"`), nunca nombres (`red` falla el esquema).
 - Rutas Windows completas (`C:/Users/Pablo/...`), nunca `~`. Skills se leen con Read, no existe herramienta `skill`.
 - Wrappers en `opencode/agents/` siguen el patrón: `description` ES+EN, `mode: subagent`, puntos 1-3, `Usted`.
@@ -24,7 +25,8 @@ Instrucciones para seguir mejorando opencode en cualquier sesión nueva.
 
 ## 4. Igualar instalado
 
-- Corra `powershell -ExecutionPolicy Bypass -File .\install.ps1` (respalda solo con `.backup-*`, nunca toca `settings.json`).
+- V1 su PC: `powershell -ExecutionPolicy Bypass -File .\install.ps1 -Version V1` (respalda solo con `.backup-*`, nunca toca `settings.json`).
+- V2 otras personas: `powershell -ExecutionPolicy Bypass -File .\install.ps1 -Version V2`.
 - Para volver atrás: `.\scripts\uninstall.ps1` restaura el respaldo más reciente.
 
 ## 5. Verificar antes de decir listo

@@ -219,6 +219,30 @@ docker compose run --rm app sh
 docker compose logs --since 1h app
 ```
 
+## Secretos BuildKit y escaneo Trivy
+
+```dockerfile
+# syntax=docker/dockerfile:1.7
+FROM node:22-alpine AS deps
+WORKDIR /app
+COPY package.json pnpm-lock.yaml ./
+RUN --mount=type=secret,id=npm_token \
+  NPM_TOKEN=$(cat /run/secrets/npm_token) pnpm install --frozen-lockfile
+```
+
+```bash
+# Build con secreto sin dejar rastro en capas
+DOCKER_BUILDKIT=1 docker build --secret id=npm_token,src=.npm_token -t app:latest .
+
+# Escaneo de vulnerabilidades HIGH y CRITICAL
+trivy image --severity HIGH,CRITICAL --no-progress app:latest
+
+# app:latest (alpine 3.19.1)
+# Total: 0 (HIGH: 0, CRITICAL: 0)
+```
+
+El secreto nunca queda en el historial de capas. Corrija primero CRITICAL, luego HIGH, y bloquee el deploy si hay CRITICAL sin corregir.
+
 ## Rules
 
 - Multi-stage builds. Always.
@@ -232,3 +256,20 @@ docker compose logs --since 1h app
 - No bind mounts in production.
 - Tags: `:latest` dev, commit SHA staging, semver prod.
 - No secrets in layers. `ARG` solo build-time, no persiste.
+
+## Referencias oficiales y repositorios famosos
+
+1. Docker Multi-stage builds (etapas build y runtime, COPY --from): https://docs.docker.com/build/building/multi-stage/
+2. Docker Building best practices (cache, .dockerignore, tags fijos, SBOM): https://docs.docker.com/build/building/best-practices/
+3. Awesome Docker curaduria veggiemonk (ejemplos, compose, seguridad): https://github.com/veggiemonk/awesome-docker
+4. Dockerfile reference (FROM, HEALTHCHECK, USER, EXPOSE): https://docs.docker.com/reference/dockerfile/
+
+La documentacion oficial prevalece. Use BuildKit con `# syntax=docker/dockerfile:1.7` y secretos con `--mount=type=secret`.
+
+### Checklist aplicable por imagen
+
+- [ ] Multi-stage con runtime `alpine` o `distroless`, usuario no root, versiones fijas sin `latest`.
+- [ ] `.dockerignore` con `node_modules`, `.git`, `.env`, `*.log`, cache copiado antes que codigo para hit de capa.
+- [ ] `HEALTHCHECK` y `depends_on` con `service_healthy`, sin bind mounts en prod, volumenes nombrados.
+- [ ] Sin secretos en capas, SBOM y escaneo `trivy` en HIGH y CRITICAL, firma Cosign si el proyecto exige.
+- [ ] Rebuild medido: `docker build --pull`, `docker compose up -d`, `docker compose logs -f app` verificados.

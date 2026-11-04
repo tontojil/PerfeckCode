@@ -231,3 +231,22 @@ core.setOutput('result', JSON.stringify(result.data))
 
 Workflow en `.github/workflows/` con jobs, `timeout-minutes`, cache y concurrency.
 Verifica con `actionlint` si existe (`actionlint .github/workflows/*.yml`); si no, valida YAML y permisos/OIDC.
+
+## Referencias oficiales y repositorios famosos
+
+1. GitHub Actions docs (workflows, jobs, environments, OIDC): https://docs.github.com/en/actions
+2. Writing workflows (sintaxis, triggers, concurrency, permissions): https://docs.github.com/en/actions/writing-workflows
+3. Starter workflows oficiales (plantillas de workflow reutilizable, matrix build, cache, secretos): https://github.com/actions/starter-workflows
+4. Awesome Actions curaduria sdras (ejemplos, reusable workflows, cache): https://github.com/sdras/awesome-actions
+5. Actionlint (linter de workflows, jobs y expresiones): https://github.com/rhysd/actionlint
+
+La documentacion oficial prevalece: https://docs.github.com/en/actions. Fije `@v4` minimo y use OIDC sobre secretos almacenados cuando sea posible.
+Para iniciar un pipeline nuevo, parta de https://github.com/actions/starter-workflows y adapte el workflow reutilizable, la matriz y el cache a su caso.
+
+### Checklist aplicable por workflow
+
+- [ ] `timeout-minutes` en cada job, `concurrency` con `cancel-in-progress` para evitar deploys paralelos.
+- [ ] `npm ci` o `--frozen-lockfile`, cache de dependencias y capas Docker con `type=gha`.
+- [ ] `permissions` minimas por job, secretos solo via `secrets.*`, OIDC para AWS y GCP.
+- [ ] Matriz con `fail-fast: false` para visibilidad total, artefactos con `retention-days` y reporte en fallo.
+- [ ] Validado con `actionlint`, environments con revisores en produccion y `if: github.ref == 'refs/heads/main'` en deploy.

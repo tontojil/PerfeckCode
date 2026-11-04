@@ -242,3 +242,92 @@ Load these resources as needed during development:
   - XML format specifications
   - Example questions and answers
   - Running an evaluation with the provided scripts
+
+## Referencias oficiales
+
+- MCP Specification: https://modelcontextprotocol.io/specification/draft — arquitectura, transports y definición de tools, resources y prompts.
+- MCP Sitemap: https://modelcontextprotocol.io/sitemap.xml — punto de entrada para navegar la spec y traer páginas con sufijo `.md`.
+- TypeScript SDK README: https://raw.githubusercontent.com/modelcontextprotocol/typescript-sdk/main/README.md — referencia para servidor recomendado en TypeScript.
+- Python SDK README: https://raw.githubusercontent.com/modelcontextprotocol/python-sdk/main/README.md — referencia para servidor en Python con FastMCP.
+- MCP Inspector: https://github.com/modelcontextprotocol/inspector — prueba local con `npx @modelcontextprotocol/inspector`.
+- Anthropic MCP Guide: https://docs.anthropic.com/en/docs/agents-and-tools/mcp — cómo el agente consume servidores MCP.
+- OpenCode Docs: https://opencode.ai/docs/ — registro de servidores MCP en proyecto y global.
+
+## Repositorios famosos y listas curadas
+
+- TypeScript SDK: https://github.com/modelcontextprotocol/typescript-sdk — SDK oficial, ejemplos y `registerTool` con Zod.
+- Python SDK: https://github.com/modelcontextprotocol/python-sdk — SDK oficial, FastMCP y `@mcp.tool`.
+- MCP Servers: https://github.com/modelcontextprotocol/servers — servidores de referencia (fetch, filesystem, github, sqlite).
+- Awesome MCP Servers: https://github.com/punkpeye/awesome-mcp-servers — catálogo curado por dominio e idioma.
+- MCP Inspector: https://github.com/modelcontextprotocol/inspector — UI para probar tools antes de entregar.
+
+## Ejemplo mínimo
+
+Servidor mínimo verificable en ambos stacks. Una tool `saludar` de solo lectura.
+
+Python con FastMCP (`server.py`):
+
+```python
+from fastmcp import FastMCP
+
+mcp = FastMCP("demo-minimo")
+
+@mcp.tool(description="Saluda por nombre. Solo lectura, idempotente.")
+def saludar(nombre: str) -> str:
+    """Saluda por nombre con mensaje accionable si falta."""
+    if not nombre.strip():
+        raise ValueError("Entregue nombre no vacío, ejemplo: nombre='Ana'.")
+    return f"Hola, {nombre.strip()}"
+
+if __name__ == "__main__":
+    mcp.run()
+```
+
+```bash
+python -m py_compile server.py
+npx @modelcontextprotocol/inspector python server.py
+```
+
+TypeScript con MCP SDK (`src/index.ts`):
+
+```typescript
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { z } from "zod";
+
+const server = new McpServer({ name: "demo-minimo", version: "1.0.0" });
+
+server.registerTool(
+  "saludar",
+  {
+    description: "Saluda por nombre. Solo lectura, idempotente.",
+    inputSchema: { nombre: z.string().min(1).describe("Nombre, ejemplo: Ana") },
+    annotations: { readOnlyHint: true, idempotentHint: true }
+  },
+  async ({ nombre }) => ({
+    content: [{ type: "text", text: `Hola, ${nombre.trim()}` }]
+  })
+);
+```
+
+```bash
+npm run build
+npx @modelcontextprotocol/inspector node build/index.js
+```
+
+## Guías de profundización sugeridas
+
+- Revise la spec antes de elegir transporte: `stdio` para local, HTTP streamable sin estado para remoto.
+- Consulte `reference/mcp_best_practices.md` para nombres, paginación y formato JSON versus Markdown.
+- Valide esquemas con Zod o Pydantic con descripciones y ejemplos en cada campo.
+- Marque anotaciones `readOnlyHint`, `destructiveHint` e `idempotentHint` en cada tool.
+- Mida con el Inspector 2 tools reales antes de agregar más cobertura.
+
+### Checklist de verificación
+
+- [ ] Se revisó la spec en `modelcontextprotocol.io` y el README del SDK usado.
+- [ ] El proyecto compila: `npm run build` o `python -m py_compile`.
+- [ ] El servidor abre en MCP Inspector y la tool `saludar` responde.
+- [ ] Cada tool tiene descripción concisa, esquema validado y manejo de errores accionable.
+- [ ] Paginación y `outputSchema` definidos donde aplica.
+- [ ] Evaluación con preguntas independientes, read-only y verificables creada si aplica.
+- [ ] No hay secretos en código ni logs con datos sensibles.

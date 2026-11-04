@@ -1,14 +1,14 @@
 ---
 name: patrones-backend-dotnet
-description: Patrones backend C# y .NET con minimal APIs, EF Core, Dapper, testing con xUnit, middleware e inyeccion de dependencias. (C#, ASP.NET Core, EF Core, Dapper)
+description: Patrones backend C# y .NET con minimal APIs, EF Core, Dapper, testing con xUnit, middleware e inyección de dependencias. Utilizar al trabajar con .NET. (C#, ASP.NET Core, EF Core, Dapper)
 ---
 
 ## Cuando usar
 
-Usa esta skill cuando trabajai con C# y .NET (minimal APIs, EF Core, Dapper, xUnit).
-Cubre DI, middleware, repositorios, migraciones y testing unitario/integracion.
-No uses esta skill fuera del stack .NET (para Django, Go u otro backend usa su skill).
-No cambies recetas existentes; solo aplica los patrones tal cual.
+Utilizar esta skill al trabajar con C# y .NET (minimal APIs, EF Core, Dapper, xUnit).
+Cubre DI, middleware, repositorios, migraciones y testing unitario e integración.
+No utilizar esta skill fuera del stack .NET (para Django, Go u otro backend utilizar su skill correspondiente).
+No modificar recetas existentes; aplicar los patrones tal como se documentan.
 
 ## Project Structure
 
@@ -276,3 +276,59 @@ public class UserServiceTests
 - Primary constructors (C# 12) for DI.
 - `Results<T>` for typed HTTP responses.
 - Test with mocks for units, real DB for integration.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los patrones existentes. Úsela para validar Minimal APIs, EF Core y xUnit.
+
+### Documentación oficial
+
+- Documentación .NET: https://learn.microsoft.com/en-us/dotnet/ — guía base de .NET, C# y ASP.NET Core.
+- ASP.NET Core: https://github.com/dotnet/aspnetcore — código fuente oficial, minimal APIs y middleware.
+- ASP.NET Core Minimal APIs: https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis — mapeo, parámetros y `Results`.
+- Entity Framework Core: https://learn.microsoft.com/ef/core/ — DbContext, migraciones y configuración fluida.
+- Configuración con Options: https://learn.microsoft.com/aspnet/core/fundamentals/configuration/options — `IOptions`, validación y secciones.
+- Inyección de dependencias: https://learn.microsoft.com/aspnet/core/fundamentals/dependency-injection — lifetimes `Scoped`, `Transient` y `Singleton`.
+- Middleware: https://learn.microsoft.com/aspnet/core/fundamentals/middleware/ — pipeline y manejo de excepciones.
+- xUnit: https://xunit.net/docs/getting-started/netfx/visual-studio — hechos, teorías y ejecución.
+- Dapper: https://github.com/DapperLib/Dapper — micro-ORM para consultas ligeras y de alto rendimiento.
+
+### Repositorios famosos y listas curadas
+
+- Awesome .NET: https://github.com/quozd/awesome-dotnet — librerías, herramientas y recursos curados.
+- eShopOnWeb: https://github.com/dotnet-architecture/eShopOnWeb — referencia de arquitectura limpia con repositorios.
+- eShopOnContainers: https://github.com/dotnet-architecture/eShopOnContainers — microservicios .NET de referencia.
+- Moq: https://github.com/devlooped/moq — mocks para pruebas unitarias con xUnit.
+- EF Core: https://github.com/dotnet/efcore — código fuente y roadmap del ORM.
+
+### Guías de profundización sugeridas
+
+- Revise Minimal APIs antes de decidir entre endpoints y controladores.
+- Consulte EF Core para elegir entre `Include`, proyecciones y consultas divididas.
+- Valide lifetimes de DI: `DbContext` siempre `Scoped`, servicios stateless según necesidad.
+- Verifique migraciones con `dotnet ef migrations script` antes de aplicar en producción.
+- Mida consultas con logging de EF o MiniProfiler y confirme uso de `CancellationToken` en todo método asíncrono.
+
+### Checklist de verificación
+
+- [ ] Se consultó `learn.microsoft.com` para la versión LTS de .NET en uso.
+- [ ] Todo método asíncrono acepta `CancellationToken` y lo propaga a EF o Dapper.
+- [ ] El mapeo utiliza `IEntityTypeConfiguration` y no atributos dispersos.
+- [ ] La configuración utiliza Options pattern con sección tipada.
+- [ ] Ningún tipo de EF se expone fuera de la capa de infraestructura.
+- [ ] El middleware centraliza `NotFound`, validación y errores 500 con logging.
+- [ ] Los tests unitarios utilizan mocks y los de integración utilizan base real.
+- [ ] `dotnet build` y `dotnet test` finalizan sin errores ni advertencias críticas.
+
+## Ejemplo minimo
+
+Endpoint mínimo con Minimal API y servicio inyectado:
+
+```csharp
+app.MapGet("/api/v1/salud", () => Results.Ok(new { estado = "ok" }));
+app.MapGet("/api/v1/usuarios/{id:guid}", async (Guid id, IUserService servicio, CancellationToken ct) =>
+{
+    var usuario = await servicio.GetByIdAsync(id, ct);
+    return usuario is null ? Results.NotFound() : Results.Ok(usuario);
+});
+```

@@ -3,6 +3,119 @@ name: swift
 description: "Desarrollo de apps para iOS y macOS con Swift, SwiftUI, SwiftData, async/await y Actores. (Swift, SwiftUI, iOS)"
 ---
 
+## Versiones mínimas
+
+- Xcode 16 o superior, Swift 6.0 o superior, Swift Tools 6.0.
+- iOS 17 o superior para `@Observable` y Observation, iOS 18 para `NavigationStack` con `NavigationPath` usado en esta skill.
+- macOS 14 o superior para desarrollo, macOS Sequoia recomendado para Xcode 16.
+- SwiftData disponible desde iOS 17 y macOS 14.
+- Portal base: https://developer.apple.com/
+- Versiones de Xcode: https://developer.apple.com/xcode/ y notas de Swift: https://www.swift.org/
+
+## Ejemplo mínimo probado (app SwiftUI completa)
+
+Proyecto nuevo tipo App en Xcode con este único archivo como `MiniApp.swift`. Probado como guía con Xcode 16 y Swift 6 en modo estricto de concurrencia.
+
+```swift
+import SwiftUI
+
+// Modelo decodificable mínimo
+struct MiniUser: Identifiable, Decodable, Sendable {
+    let id: Int
+    let name: String
+    let email: String
+}
+
+// Cliente mínimo con async y await
+actor MiniAPIClient {
+    static let shared = MiniAPIClient()
+    private let session: URLSession = .shared
+
+    func fetchUsers() async throws -> [MiniUser] {
+        guard let url = URL(string: "https://jsonplaceholder.typicode.com/users") else {
+            throw URLError(.badURL)
+        }
+        let (data, response) = try await session.data(from: url)
+        guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else {
+            throw URLError(.badServerResponse)
+        }
+        return try JSONDecoder().decode([MiniUser].self, from: data)
+    }
+}
+
+// ViewModel con Observation
+@Observable
+final class MiniUserViewModel {
+    var users: [MiniUser] = []
+    var isLoading = false
+    var errorMessage: String?
+
+    private let api: MiniAPIClient
+
+    init(api: MiniAPIClient = .shared) {
+        self.api = api
+    }
+
+    @MainActor
+    func load() async {
+        isLoading = true
+        errorMessage = nil
+        defer { isLoading = false }
+        do {
+            users = try await api.fetchUsers()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+}
+
+// Vista completa con estados
+struct MiniUserListView: View {
+    @State private var viewModel = MiniUserViewModel()
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if viewModel.isLoading {
+                    ProgressView("Cargando usuarios")
+                } else if let message = viewModel.errorMessage {
+                    ContentUnavailableView(
+                        "No se pudo cargar",
+                        systemImage: "wifi.exclamationmark",
+                        description: Text(message)
+                    )
+                } else {
+                    List(viewModel.users) { user in
+                        VStack(alignment: .leading) {
+                            Text(user.name).font(.headline)
+                            Text(user.email).font(.subheadline).foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+            .navigationTitle("Usuarios")
+            .task { await viewModel.load() }
+        }
+    }
+}
+
+// Punto de entrada mínimo
+@main
+struct MiniApp: App {
+    var body: some Scene {
+        WindowGroup {
+            MiniUserListView()
+        }
+    }
+}
+
+#Preview {
+    MiniUserListView()
+}
+```
+
+Verificación: compila con `xcodebuild -scheme MiniApp -destination 'platform=iOS Simulator,name=iPhone 16'` y el preview muestra lista, carga y error.
+
 ## SwiftUI Architecture
 
 ### State Management
@@ -220,3 +333,45 @@ func loadDashboard() async throws -> Dashboard {
 - NavigationSplitView for iPad/macOS, NavigationStack for iPhone.
 - `#Preview` macros for all views.
 - `Sendable` conformance for types crossing concurrency boundaries.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los patrones existentes. Úsela para validar SwiftUI, concurrencia y SwiftData.
+
+### Documentación oficial
+
+- Portal base Apple: https://developer.apple.com/
+- Lenguaje Swift: https://docs.swift.org/swift-book/ — referencia base del lenguaje y concurrencia.
+- SwiftUI: https://developer.apple.com/documentation/swiftui — vistas, estado y navegación.
+- Observation: https://developer.apple.com/documentation/observation — `@Observable` y seguimiento de estado.
+- SwiftData: https://developer.apple.com/documentation/swiftdata — modelos, `@Query` y relaciones.
+- Concurrencia: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/ — `async`, `await` y actores.
+- NavigationStack: https://developer.apple.com/documentation/swiftui/navigationstack — destinos y `NavigationPath`.
+- Human Interface Guidelines: https://developer.apple.com/design/human-interface-guidelines — patrones iOS y macOS.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Swift: https://github.com/matteocrippa/awesome-swift — librerías y recursos curados.
+- Swift: https://github.com/swiftlang/swift — compilador y evolución del lenguaje.
+- SwiftUI Examples: https://github.com/jordansinger/SwiftUI-Kit — componentes y patrones visuales.
+- Alamofire: https://github.com/Alamofire/Alamofire — red para casos donde `URLSession` no basta.
+- swift-snapshot-testing: https://github.com/pointfreeco/swift-snapshot-testing — snapshots de vistas.
+
+### Guías de profundización sugeridas
+
+- Revise Observation antes de elegir entre `@State`, `@Environment` y modelo compartido.
+- Consulte SwiftData para definir `deleteRule` e inversos antes de modelar relaciones.
+- Valide concurrencia con `actor` para estado mutable compartido y `Sendable` en bordes.
+- Verifique navegación con `NavigationPath` centralizado en `AppRouter`.
+- Mida con Instruments y `XCTest` de performance antes de optimizar listas grandes.
+
+### Checklist de verificación
+
+- [ ] Se consultó `developer.apple.com/documentation/swiftui` para el API utilizado.
+- [ ] Se utiliza `@Observable` en lugar de `ObservableObject` en código nuevo.
+- [ ] El estado de vista utiliza `@State` y el compartido utiliza `@Environment`.
+- [ ] El estado mutable compartido reside en `actor` con conformidad `Sendable`.
+- [ ] Toda red utiliza `async` y `await` sin completion handlers nuevos.
+- [ ] La persistencia nueva utiliza SwiftData con relaciones e inversos definidos.
+- [ ] Cada vista principal incluye `#Preview` con contenedor en memoria cuando usa datos.
+- [ ] `NavigationStack` se utiliza en iPhone y `NavigationSplitView` en iPad y macOS cuando corresponde.

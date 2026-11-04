@@ -34,7 +34,7 @@ Create a skill when:
 
 ## Skill Structure
 
-```
+```text
 skills/{skill-name}/
 ├── SKILL.md              # Required - main skill file
 ├── assets/               # Optional - templates, schemas, examples
@@ -99,7 +99,7 @@ metadata:
 
 ## Decision: assets/ vs references/
 
-```
+```text
 
 Need code templates?        → assets/
 Need JSON schemas?          → assets/
@@ -115,7 +115,7 @@ Link to external guides?    → references/ (with local path)
 
 ## Decision: Project-Specific vs Generic
 
-```
+```text
 
 Patterns apply to ANY project?     → Generic skill (e.g., pytest, typescript)
 Patterns are project-specific?     → {project}-{name} skill
@@ -197,3 +197,115 @@ visualizacion o reportes, aunque no pida un dashboard explicito".
 ## Resources
 
 - **Templates**: See [assets/](assets/) for SKILL.md template
+
+## Ejemplo mínimo
+
+Skill mínima válida y copiable para validar el formato antes de crear la real.
+
+Estructura:
+
+```text
+skills/revision-changelog/
+├── SKILL.md
+└── assets/
+    └── template.md
+```
+
+`skills/revision-changelog/SKILL.md`:
+
+```markdown
+---
+name: revision-changelog
+description: >
+  Revisa CHANGELOG con formato Keep a Changelog.
+  Usala cuando el usuario mencione changelog, release o notas de versión.
+license: Apache-2.0
+metadata:
+  version: "1.0"
+---
+
+## When to Use
+
+- El usuario pide crear o revisar un CHANGELOG.
+- El usuario menciona release, versión o notas de cambio.
+
+## Critical Patterns
+
+- Exija formato Keep a Changelog: Added, Changed, Fixed.
+- No invente entradas sin commit o diff que las respalde.
+
+## Code Examples
+
+```markdown
+## [1.2.0] - 2026-10-15
+### Added
+- Soporte para exportación CSV.
+```
+
+## Commands
+
+```bash
+git log --oneline -20
+npm run build
+```
+
+## Resources
+
+- **Templates**: See [assets/](assets/) for plantilla de entrada.
+```
+
+Comandos de verificación mínima:
+
+```bash
+ls skills/revision-changelog/SKILL.md
+npx skills check
+```
+
+Prueba A/B mínima:
+
+```text
+Prompt 1: "Crea el CHANGELOG 1.2.0 con estos 5 commits".
+Prompt 2: "Revisa este CHANGELOG y marca lo que rompe Keep a Changelog".
+Criterio: con skill gana en formato válido y sin entradas inventadas.
+```
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar la plantilla ni el flujo existente. Úsela para crear skills válidas y evaluadas.
+
+### Documentación oficial
+
+- Agent Skills Spec: https://agentskills.io/ — estructura, frontmatter y validación de `SKILL.md`.
+- Anthropic Agent Skills: https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills — guía de creación y buenas prácticas.
+- OpenCode Customization: https://opencode.ai/docs/ — skills en `~/.config/opencode/` y `skills/` de proyecto.
+- Anthropic Skills Repo: https://github.com/anthropics/skills — ejemplos `pdf`, `pptx`, `xlsx` con `LICENSE.txt`.
+- Skill Authoring Best Practices: https://docs.anthropic.com/en/docs/agents-and-tools/agent-skills/best-practices — patrones DO y DON'T.
+- Markdown GitHub: https://docs.github.com/github/writing-on-github/getting-started-with-writing-and-formatting-on-github — formato legible.
+- SemVer: https://semver.org/ — versionado `metadata.version` como string.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Claude Skills: https://github.com/ComposioHQ/awesome-claude-skills — patrones reutilizables por dominio.
+- Vercel Agent Skills: https://github.com/vercel-labs/agent-skills — triggers pushy y ejemplos mínimos.
+- Skills.sh: https://skills.sh/ — publicación y descubrimiento con `npx skills`.
+- Claude Code Plugins: https://github.com/anthropics/claude-code — registro y contadores en `skill-registry.md`.
+- Skill Creator Examples: https://github.com/anthropics/skills — plantilla `SKILL.md` con `assets/` y `references/`.
+
+### Guías de profundización sugeridas
+
+- Revise la spec antes de nombrar: `{tecnologia}`, `{proyecto}-{componente}` o `{accion}-{target}`.
+- Consulte best practices para mantener ejemplos mínimos y sección Commands copiable.
+- Valide frontmatter completo: `name`, `description` con trigger, `license` y `metadata.version`.
+- Verifique decisión `assets/` versus `references/` con rutas locales, no URLs web.
+- Mida con loop A/B: mismo prompt con y sin skill, dos corridas, feedback del usuario.
+
+### Checklist de verificación
+
+- [ ] Se consultó `agentskills.io` y `docs.anthropic.com` para la estructura creada.
+- [ ] El nombre sigue convenciones y no duplica skill existente en `skills/`.
+- [ ] El frontmatter incluye trigger pushy en español con keywords de búsqueda.
+- [ ] Los patrones críticos van primero con tablas de decisión cuando aplica.
+- [ ] Los ejemplos son mínimos y la sección Commands es copiable.
+- [ ] Se agrega entrada en `skill-registry.md` con contador Total actualizado.
+- [ ] La evaluación A/B demuestra ganancia clara con 2-3 prompts realistas.
+- [ ] La licencia es `Apache-2.0` por defecto o la del proyecto cuando manda.

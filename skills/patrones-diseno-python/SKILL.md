@@ -25,6 +25,88 @@ class ReportGenerator:
     def generate(self, user: User) -> Report: ...
 ```
 
+### Open/Closed (abierto a extensión, cerrado a modificación)
+
+```python
+from typing import Protocol
+
+# BAD: modificar la clase por cada medio de pago nuevo
+class PaymentServiceBad:
+    def pay(self, method: str, amount: float) -> None:
+        if method == "stripe":
+            ...
+        elif method == "paypal":
+            ...
+
+# GOOD: extender con una implementación nueva sin tocar el servicio
+class PaymentMethod(Protocol):
+    def charge(self, amount: float) -> None: ...
+
+class StripePayment:
+    def charge(self, amount: float) -> None:
+        # Lógica de Stripe
+        ...
+
+class PaypalPayment:
+    def charge(self, amount: float) -> None:
+        # Lógica de PayPal
+        ...
+
+class PaymentService:
+    def __init__(self, method: PaymentMethod):
+        self._method = method
+
+    def pay(self, amount: float) -> None:
+        self._method.charge(amount)
+```
+
+### Liskov Substitution (sustitución de Liskov)
+
+```python
+from typing import Protocol
+
+class Bird(Protocol):
+    def move(self) -> str: ...
+
+class Sparrow:
+    def move(self) -> str:
+        return "vuela 10 metros"
+
+class Penguin:
+    def move(self) -> str:
+        return "nada 10 metros"
+
+# GOOD: ambas sustituyen a Bird sin romper el contrato de move().
+# BAD sería heredar Penguin de una clase FlyingBird con fly(),
+# porque Penguin no puede volar y rompería el contrato.
+def travel(bird: Bird) -> str:
+    return bird.move()
+```
+
+### Interface Segregation (segregación de interfaces)
+
+```python
+from typing import Protocol
+
+# BAD: interfaz gruesa que obliga a implementar lo que no se usa
+class WorkerBad(Protocol):
+    def work(self) -> None: ...
+    def eat(self) -> None: ...
+    def attend_meeting(self) -> None: ...
+
+# GOOD: interfaces pequeñas y específicas
+class Workable(Protocol):
+    def work(self) -> None: ...
+
+class Eatable(Protocol):
+    def eat(self) -> None: ...
+
+class Robot:
+    def work(self) -> None:
+        # Solo implementa lo que necesita
+        ...
+```
+
 ### Dependency Inversion
 
 ```python
@@ -48,6 +130,46 @@ class NotificationService:
 
     def notify(self, recipient: str, message: str) -> None:
         self._sender.send(recipient, message)
+
+# Uso: la dependencia se decide fuera de la clase
+service = NotificationService(sender=EmailSender())
+service.notify("ana@example.com", "Bienvenida")
+```
+
+### Inyección de dependencias por constructor, factoría y contenedor
+
+```python
+from typing import Protocol
+
+class PasswordHasher(Protocol):
+    def hash(self, password: str) -> str: ...
+
+class BcryptHasher:
+    def hash(self, password: str) -> str:
+        return f"bcrypt:{password}"
+
+# 1. Constructor: forma preferida, dependencia explícita y testeable
+class SignupService:
+    def __init__(self, hasher: PasswordHasher):
+        self._hasher = hasher
+
+# 2. Factoría: centraliza la creación según configuración
+def build_signup_service(env: str) -> SignupService:
+    hasher: PasswordHasher = BcryptHasher()
+    return SignupService(hasher=hasher)
+
+# 3. Contenedor simple: útil cuando hay muchas dependencias
+class Container:
+    def __init__(self) -> None:
+        self._hasher = BcryptHasher()
+
+    def signup_service(self) -> SignupService:
+        return SignupService(hasher=self._hasher)
+
+# Reglas de inyección:
+# - Inyectar por constructor, no con import directo dentro del método.
+# - Depender de Protocol, no de la clase concreta.
+# - No usar singletons globales ni variables de módulo como dependencias ocultas.
 ```
 
 ## Patterns
@@ -236,3 +358,59 @@ class UserResponse(BaseModel):
 - Dependency injection via constructor.
 - Immutable data with `@dataclass(frozen=True)`.
 - `asyncio` for I/O-bound, sync for CPU-bound.
+
+## Referencias oficiales y repositorios famosos
+
+Esta sección amplía sin modificar los patrones existentes. Úsela para validar diseño, tipado y validación.
+
+### Documentación oficial
+
+- Documentación Python 3: https://docs.python.org/3/ — referencia base del lenguaje y biblioteca estándar.
+- `typing` y `Protocol`: https://docs.python.org/3/library/typing.html — `Protocol`, genéricos y `TypeVar`.
+- `dataclasses`: https://docs.python.org/3/library/dataclasses.html — dataclasses inmutables y configurables.
+- `asyncio`: https://docs.python.org/3/library/asyncio.html — concurrencia para I/O-bound.
+- `match` estructural: https://docs.python.org/3/tutorial/controlflow.html#match-statements — pattern matching desde 3.10.
+- Pydantic v2: https://docs.pydantic.dev/latest/ — validación en bordes con `BaseModel` y validadores.
+- Mypy: https://mypy.readthedocs.io/ — verificación con `mypy --strict`.
+
+### Repositorios famosos y listas curadas
+
+- Awesome Python: https://github.com/vinta/awesome-python — frameworks, librerías y herramientas curadas.
+- CPython: https://github.com/python/cpython — implementación de referencia del lenguaje.
+- Pydantic: https://github.com/pydantic/pydantic — validación y serialización.
+- Dependency Injector: https://github.com/ets-labs/python-dependency-injector — contenedor DI para Python.
+- Returns: https://github.com/dry-python/returns — tipos `Result`, `Maybe` y programación funcional.
+
+### Guías de profundización sugeridas
+
+- Revise `typing.Protocol` antes de crear una interfaz nueva; prefiera composición.
+- Consulte Pydantic para validar en bordes y mantener el dominio con dataclasses puras.
+- Valide inmutabilidad con `@dataclass(frozen=True)` para objetos de valor.
+- Verifique concurrencia: `asyncio` para I/O, funciones síncronas para CPU-bound.
+- Mida tipado con `mypy --strict` y linter `ruff` antes de integrar cambios.
+
+### Checklist de verificación
+
+- [ ] Se consultó `docs.python.org/3` para la versión de Python declarada.
+- [ ] Toda función pública incluye anotaciones de tipos completas.
+- [ ] Las interfaces utilizan `Protocol` en lugar de herencia innecesaria.
+- [ ] La validación de entrada utiliza Pydantic en bordes del sistema.
+- [ ] La inyección se realiza por constructor, sin singletons ocultos.
+- [ ] Los datos inmutables utilizan `@dataclass(frozen=True)` cuando corresponde.
+- [ ] `match` se utiliza solo en Python 3.10 o superior verificado.
+- [ ] `mypy --strict` finaliza sin errores.
+
+## Ejemplo minimo
+
+Servicio con inyección por constructor y protocolo:
+
+```python
+class ServicioSaludo:
+    def __init__(self, repo: UserRepository):
+        self._repo = repo
+    async def saludar(self, usuario_id: int) -> str:
+        usuario = await self._repo.get_by_id(usuario_id)
+        if usuario is None:
+            raise ValueError("Usuario no existe")
+        return f"Hola {usuario.name}"
+```
