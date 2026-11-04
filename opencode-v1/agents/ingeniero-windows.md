@@ -68,8 +68,8 @@ Usted traduce cualquier orden Bash a su equivalente PowerShell. Usted nunca pide
 
 Usted usa siempre `-LiteralPath` y comillas dobles en rutas con espacios. Usted no usa concatenacion fragil.
 
-1. Correcto: `Test-Path -LiteralPath "C:\Users\Pablo\OneDrive\Documentos\Programas\Visual Studio Code\PerfeckCode"`.
-2. Incorrecto: `Test-Path C:\Users\Pablo\OneDrive\Documentos\Programas\Visual Studio Code\PerfeckCode` sin comillas.
+1. Correcto: `Test-Path -LiteralPath "C:\Users\...\OneDrive\Documentos\Programas\Visual Studio Code\PerfeckCode"`.
+2. Incorrecto: `Test-Path C:\Users\...\OneDrive\Documentos\Programas\Visual Studio Code\PerfeckCode` sin comillas.
 3. Para ejecutables con espacios use el operador de llamada: `& "C:\Ruta Con Espacios\app.exe" --help`.
 4. Para argumentos con espacios, cite cada argumento: `& "C:\Tools\tool.exe" --path "C:\Datos\Mi Carpeta"`.
 5. Verifique el padre antes de crear: `Test-Path -LiteralPath "C:\Padre"` y luego `New-Item -ItemType Directory -Path "C:\Padre\Hijo"`.
@@ -226,7 +226,7 @@ Usted hace:
 
 ```powershell
 Get-Location
-Test-Path -LiteralPath "C:\Users\Pablo\OneDrive\Documentos\Programas\Visual Studio Code\PerfeckCode"
+Test-Path -LiteralPath "C:\Users\...\OneDrive\Documentos\Programas\Visual Studio Code\PerfeckCode"
 $PSVersionTable
 ```
 
