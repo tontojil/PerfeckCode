@@ -32,6 +32,7 @@ Native Context, MCP and Todo sections remain host-owned. MCP entries require con
 | `plugins/perfeckcode/model.ts` | Pure session-to-presentation mapping, with no host or filesystem dependencies |
 | `plugins/perfeckcode/index.ts` | Separate V2 server entrypoint; no UI or console banner side effects |
 | `plugins/guard.js` | Server-side tool hook; supports native V2 `shell` and legacy `bash` names |
+| `plugins/perfeck-banner.js` | Optional standalone V2 console banner for manual use; the default profile does not install it |
 | `../scripts/install-opencode.mjs` | Shared cross-platform installer, native config adapter and backups |
 | `tests/` | Offline theme, activity, guard and installation regression tests |
 
@@ -51,6 +52,8 @@ To undo the visual profile, close OpenCode and restore the adjacent backups of `
 bun test opencode/tests
 bash -n install.sh
 ```
+
+On Windows the four POSIX permission-mode assertions in `identity-migration.test.ts` and `install.test.ts` cannot pass because NTFS does not store POSIX mode bits; run the full suite on Linux/WSL for that gate. The functional, config and theme tests run on both platforms.
 
 V2 does not expose V1's `home_logo` replacement slot. PerfeckCode uses the supported home footer and leaves OpenCode's native logo and composer intact. Fonts, terminal size and terminal rendering are outside the theme's control; pixel-identical V1 output is not promised. Theme/sidebar data tests are not a substitute for native runtime loading and interactive verification.
 

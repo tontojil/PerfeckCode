@@ -1,4 +1,4 @@
-import { resolve } from "node:path"
+import { posix, resolve } from "node:path"
 
 export interface SecretRule {
   readonly label: string
@@ -64,7 +64,10 @@ export function resolveWorkspacePath(baseDirectory: string | undefined, target: 
   if (!normalized) return ""
   if (/^(?:[A-Za-z]:\/|\/|\/\/)/.test(normalized)) return normalized
   if (!baseDirectory) return ""
-  return resolve(normalizePathSeparators(baseDirectory), normalized)
+  const base = normalizePathSeparators(baseDirectory)
+  // Una base POSIX debe seguir siendo POSIX aunque el host sea Windows.
+  if (base.startsWith("/") && !base.startsWith("//")) return posix.resolve(base, normalized)
+  return resolve(base, normalized)
 }
 
 export function extractPatchPaths(patchText: unknown): string[] {
