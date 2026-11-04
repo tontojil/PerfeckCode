@@ -22,9 +22,9 @@ test("shared agent files retain V1 restrictions alongside equivalent native V2 r
   const home = mkdtempSync(join(tmpdir(), "agent-permissions-"))
   try {
     installOpenCode({ repo, home })
-    for (const name of readdirSync(join(repo, "opencode/agents"))) {
+    for (const name of readdirSync(join(repo, "opencode-v2/agents"))) {
       const parse = (path: string) => Bun.YAML.parse(/^---\r?\n([\s\S]*?)\r?\n---/.exec(readFileSync(path, "utf8"))![1])
-      const source = parse(join(repo, "opencode/agents", name))
+      const source = parse(join(repo, "opencode-v2/agents", name))
       const installed = parse(join(home, ".config/opencode/agents", name))
       if (!source.permission) continue
       expect(installed.permission).toEqual(source.permission)

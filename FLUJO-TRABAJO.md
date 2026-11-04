@@ -6,7 +6,7 @@ Instrucciones para seguir mejorando opencode en cualquier sesión nueva.
 
 - Esta carpeta (`PerfeckCode/`) es la fuente de verdad. Se edita aquí.
 - `opencode-v1/` es su configuracion actual V1 con `tonto-jil`. `opencode-v2/` es la configuracion nueva V2 con `perfeck`, `cli.json`, `themes/` y `plugins/` del pull. `opencode/` queda como compatibilidad con V1.
-- Lo instalado vive en `C:/Users/Pablo/.config/opencode/` (opencode) y `C:/Users/Pablo/.claude/` (Claude Code + skills).
+- Lo instalado vive en `C:/Users/.../.config/opencode/` (opencode) y `C:/Users/.../.claude/` (Claude Code + skills).
 - Ambas deben quedar gemelas. El instalador copia de aquí hacia allá con `-Version V1` por defecto y `-Version V2` para otras personas.
 
 ## 2. Reglas de edición
@@ -14,7 +14,7 @@ Instrucciones para seguir mejorando opencode en cualquier sesión nueva.
 - Lea el archivo con Read antes de editar. Cambios chicos, nunca rewrites.
 - Español neutro, habla normal y neutra, sin modismos. Tildes y ñ sí, comillas ASCII rectas.
 - `color:` en frontmatter solo hexadecimal entre comillas (`"#ff0000"`), nunca nombres (`red` falla el esquema).
-- Rutas Windows completas (`C:/Users/Pablo/...`), nunca `~`. Skills se leen con Read, no existe herramienta `skill`.
+- Rutas Windows completas (`C:/Users/.../...`), nunca `~`. Skills se leen con Read, no existe herramienta `skill`.
 - Wrappers en `opencode/agents/` siguen el patrón: `description` ES+EN, `mode: subagent`, puntos 1-3, `Usted`.
 
 ## 3. Al crear skills o agentes
